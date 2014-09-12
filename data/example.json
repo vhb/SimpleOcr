@@ -1,0 +1,41 @@
+{
+    // The propressesors transform the image in order to
+    //    maximize the efficiency of the other blocks
+    "preprocessors": [
+        {
+            "path": "path_to_lib",
+            "args": {
+                "args1": "arg1",
+                "args2": "arg2"
+            }
+        }
+    ],
+    // The segmenter detect the interessting parts of the image and cut it into
+    //      words / caracters TODO: check if it does need to access other part 
+    //      of the program
+    "segmenter": {
+        "path": "path_to_segmenter_library",
+        "args": {
+            "classfier": "_classifier" // gives the classifier instance
+        }
+    },
+    // The feature extractor thake the image and give it as a matrix that the
+    //    classifier can use
+    "feature_extractor": {
+        "path": "path_to_lib",
+        "args": {
+            "args1": "arg1",
+            "args2": "arg2"
+        }
+    },
+    // The classifier takes the matrix of feature and classify it into the 
+    "classifier": {
+        "path": "path_to_classfier_library",
+        "args": {
+            "dataset": {
+                "path_to_data": "data_category",
+                "path_to_other_data": "other_data_category"
+            }
+        }
+    }
+}

@@ -16,7 +16,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++0x")
 find_package(OpenCV REQUIRED)
 
 include_directories(
-    ./libs
+    ./src
     ${OPENCV_INCLUDE_DIR}
 )
 
@@ -29,12 +29,14 @@ add_library(OBJECTS OBJECT ${LIB_SOURCES})
 # OpenCV application
 
 set(APP_SOURCES
-    ./app/main.cpp
+    ./src/main.cpp
 )
 
 add_executable(ocr ${APP_SOURCES} $<TARGET_OBJECTS:OBJECTS>)
 
 target_link_libraries(ocr ${OpenCV_LIBS})
+
+add_subdirectory(./tests)
 
 # Some unit tests
 #unit_test(PatternFinder)
