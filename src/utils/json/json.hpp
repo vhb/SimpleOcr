@@ -31,6 +31,8 @@
 #include <fstream>
 #include <string>
 
+#define JSON_CAST(TYPE, OBJ) utils::Json::cast<utils::Json::TYPE>(OBJ)
+
 namespace utils {
 
     class Json {
@@ -44,6 +46,8 @@ namespace utils {
             typedef boost::any Item;
             typedef std::unordered_map<std::string, boost::any> Map;
             typedef std::vector<boost::any> Vector;
+            typedef int Int;
+            typedef std::string String;
 
             class Token
             {

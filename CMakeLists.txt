@@ -2,22 +2,19 @@ cmake_minimum_required(VERSION 2.8.8)
 
 project(machine_learning_ocr)
 
-# Macros
-#macro(unit_test NAME)
-  #message(STATUS "Add unit test ${NAME}")
-  #add_executable(test${NAME} tests/${NAME}.cpp $<TARGET_OBJECTS:OBJECTS>)
-  #target_link_libraries(test${NAME} ${OpenCV_LIBS})
-#endmacro()
-
 # Settings
-
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++0x")
-find_package(OpenCV REQUIRED)
+
+find_package("OpenCV")
+
+message("${OpenCV_INCLUDE_PATH}")
+message("${OPENCV_FOUND}")
+message("${OpenCV_LIBS}")
 
 include_directories(
     ./src
-    ${OPENCV_INCLUDE_DIR}
+    ${OPENCV2_INCLUDE_DIR}
 )
 
 set(
@@ -30,6 +27,10 @@ add_library(OBJECTS OBJECT ${LIB_SOURCES})
 
 set(APP_SOURCES
     ./src/main.cpp
+    ./src/Brain.cpp
+    ./src/utils/json/json.cpp
+    ./src/PreprocessorManager.cpp
+    ./src/Image.cpp
 )
 
 add_executable(ocr ${APP_SOURCES} $<TARGET_OBJECTS:OBJECTS>)
@@ -37,8 +38,3 @@ add_executable(ocr ${APP_SOURCES} $<TARGET_OBJECTS:OBJECTS>)
 target_link_libraries(ocr ${OpenCV_LIBS})
 
 add_subdirectory(./tests)
-
-# Some unit tests
-#unit_test(PatternFinder)
-
-

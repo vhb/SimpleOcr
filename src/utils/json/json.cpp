@@ -5,7 +5,8 @@
 #warning "TODO: handle comments"
 
 namespace utils {
-    boost::any
+
+    Json::Item
     Json::parse(std::string &&str) {
         int k;
         tokenize(std::move(str));
@@ -13,7 +14,7 @@ namespace utils {
         return value;
     }
 
-    boost::any
+    Json::Item
     Json::load(std::ifstream &is) {
         std::string str;
         std::string tmp;
@@ -24,7 +25,7 @@ namespace utils {
         return parse(std::move(str));
     }
 
-    boost::any
+    Json::Item
     Json::load(std::string &&filename) {
         std::ifstream is(filename);
         if (not is)
@@ -221,36 +222,36 @@ namespace utils {
 
     }
 
-    boost::any
+    Json::Item
     Json::parse_bool(std::string &&s) const {
-        return boost::any(s == "true" ? true : false);
+        return Json::Item(s == "true" ? true : false);
     }
 
-    boost::any
+    Json::Item
     Json::parse_int(std::string &&s) const {
-        return boost::any(boost::lexical_cast<int>(s));
+        return Json::Item(boost::lexical_cast<int>(s));
     }
 
-    boost::any
+    Json::Item
     Json::parse_float(std::string &&s) const {
-        return boost::any(boost::lexical_cast<float>(s));
+        return Json::Item(boost::lexical_cast<float>(s));
     }
 
-    boost::any
+    Json::Item
     Json::_parse(std::vector<Token> &&v, int i, int &r) const {
-        boost::any current;
+        Json::Item current;
         int j, k;
 
         switch (v[i].type) {
             {
                 case Token::T_LEFT_BRACE:
-                    auto tmp = std::unordered_map<std::string, boost::any>();
+                    auto tmp = std::unordered_map<std::string, Json::Item>();
                     k = i + 1;
                     while (v[k].type != Token::T_RIGHT_BRACE) {
                         std::string key = v[k].value;
                         k += 2;
                         j = k;
-                        boost::any vv = _parse(std::move(v), k, j);
+                        Json::Item vv = _parse(std::move(v), k, j);
                         //std::cout << vv.type().name() << std::endl;
                         tmp[key] = vv;
                         k = j;
@@ -264,11 +265,11 @@ namespace utils {
 
             {
                 case Token::T_LEFT_BRACKET:
-                    auto tmp = std::vector<boost::any>();
+                    auto tmp = std::vector<Json::Item>();
                     k = i + 1;
                     while (v[k].type != Token::T_RIGHT_BRACKET) {
                         j = k;
-                        boost::any vv = _parse(std::move(v), k, j);
+                        Json::Item vv = _parse(std::move(v), k, j);
                         tmp.push_back(vv);
                         k = j;
                         if (v[k].type == Token::T_COMMA)

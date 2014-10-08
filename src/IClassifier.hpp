@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Dataset.hpp>
+
 namespace ocr {
     class IClassifier {
         public:

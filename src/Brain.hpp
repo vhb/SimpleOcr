@@ -2,7 +2,17 @@
 
 #include <vector>
 #include <memory>
-#include <utils/json.hpp>
+#include <utils/json/json.hpp>
+
+#include <ModuleManager.hpp>
+#include <PreprocessorManager.hpp>
+#include <ISegmenter.hpp>
+#include <IClassifier.hpp>
+#include <IPreprocessor.hpp>
+#include <IFeatureExtractor.hpp>
+
+#include <utils/json/json.hpp>
+#include <utils/lib_loader.hpp>
 
 namespace ocr {
 
@@ -18,12 +28,12 @@ namespace ocr {
         private:
 
 
-            std::shared_ptr<PreprocessorManager> m_preprocessorManager;
+            PreprocessorManager                  m_preprocessorManager;
             std::shared_ptr<ISegmenter>          m_segmenter;
             std::shared_ptr<IFeatureExtractor>   m_featureExtractor;
             std::shared_ptr<IClassifier>         m_classifier;
 
             utils::Json                         m_json;
-            utils::LibLoader                    m_libLoader;
+            ModuleManager                       m_moduleManager;
     };
 }
