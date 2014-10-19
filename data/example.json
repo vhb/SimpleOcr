@@ -5,7 +5,7 @@
         {
             "path": "path_to_lib",
             "args": {
-                "args1": "arg1",
+                "args2": "arg1",
                 "args2": "arg2"
             }
         }

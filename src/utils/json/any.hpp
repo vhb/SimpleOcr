@@ -30,12 +30,6 @@
 
 class Any {
     private:
-
-        /**
-         * @class IData
-         * Simple interface to store Data without template
-         * parameters.
-         */
         struct IData {
             virtual ~IData() {}
             virtual bool isPointer() const = 0;
@@ -43,178 +37,108 @@ class Any {
             virtual std::ostream &print(std::ostream &) const = 0;
         };
 
-        /**
-         * @class Data
-         * Simple data structure to hide the type of the data.
-         */
         template<typename T>
-            struct Data : IData {
+        struct Data : IData {
 
-                /**
-                 * The real data.
-                 */
-                T data;
+            T data;
 
-                /**
-                 * Default empty constructor.
-                 */
-                Data() {}
+            Data() {}
 
-                /**
-                 * Copy constructor.
-                 */
-                Data(Data const &other)
-                    : data(other.data) {}
+            Data(Data const &other)
+                : data(other.data) {}
 
-                /**
-                 * Construct from value.
-                 */
-                Data(T const &v)
-                    : data(v) {}
+            Data(T const &v)
+                : data(v) {}
 
-                /**
-                 * Empty destructor.
-                 */
-                ~Data() {}
+            ~Data() {}
 
-                /**
-                 * Assignement operator.
-                 */
-                Data &operator=(Data const &other) {
-                    if (this != &other)
-                        data = other.data;
-                    return *this;
-                }
-
-                /**
-                 * Assign from value.
-                 */
-                void operator=(T const &v) {
-                    data = v;
-                }
-
-                /**
-                 * Check if the data is a pointer or not.
-                 */
-                bool isPointer() const {
-                    return std::is_pointer<T>::value;
-                }
-
-                /**
-                 * Return the type_info structure for this data.
-                 */
-                std::type_info const &getTypeInfo() const {
-                    return typeid(T);
-                }
-
-                /**
-                 * Print this data with the given stream.
-                 */
-                inline std::ostream &print(std::ostream &os) const {
-                    return os;
-                }
-
-            };
-
-    public:
-
-        /**
-         * Empty default constructor.
-         */
-        Any() {}
-
-        /**
-         * Construct from value.
-         */
-        template<typename T>
-            Any(T const &v)
-            : _data(new Data<T>(v)) {}
-
-        /**
-         * Copy constructor.
-         */
-        Any(Any const &other)
-            : _data(other._data) {}
-
-        /**
-         * Empty destructor.
-         */
-        ~Any() {}
-
-        /**
-         * Assign the given value.
-         */
-        template<typename T>
-            void operator=(T const &v) {
-                _data = std::shared_ptr<IData>(new Data<T>(v));
+            Data &operator=(Data const &other) {
+                if (this != &other)
+                    data = other.data;
+                return *this;
             }
 
-        /**
-         * Assignement operator.
-         */
+            void operator=(T const &v) {
+                data = v;
+            }
+
+            bool isPointer() const {
+                return std::is_pointer<T>::value;
+            }
+
+            std::type_info const &getTypeInfo() const {
+                return typeid(T);
+            }
+
+            inline std::ostream &print(std::ostream &os) const {
+                return os;
+            }
+
+        };
+
+    public:
+        Any() = default;
+
+        template<typename T>
+        Any(T const &v)
+            : _data(new Data<T>(v))
+        {
+        }
+
+        Any(Any const &other)
+            : _data(other._data)
+        {
+        }
+
+        ~Any() {}
+
+        template<typename T>
+        void operator=(T const &v) {
+            _data = std::shared_ptr<IData>(new Data<T>(v));
+        }
+
         Any &operator=(Any const &other) {
             if (this != &other)
                 _data = other._data;
             return *this;
         }
 
-        /**
-         * Check if the data is a pointer.
-         */
         bool isPointer() const {
             return _data->isPointer();
         }
 
-        /**
-         * Check if the type of this any has type `T`.
-         */
         template<typename T>
-            bool hasType() const {
-                return _data && typeid(T).hash_code() == _data->getTypeInfo().hash_code();
-            }
+        bool hasType() const {
+            return _data && typeid(T).hash_code() == _data->getTypeInfo().hash_code();
+        }
 
-        /**
-         * Return the data.
-         */
         template<typename T>
-            T &get() {
-                if ((_data->isPointer() && !std::is_pointer<T>::value) ||
-                        !hasType<T>())
-                    throw std::bad_cast();
-                return static_cast<Data<T>*>(_data.get())->data;
-            }
+        T &get() {
+            if ((_data->isPointer() && !std::is_pointer<T>::value) ||
+                    !hasType<T>())
+                throw std::bad_cast();
+            return static_cast<Data<T>*>(_data.get())->data;
+        }
 
-        /**
-         * Return the data.
-         */
         template<typename T>
-            operator T &() {
-                return get<T>();
-            }
+        operator T &() {
+            return get<T>();
+        }
 
-        /**
-         * Return the data.
-         */
         template<typename T>
-            T const &get() const {
-                if (!_data ||
-                        (_data->isPointer() && !std::is_pointer<T>::value) ||
-                        !hasType<T>())
-                    throw std::bad_cast();
-                return static_cast<Data<T>*>(_data.get())->data;
-            }
+        T const &get() const {
+            if (!_data ||
+                    (_data->isPointer() && !std::is_pointer<T>::value) ||
+                    !hasType<T>())
+                throw std::bad_cast();
+            return static_cast<Data<T>*>(_data.get())->data;
+        }
 
-        /**
-         * Return the data.
-         */
         template<typename T>
-            operator T const &() const {
-                return get<T>();
-            }
+        operator T const &() const {
+            return get<T>();
+        }
 
-        /**
-         * Check if the any contains any data.
-         */
         bool operator!() const {
             return _data != NULL;
         }

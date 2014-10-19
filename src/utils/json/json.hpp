@@ -21,9 +21,6 @@
 
 #pragma once
 
-//#include <boost/variant.hpp>
-//#include <boost/mpl/vector.hpp>
-
 #include <boost/any.hpp>
 
 #include <vector>
@@ -44,8 +41,8 @@ namespace utils {
             }
 
             typedef boost::any Item;
-            typedef std::unordered_map<std::string, boost::any> Map;
-            typedef std::vector<boost::any> Vector;
+            typedef std::unordered_map<std::string, Item> Map;
+            typedef std::vector<Item> Vector;
             typedef int Int;
             typedef std::string String;
 
@@ -76,15 +73,15 @@ namespace utils {
                     Type type;
             };
 
-            boost::any parse(std::string &&str);
-            boost::any load(std::string &&filename);
-            boost::any load(std::ifstream &is);
+            Item parse(std::string &&str);
+            Item load(std::string &&filename);
+            Item load(std::ifstream &is);
 
         private:
-            boost::any m_content;
+            Item m_content;
 
             void tokenize(std::string &&data);
-            boost::any _parse(std::vector<Token> &&tokens, int i, int &r) const;
+            Item _parse(std::vector<Token> &&tokens, int i, int &r) const;
 
             void _check_string(size_t &k, std::string &&token, char delim);
             void _check_comma(size_t &k, std::string &&s);
@@ -101,15 +98,15 @@ namespace utils {
             size_t _skip_spaces(std::string &&data, int i) const;
             size_t _next_space(std::string &&data, int i) const;
 
-            boost::any parse_bool(std::string &&s) const;
-            boost::any parse_int(std::string &&s) const;
-            boost::any parse_float(std::string &&s) const;
+            Item parse_bool(std::string &&s) const;
+            Item parse_int(std::string &&s) const;
+            Item parse_float(std::string &&s) const;
 
             std::vector<Token> _tokens;
     };
 
     inline std::ostream & operator<<(std::ostream &is, Json::Token::Type t) {
-        std::vector<std::string> v = { "T_UNDEFINDED", "T_STRING",
+        char const * v[] = { "T_UNDEFINDED", "T_STRING",
             "T_INT", "T_FLOAT", "T_LEFT_BRACE", "T_RIGHT_BRACE", "T_RIGHT_BRACKET",
             "T_LEFT_BRACKET", "T_COLON", "T_COMMA", "T_BOOLEAN", "T_NULL" };
         std::string value = v[static_cast<int>(t)];
