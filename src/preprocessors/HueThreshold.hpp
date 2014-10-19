@@ -1,4 +1,4 @@
-// Simple OCR program
+// Simple ocr
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,38 +22,16 @@
 
 #pragma once
 
-#include <opencv2/opencv.hpp>
-
-#include <utils/NonCopyable.hpp>
-#include <unordered_map>
-#include <Pos.hpp>
+#include <IPreprocessor.hpp>
 
 namespace ocr {
 
-    class Image
+    class HueThreshold
+        : public IPreprocessor
     {
         public:
-            Image(std::string &&image_path);
-            Image(cv::Mat &&matrix);
-            ~Image() = default;
-
-            Image(Image &&) = default;
-            Image &operator=(Image &&) = default;
-
-            void writeImage(std::string &&dest_path);
-            Image &&subImage(cv::Rect &&r);
-            void setMatrix(std::string &&id, cv::Mat &&mat);
-            cv::Mat &getCurrentMatrix();
-            cv::Mat const &getCurrentMatrix() const;
-
-        private:
-            void load(std::string &&image_path);
-
-            cv::Mat m_currentMatrix;
-            std::unordered_map<std::string, cv::Mat> m_matrices;
-
-            cv::Mat m_smooth;
-            cv::Mat m_threshold;
-            cv::Mat m_open_morf;
+            virtual ~HueThreshold() noexcept;
+            virtual void apply(Image &) const;
     };
-} // namespace ocr
+} /* namespace ocr */
+

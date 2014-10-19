@@ -1,4 +1,4 @@
-// Simple OCR program
+// Simple ocr
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -20,20 +20,39 @@
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include <PreprocessorManager.hpp>
-#include <utils/json/json.hpp>
+#include <preprocessors/HueThreshold.hpp>
 
 namespace ocr {
-
-    void
-    PreprocessorManager::load_preprocessor(std::vector<utils::Json::Item> &&pl)
+    HueThreshold::~HueThreshold() noexcept
     {
-        for (auto &i : pl) {
-            std::cout << "coucou" << std::endl;
-            auto &&item = JSON_CAST(Map, i);
-            std::cout << "apres" << std::endl;
-            m_preprocessors.push_back(this->load_module<IPreprocessor>(std::move(item)));
-        }
     }
 
-} // namespace ocr
+    void
+    HueThreshold::apply(Image &img) const
+    {
+        auto &tmp = img.getCurrentMatrix();
+        auto value = tmp.clone();
+        cv::Scalar avg, avgStd;
+        cv::meanStdDev(tmp, avg, avgStd);
+        int thresh = (int)avg[0]-7*(int)(avgStd[0]/8);
+        cv::threshold(tmp, value, thresh, 255, cv::THRESH_BINARY_INV);
+        img.setMatrix("Threshold", std::move(value));
+        // Dans l'ordre je load mes images sous differents formats
+        //
+        // smooth
+        // je calcule average value and standard deviation of array elements
+        // J'applique un threshold avec pour paramettres : (int)avg.val[0]-7*(int)(avgStd.val[0]/8),
+        // 255, CV_THRESH_BINARY_INV
+        // Erode puis dilate
+        // Ensuite je fais un findContours
+        // puis un approxPolyDP pour optimiser les contours
+        // Ensuite regarder pour les moments au niveau de la feature extraction
+    }
+} /* namespace ocr */
+
+extern "C" {
+    ocr::HueThreshold *constructor() {
+        return new ocr::HueThreshold();
+    }
+}
+

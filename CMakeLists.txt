@@ -30,11 +30,17 @@ set(APP_SOURCES
     ./src/Brain.cpp
     ./src/utils/json/json.cpp
     ./src/PreprocessorManager.cpp
+)
+
+set(IMG_LIB_SOURCES
     ./src/Image.cpp
 )
 
 add_executable(ocr ${APP_SOURCES} $<TARGET_OBJECTS:OBJECTS>)
+add_library(image SHARED ${IMG_LIB_SOURCES})
+target_link_libraries(image ${OpenCV_LIBS})
 
-target_link_libraries(ocr ${OpenCV_LIBS})
-
+target_link_libraries(ocr ${OpenCV_LIBS} image)
 add_subdirectory(./tests)
+add_subdirectory(./src)
+

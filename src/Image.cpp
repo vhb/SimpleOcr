@@ -24,34 +24,34 @@
 
 namespace ocr {
 
-    Image::Image(std::string &&image_path, bool lazy)
-        : m_img_path(image_path)
+    Image::Image(std::string &&image_path)
     {
-        if (not lazy)
-            this->load();
+        this->load(std::move(image_path));
     }
 
-    Image::Image(std::string &&image_path, cv::Mat &&matrix)
-        : m_img_path(image_path), m_matrix(matrix)
+    Image::Image(cv::Mat &&matrix)
+        : m_currentMatrix(matrix)
     {
+        m_matrices["origin"] = matrix;
     }
 
     Image &&
     Image::subImage(cv::Rect &&r)
     {
-        cv::Mat sub_matrix = m_matrix(r);
-        m_matrix.copyTo(sub_matrix);
-        return std::move(Image(std::move(m_img_path), std::move(sub_matrix)));
+        cv::Mat sub_matrix = m_currentMatrix(r);
+        m_currentMatrix.copyTo(sub_matrix);
+        return std::move(Image(std::move(sub_matrix)));
     }
 
     void
-    Image::load()
+    Image::load(std::string &&img_path)
     {
-        cv::Mat image = cv::imread(m_img_path, 1);
+        cv::Mat image = cv::imread(img_path, 1);
         if (image.empty()) {
             throw std::runtime_error("Canno't read image");
         }
-        m_matrix = image;
+        m_currentMatrix = image;
+        m_matrices["origin"] = image;
     }
 
     void
@@ -60,7 +60,26 @@ namespace ocr {
         std::vector<int> compression_params;
         compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
         compression_params.push_back(9);
-        imwrite(dest_path, m_matrix, compression_params);
+        cv::imwrite(dest_path, m_currentMatrix, compression_params);
+    }
+
+    void
+    Image::setMatrix(std::string &&matrixName, cv::Mat &&mat)
+    {
+        m_currentMatrix = mat;
+        m_matrices[matrixName] = mat;
+    }
+
+    cv::Mat &
+    Image::getCurrentMatrix()
+    {
+        return m_currentMatrix;
+    }
+
+    cv::Mat const &
+    Image::getCurrentMatrix() const
+    {
+        return m_currentMatrix;
     }
 
 } // namespace ocr
