@@ -21,6 +21,13 @@
 
 #pragma once
 
+#ifdef __APPLE__
+#define EXT = std::string(".dylib")
+#else
+#define EXT std::string(".so")
+#endif
+
+
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -74,7 +81,7 @@ namespace utils {
 
                 void *
                 load(std::string &&lib_path) {
-                    Handle value = value = dlopen((lib_path + std::string(".dylib")).c_str(), RTLD_LAZY);
+                    Handle value = dlopen((lib_path + EXT).c_str(), RTLD_LAZY);
                     if (not value)
                         throw std::runtime_error(dlerror());
                     m_handles.push_back(value);
