@@ -19,3 +19,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g3")
 add_library(koala SHARED ${KOALA_SOURCE})
 add_library(panda SHARED ${PANDA_SOURCE})
 set(EXECUTABLE_OUTPUT_PATH .)
+

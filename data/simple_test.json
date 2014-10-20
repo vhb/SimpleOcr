@@ -1,0 +1,34 @@
+{
+    "preprocessors": [
+        {
+            "path": "libhuethreshold",
+            "args": {}
+        },
+        {
+            "path": "libsmooth",
+            "args": {}
+        },
+        {
+            "path": "libmorphologicfilter  ",
+            "args": {}
+        }
+    ],
+    "segmenter": {
+        "path": "segmenter.so",
+        "args": {}
+    },
+    "feature_extractor": {
+        "path": "feature_extractor.so",
+        "args": {}
+    },
+    "classifier": {
+        "path": "classifier.so",
+        "args": {
+            "dataset": {
+                "path_to_data": "data_category",
+                "path_to_other_data": "other_data_category"
+            }
+        }
+    }
+}
+

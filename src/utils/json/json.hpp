@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <iostream>
 #include <fstream>
 #include <string>
 
@@ -76,6 +77,10 @@ namespace utils {
             Item parse(std::string &&str);
             Item load(std::string &&filename);
             Item load(std::ifstream &is);
+
+            ~Json() {
+                std::cout << "Json::~Json()" << std::endl;
+            }
 
         private:
             Item m_content;

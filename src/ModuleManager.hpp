@@ -32,7 +32,9 @@ namespace ocr {
 
         public:
             ModuleManager() = default;
-            ~ModuleManager() = default;
+            ~ModuleManager() {
+                std::cout << "ModuleManager::~ModuleManager" << std::endl;
+            }
 
             ModuleManager(ModuleManager const &) = delete;
             ModuleManager &operator=(ModuleManager const &) = delete;

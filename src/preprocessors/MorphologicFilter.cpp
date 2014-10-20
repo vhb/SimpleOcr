@@ -23,7 +23,7 @@
 
 namespace ocr {
     void
-    MorphologicFilter::apply(Image &img)
+    MorphologicFilter::apply(Image &img) const
     {
         auto &tmp = img.getCurrentMatrix();
         auto value = tmp.clone();
@@ -32,3 +32,9 @@ namespace ocr {
         //cv::dilate(value, value, NULL, 1);
     }
 } /* namespace ocr */
+
+extern "C" {
+    ocr::MorphologicFilter *constructor() {
+        return new ocr::MorphologicFilter();
+    }
+}

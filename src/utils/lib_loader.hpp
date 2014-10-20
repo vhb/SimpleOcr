@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <vector>
+#include <iostream>
 #include <utility>
 #include <dlfcn.h>
 #include <string>
@@ -31,14 +32,26 @@ namespace utils {
     class LibLoader {
         public:
             template <typename InstanceType, typename... Params>
-            InstanceType load(std::string &&lib_path, Params... p) {
-                typedef InstanceType (*Jumper)(Params...);
-                Jumper l = reinterpret_cast<Jumper>(m_internal.load(std::move(lib_path)));
-                return l(p...);
+            InstanceType &&load(std::string &&lib_path, Params... p) {
+                try {
+                    typedef InstanceType (*Jumper)(Params...);
+                    Jumper l = reinterpret_cast<Jumper>(
+                        m_internal.load(std::move(lib_path))
+                        );
+                    std::cout << reinterpret_cast<void *>(l) << std::endl;
+                    auto &&value = l(p...);
+                    std::cout << value << std::endl;
+                    return std::move(value);
+                }
+                catch (std::exception &e) {
+                    std::cout << e.what() << std::endl;
+                    throw;
+                }
             }
 
         private:
             struct Internal {
+
                 typedef void * Handle;
 
                 Internal() = default;

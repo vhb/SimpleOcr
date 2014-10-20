@@ -28,6 +28,6 @@ namespace ocr {
         : public IPreprocessor
     {
         virtual ~MorphologicFilter() noexcept {}
-        virtual void apply(Image &img);
+        virtual void apply(Image &img) const;
     };
 } /* namespace ocr */
