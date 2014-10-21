@@ -31,12 +31,7 @@ namespace ocr {
     class PreprocessorManager : private ModuleManager {
         public:
             typedef std::vector<std::shared_ptr<IPreprocessor>> PreprocessorList;
-            //~PreprocessorManager() {
-                //for (auto i: m_preprocessors) {
-                    //std::cout << i.get() << std::endl;
-                //}
-            //}
-
+            ~PreprocessorManager() = default;
             // In fact except a std::vector<std::string>
             void load_preprocessor(std::vector<utils::Json::Item> &&preprocessor_list);
 

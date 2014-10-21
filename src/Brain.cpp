@@ -22,34 +22,35 @@
 #include <Brain.hpp>
 #include <utility>
 
-//#include <
-
 namespace ocr {
 
 Brain::Brain(std::string &&json_path)
 {
     auto datas = JSON_CAST(Map, m_json.load(std::move(json_path)));
 
-    try {
-        if (std::string(datas["preprocessors"].type().name()) == "v")
-            throw std::runtime_error("No preprocessors in json");
-        m_preprocessorManager.load_preprocessor(JSON_CAST(Vector, datas["preprocessors"]));
-    }
-    catch (std::exception &e) {
-        //std::cout << "brain " << e.what() << std::endl;
-    }
+    if (std::string(datas["preprocessors"].type().name()) == "v")
+        throw std::runtime_error("No preprocessors in json");
+    m_preprocessorManager.load_preprocessor(
+            JSON_CAST(Vector, datas["preprocessors"])
+            );
 
-    //if (std::string(datas["segmenter"].type().name()) == "v")
-        //throw std::runtime_error("No segmenter in json");
-    //m_segmenter = m_moduleManager.load_module<ISegmenter>(JSON_CAST(Map, datas["segmenter"]));
+    if (std::string(datas["segmenter"].type().name()) == "v")
+        throw std::runtime_error("No segmenter in json");
+    m_segmenter = m_moduleManager.load_module<ISegmenter>(
+            JSON_CAST(Map, datas["segmenter"])
+            );
 
-    //if (std::string(datas["feature_extractor"].type().name()) == "v")
-        //throw std::runtime_error("No feature_extractor in json");
-    //m_featureExtractor = m_moduleManager.load_module<IFeatureExtractor>(JSON_CAST(Map, datas["feature_extractor"]));
+    if (std::string(datas["feature_extractor"].type().name()) == "v")
+        throw std::runtime_error("No feature_extractor in json");
+    m_featureExtractor = m_moduleManager.load_module<IFeatureExtractor>(
+            JSON_CAST(Map, datas["feature_extractor"])
+            );
 
-    //if (std::string(datas["classifier"].type().name()) == "v")
-        //throw std::runtime_error("No classifier in json");
-    //m_classifier = m_moduleManager.load_module<IClassifier>(JSON_CAST(Map, datas["classifier"]));
+    if (std::string(datas["classifier"].type().name()) == "v")
+        throw std::runtime_error("No classifier in json");
+    m_classifier = m_moduleManager.load_module<IClassifier>(
+            JSON_CAST(Map, datas["classifier"])
+            );
 }
 
 Brain::~Brain() noexcept

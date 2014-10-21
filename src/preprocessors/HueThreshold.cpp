@@ -25,7 +25,6 @@
 namespace ocr {
     HueThreshold::~HueThreshold() noexcept
     {
-        std::cout << "HueThreshold::~HueThreshold()" << std::endl;
     }
 
     void

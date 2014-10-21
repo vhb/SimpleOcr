@@ -49,11 +49,11 @@ namespace ocr {
 
         private:
             PreprocessorManager                  m_preprocessorManager;
-            //std::shared_ptr<ISegmenter>          m_segmenter;
-            //std::shared_ptr<IFeatureExtractor>   m_featureExtractor;
-            //std::shared_ptr<IClassifier>         m_classifier;
+            std::shared_ptr<ISegmenter>          m_segmenter;
+            std::shared_ptr<IFeatureExtractor>   m_featureExtractor;
+            std::shared_ptr<IClassifier>         m_classifier;
 
             utils::Json                         m_json;
-            //ModuleManager                       m_moduleManager;
+            ModuleManager                       m_moduleManager;
     };
 }

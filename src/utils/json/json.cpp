@@ -274,7 +274,6 @@ namespace utils {
                         k += 2;
                         j = k;
                         Json::Item vv = _parse(std::move(v), k, j);
-                        //std::cout << vv.type().name() << std::endl;
                         tmp[key] = vv;
                         k = j;
                         if (v[k].type == Token::T_COMMA)

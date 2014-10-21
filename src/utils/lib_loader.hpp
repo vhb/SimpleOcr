@@ -22,7 +22,7 @@
 #pragma once
 
 #ifdef __APPLE__
-#define EXT = std::string(".dylib")
+#define EXT std::string(".dylib")
 #else
 #define EXT std::string(".so")
 #endif
@@ -40,20 +40,12 @@ namespace utils {
         public:
             template <typename InstanceType, typename... Params>
             InstanceType &&load(std::string &&lib_path, Params... p) {
-                try {
-                    typedef InstanceType (*Jumper)(Params...);
-                    Jumper l = reinterpret_cast<Jumper>(
+                typedef InstanceType (*Jumper)(Params...);
+                Jumper l = reinterpret_cast<Jumper>(
                         m_internal.load(std::move(lib_path))
                         );
-                    std::cout << reinterpret_cast<void *>(l) << std::endl;
-                    auto &&value = l(p...);
-                    std::cout << value << std::endl;
-                    return std::move(value);
-                }
-                catch (std::exception &e) {
-                    std::cout << e.what() << std::endl;
-                    throw;
-                }
+                auto &&value = l(p...);
+                return std::move(value);
             }
 
         private:
