@@ -33,6 +33,7 @@ namespace ocr {
     class Image
     {
         public:
+            Image() = default;
             Image(std::string &&image_path);
             Image(cv::Mat &&matrix);
             ~Image() = default;
@@ -41,7 +42,7 @@ namespace ocr {
             Image &operator=(Image &&) = default;
 
             void writeImage(std::string &&dest_path);
-            Image &&subImage(cv::Rect &&r);
+            Image subImage(cv::Rect &&r);
             void setMatrix(std::string &&id, cv::Mat &&mat);
             cv::Mat &getCurrentMatrix();
             cv::Mat const &getCurrentMatrix() const;

@@ -35,12 +35,12 @@ namespace ocr {
         m_matrices["origin"] = matrix;
     }
 
-    Image &&
+    Image
     Image::subImage(cv::Rect &&r)
     {
         cv::Mat sub_matrix = m_currentMatrix(r);
         m_currentMatrix.copyTo(sub_matrix);
-        return std::move(Image(std::move(sub_matrix)));
+        return Image(std::move(sub_matrix));
     }
 
     void

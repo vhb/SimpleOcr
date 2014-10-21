@@ -14,7 +14,7 @@
         }
     ],
     "segmenter": {
-        "path": "segmenter.so",
+        "path": "libContoursSegmenter",
         "args": {}
     },
     "feature_extractor": {

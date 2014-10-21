@@ -41,19 +41,22 @@ namespace ocr {
 
         public:
             Brain(std::string &&json_path);
-            ~Brain() noexcept;
+            ~Brain() ;
 
             bool train();
             //void train(std::string &&dataset_path);
             std::vector<std::string> &&apply(std::string &&image_path) const;
 
         private:
+            // The ordre is important here: the modulemanager destructor realease
+            //      The shared library used by the segment, etc..
+            // This is a design flow, it may need fix, but it work
+            ModuleManager                       m_moduleManager;
             PreprocessorManager                  m_preprocessorManager;
             std::shared_ptr<ISegmenter>          m_segmenter;
             std::shared_ptr<IFeatureExtractor>   m_featureExtractor;
             std::shared_ptr<IClassifier>         m_classifier;
 
             utils::Json                         m_json;
-            ModuleManager                       m_moduleManager;
     };
 }

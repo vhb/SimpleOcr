@@ -38,14 +38,15 @@
 namespace utils {
     class LibLoader {
         public:
+            ~LibLoader() { }
             template <typename InstanceType, typename... Params>
-            InstanceType &&load(std::string &&lib_path, Params... p) {
+            InstanceType load(std::string &&lib_path, Params... p) {
                 typedef InstanceType (*Jumper)(Params...);
                 Jumper l = reinterpret_cast<Jumper>(
                         m_internal.load(std::move(lib_path))
                         );
-                auto &&value = l(p...);
-                return std::move(value);
+                auto value = l(p...);
+                return value;
             }
 
         private:
@@ -78,8 +79,9 @@ namespace utils {
                         throw std::runtime_error(dlerror());
                     m_handles.push_back(value);
                     Handle func_ptr = dlsym(value, "constructor");
-                    if (not func_ptr)
+                    if (not func_ptr) {
                         throw std::runtime_error(dlerror());
+                    }
                     return func_ptr;
                 }
 
