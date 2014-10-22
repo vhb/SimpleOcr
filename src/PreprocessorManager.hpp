@@ -35,9 +35,9 @@ namespace ocr {
             // In fact except a std::vector<std::string>
             void load_preprocessor(std::vector<utils::Json::Item> &&preprocessor_list);
 
-            bool apply(Image &&img) const;
-            PreprocessorList &&get_preprocessors() const;
-            std::shared_ptr<IPreprocessor *> &&get_preprocessor(std::string &&name);
+            bool apply(Image &img) const;
+            PreprocessorList const &get_preprocessors() const;
+            std::shared_ptr<IPreprocessor> const &get_preprocessor(std::string &&name) const;
 
         private:
             PreprocessorList m_preprocessors;

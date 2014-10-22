@@ -29,8 +29,7 @@ int main(int ac, char * const av[]) {
             return 1;
         }
         Brain brain(av[2]);
-        std::cout << "coucou" << std::endl;
-        //brain.apply(av[1]);
+        brain.apply(av[1]);
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

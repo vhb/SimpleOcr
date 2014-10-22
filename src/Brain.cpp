@@ -67,6 +67,9 @@ Brain::train() {
 
 std::vector<std::string> &&
 Brain::apply(std::string &&imagePath) const {
+    auto img = Image(std::move(imagePath));
+    m_preprocessorManager.apply(img);
+    m_segmenter->apply(std::move(img));
 #warning "TODO: Brain::apply"
     return std::move(std::vector<std::string>());
 }

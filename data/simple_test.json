@@ -11,6 +11,10 @@
         {
             "path": "libmorphologicfilter",
             "args": {}
+        },
+        {
+            "path": "libgrayimg",
+            "args": {}
         }
     ],
     "segmenter": {
