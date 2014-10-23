@@ -28,29 +28,39 @@ namespace ocr {
     std::vector<Image>
     ContoursSegmenter::apply(Image&& img) const
     {
+        std::cout << "applying ContoursSegmenter" << std::endl;
         std::vector<std::vector<cv::Point> > contours;
-        cv::Mat contourOutput = img.getCurrentMatrix().clone();
+        cv::Mat m = img.getCurrentMatrix();
+        cv::Mat contourOutput = m.clone();
         cv::findContours(contourOutput,
                          contours,
-                         cv::RETR_LIST,
-                         cv::CHAIN_APPROX_NONE);
+                         cv::RETR_EXTERNAL,
+                         cv::CHAIN_APPROX_SIMPLE,
+                         cv::Point(0, 0));
 
         std::vector<std::vector<cv::Point>> approxCurve(contours.size());
-        std::cout << contours.size() << std::endl;
-        //cv::approxPolyDP(contourOutput, approxCurve, 3, true);
 
         std::vector<Image> value(contours.size());
-        for (std::size_t i = 0; i < contours.size(); ++i) {
-            auto rect = cv::boundingRect(cv::Mat(approxCurve[i]));
-            std::cout << i << "\t" << contours.size() << std::endl;
+        for (std::size_t i = 0; i < contours.size();  ++i) {
+            cv::approxPolyDP(contours[i], approxCurve[i], 1, true);
+            auto rect = cv::boundingRect(cv::Mat(contours[i]));
+            cv::Point pt1, pt2;
+            pt1.x = rect.x;
+            pt2.x = rect.x + rect.width;
+            pt1.y = rect.y;
+            pt2.y = rect.y + rect.height;
+            auto color = CV_RGB(255, 255, 255);
+            cv::rectangle(, pt1, pt2, color, 1, 8, 0);
             value[i] = img.subImage(std::move(rect));
-            std::cout << "end" << std::endl;
         }
-        //for (std::size_t i = 0; i < approxCurve.size(); ++i) {
-            //auto rect = cv::boundingRect(cv::Mat(approxCurve[i]));
-            //value[i] = img.subImage(std::move(rect));
-        //}
-        return value;
+        img.setMatrix("contourOutput", std::move(contourOutput));
+        return std::vector<Image>();
+    }
+
+    char const *
+    ContoursSegmenter::name() const
+    {
+        return "ContoursSegmenter";
     }
 
 } /* namespace ocr */

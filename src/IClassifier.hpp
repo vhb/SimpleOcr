@@ -23,9 +23,12 @@
 #pragma once
 
 #include <Dataset.hpp>
+#include <IPlugin.hpp>
 
 namespace ocr {
-    class IClassifier {
+    class IClassifier
+        : public IPlugin
+    {
         public:
             virtual ~IClassifier() noexcept {}
             virtual std::string &&classify() const = 0;

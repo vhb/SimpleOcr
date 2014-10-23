@@ -27,10 +27,10 @@ namespace ocr {
         : public ISegmenter
     {
         public:
-            virtual ~ContoursSegmenter() noexcept {
-            }
+            virtual ~ContoursSegmenter() noexcept {}
 
             virtual std::vector<Image> apply(Image &&img) const;
+            virtual char const *name() const;
     };
 
 } /* namespace ocr */

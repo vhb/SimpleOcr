@@ -26,6 +26,7 @@ namespace ocr {
         : public IPreprocessor
     {
         virtual ~GrayImg() noexcept {}
-        void apply(Image &img) const;
+        virtual void apply(Image &img) const;
+        virtual char const *name() const;
     };
 } /* namespace ocr */

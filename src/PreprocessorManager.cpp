@@ -39,7 +39,9 @@ namespace ocr {
     bool
     PreprocessorManager::apply(Image &img) const
     {
+        std::cout << "Preprocessor" << std::endl;
         for (auto const &i : m_preprocessors) {
+            std::cout << "\t Applying: " << i->name() << std::endl;
             i->apply(img);
         }
         return true;
@@ -54,7 +56,10 @@ namespace ocr {
     std::shared_ptr<IPreprocessor> const &
     PreprocessorManager::get_preprocessor(std::string &&name) const
     {
-#warning "get_preprocessor(name) not implemented yet"
+        return *std::find_if(m_preprocessors.begin(), m_preprocessors.end(),
+                         [&] (auto &it) {
+                            return it->name() == name;
+                         });
     }
 
 } // namespace ocr

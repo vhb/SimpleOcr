@@ -30,7 +30,13 @@ namespace ocr {
         cv::Mat dest = mat.clone();
         cv::Size blurKernel(3, 3);
         cv::blur(mat, dest, blurKernel, cv::Point(-1, -1));
-        img.setMatrix("bluredMatrix", std::move(dest));
+        img.setMatrix("Smooth", std::move(dest));
+    }
+
+    char const *
+    Smooth::name() const
+    {
+        return "Smooth";
     }
 
 } /* namespace ocr */

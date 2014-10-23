@@ -5,9 +5,9 @@ project(machine_learning_ocr)
 # Settings
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 if (APPLE)
-    set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++0x -g3")
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++1y -g3")
 else()
-    set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++0x -g3 -ldl")
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++1y -g3 -ldl")
 endif()
 
 find_package("OpenCV")

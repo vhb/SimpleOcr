@@ -1,7 +1,7 @@
 {
     "preprocessors": [
         {
-            "path": "libhuethreshold",
+            "path": "libgrayimg",
             "args": {}
         },
         {
@@ -9,13 +9,13 @@
             "args": {}
         },
         {
-            "path": "libmorphologicfilter",
+            "path": "libhuethreshold",
             "args": {}
         },
         {
-            "path": "libgrayimg",
+            "path": "libmorphologicfilter",
             "args": {}
-        }
+        },
     ],
     "segmenter": {
         "path": "libContoursSegmenter",

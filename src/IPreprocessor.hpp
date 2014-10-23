@@ -23,10 +23,13 @@
 #pragma once
 
 #include <Image.hpp>
+#include <IPlugin.hpp>
 
 namespace ocr {
 
-    class IPreprocessor {
+    class IPreprocessor
+        : public IPlugin
+    {
         public:
             virtual ~IPreprocessor() noexcept {}
             virtual void apply(Image &) const = 0;

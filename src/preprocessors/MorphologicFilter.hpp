@@ -29,5 +29,6 @@ namespace ocr {
     {
         virtual ~MorphologicFilter() noexcept {}
         virtual void apply(Image &img) const;
+        virtual char const *name() const;
     };
 } /* namespace ocr */

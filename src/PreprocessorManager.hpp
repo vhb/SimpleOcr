@@ -28,7 +28,9 @@
 
 namespace ocr {
 
-    class PreprocessorManager : private ModuleManager {
+    class PreprocessorManager
+        : private ModuleManager
+    {
         public:
             typedef std::vector<std::shared_ptr<IPreprocessor>> PreprocessorList;
             ~PreprocessorManager() = default;

@@ -48,6 +48,12 @@ namespace ocr {
         // puis un approxPolyDP pour optimiser les contours
         // Ensuite regarder pour les moments au niveau de la feature extraction
     }
+
+    char const *
+    HueThreshold::name() const
+    {
+        return "HueThreshold";
+    }
 } /* namespace ocr */
 
 extern "C" {

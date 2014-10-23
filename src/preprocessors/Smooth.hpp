@@ -28,5 +28,6 @@ namespace ocr {
         public:
             ~Smooth() noexcept {}
             void apply(Image &) const;
+            char const *name() const;
     };
 } /* namespace ocr */

@@ -32,6 +32,7 @@ namespace ocr {
         public:
             virtual ~HueThreshold() noexcept;
             virtual void apply(Image &) const;
+            virtual char const *name() const;
     };
 } /* namespace ocr */
 

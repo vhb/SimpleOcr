@@ -59,17 +59,21 @@ Brain::~Brain()
 }
 
 bool
-Brain::train() {
+Brain::train()
+{
 #warning "TODO: Brain::train"
     return false;
 }
 
 std::vector<std::string> &&
-Brain::apply(std::string &&imagePath) const {
+Brain::apply(std::string &&imagePath) const
+{
     auto img = Image(std::move(imagePath));
     m_preprocessorManager.apply(img);
+    std::cout << "Segmentation" << std::endl;
+    std::cout << "\tApply " << m_segmenter->name() << std::endl;
     m_segmenter->apply(std::move(img));
-#warning "TODO: Brain::apply"
+    img.writeImage();
     return std::move(std::vector<std::string>());
 }
 

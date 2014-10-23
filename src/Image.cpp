@@ -37,7 +37,6 @@ namespace ocr {
 
     Image::~Image()
     {
-        writeImage();
     }
 
     Image
@@ -45,7 +44,8 @@ namespace ocr {
     {
         cv::Mat sub_matrix = m_currentMatrix(r);
         m_currentMatrix.copyTo(sub_matrix);
-        return Image(std::move(sub_matrix));
+        auto value = Image(std::move(sub_matrix));
+        return value;
     }
 
     void
@@ -66,7 +66,9 @@ namespace ocr {
             std::vector<int> compression_params;
             compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
             compression_params.push_back(9);
-            cv::imwrite(dest_path + i.first + std::string(".png"),
+            auto tmp = dest_path + i.first + std::string(".png");
+            std::cout << "writting image " << tmp << std::endl;
+            cv::imwrite(tmp,
                         i.second,
                         compression_params);
         }

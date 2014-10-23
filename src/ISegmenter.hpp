@@ -24,9 +24,12 @@
 
 #include <vector>
 #include <Image.hpp>
+#include <IPlugin.hpp>
 
 namespace ocr {
-    class ISegmenter {
+    class ISegmenter
+        : public IPlugin
+    {
         public:
             virtual ~ISegmenter() noexcept {}
             virtual std::vector<Image> apply(Image &&img) const = 0;
