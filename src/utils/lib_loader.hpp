@@ -39,6 +39,7 @@ namespace utils {
     class LibLoader {
         public:
             ~LibLoader() { }
+
             template <typename InstanceType, typename... Params>
             InstanceType load(std::string &&lib_path, Params... p) {
                 typedef InstanceType (*Jumper)(Params...);

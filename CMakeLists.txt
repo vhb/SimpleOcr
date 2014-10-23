@@ -12,20 +12,10 @@ endif()
 
 find_package("OpenCV")
 
-message("${OpenCV_INCLUDE_PATH}")
-message("${OPENCV_FOUND}")
-message("${OpenCV_LIBS}")
-
 include_directories(
     ./src
     ${OPENCV2_INCLUDE_DIR}
 )
-
-set(
-    LIB_SOURCES
-)
-
-add_library(OBJECTS OBJECT ${LIB_SOURCES})
 
 # OpenCV application
 
@@ -40,7 +30,7 @@ set(IMG_LIB_SOURCES
     ./src/Image.cpp
 )
 
-add_executable(ocr ${APP_SOURCES} $<TARGET_OBJECTS:OBJECTS>)
+add_executable(ocr ${APP_SOURCES} )
 add_library(image SHARED ${IMG_LIB_SOURCES})
 target_link_libraries(image ${OpenCV_LIBS})
 

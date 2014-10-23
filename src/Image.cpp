@@ -35,6 +35,11 @@ namespace ocr {
         m_matrices["origin"] = matrix;
     }
 
+    Image::~Image()
+    {
+        writeImage();
+    }
+
     Image
     Image::subImage(cv::Rect &&r)
     {
@@ -57,10 +62,14 @@ namespace ocr {
     void
     Image::writeImage(std::string &&dest_path)
     {
-        std::vector<int> compression_params;
-        compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
-        compression_params.push_back(9);
-        cv::imwrite(dest_path, m_currentMatrix, compression_params);
+        for (auto const &i : m_matrices) {
+            std::vector<int> compression_params;
+            compression_params.push_back(cv::IMWRITE_PNG_COMPRESSION);
+            compression_params.push_back(9);
+            cv::imwrite(dest_path + i.first + std::string(".png"),
+                        i.second,
+                        compression_params);
+        }
     }
 
     void
