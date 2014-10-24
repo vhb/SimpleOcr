@@ -50,7 +50,7 @@ namespace ocr {
             pt1.y = rect.y;
             pt2.y = rect.y + rect.height;
             auto color = CV_RGB(255, 255, 255);
-            cv::rectangle(, pt1, pt2, color, 1, 8, 0);
+            cv::rectangle(contourOutput, pt1, pt2, color, 1, 8, 0);
             value[i] = img.subImage(std::move(rect));
         }
         img.setMatrix("contourOutput", std::move(contourOutput));
