@@ -107,7 +107,7 @@ namespace utils {
     };
 
     inline std::ostream & operator<<(std::ostream &is, Json::Token::Type t) {
-        char const * v[] = { "T_UNDEFINDED", "T_STRING",
+        static char const * v[] = { "T_UNDEFINDED", "T_STRING",
             "T_INT", "T_FLOAT", "T_LEFT_BRACE", "T_RIGHT_BRACE", "T_RIGHT_BRACKET",
             "T_LEFT_BRACKET", "T_COLON", "T_COMMA", "T_BOOLEAN", "T_NULL" };
         std::string value = v[static_cast<int>(t)];

@@ -6,9 +6,5 @@ SET(JSON_TEST_SOURCES
     ../../src/utils/json/json.cpp
     )
 
-#INCLUDE_DIRECTORIES(
-
-#)
-
 ADD_EXECUTABLE(ocr_test_json ${JSON_TEST_SOURCES})
 
