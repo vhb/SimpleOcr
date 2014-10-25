@@ -19,26 +19,34 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#pragma once
-
-#include <opencv2/opencv.hpp>
+#include <utils/json/json.hpp>
+#include <Dataset.hpp>
 
 namespace ocr {
 
-    // implement a range enumerable dataset
-    class Dataset {
-        public:
-            typedef std::tuple<std::string, cv::Mat> Data;
+	Dataset::Dataset(std::string &&json_path)
+	: m_json_path(json_path) {
+		auto json = utils::Json();
+		auto datas = JSON_CAST(Map, json.load(std::move(json_path)));
+		for (auto data : datas) {
+			auto key = data.first;
+			auto value = data.second;
+			m_datas.push_back(Data(key, cv::imread(JSON_CAST(String, value), 1)));
+		}
+	}
 
-            // Load the data described in `json_path`
-            Dataset(std::string &&json_path);
-            ~Dataset() noexcept;
+	Dataset::~Dataset() noexcept {}
 
-            std::vector<Data> const &get_datas() const;
-            std::string const &get_json_path() const;
+	std::vector<Dataset::Data> const &
+	Dataset::get_datas() const {
+		return m_datas;
+	}
 
-        private:
-            std::string m_json_path;
-            std::vector<Data> m_datas;
-    };
+
+	std::string const &
+	Dataset::get_json_path() const {
+		return m_json_path;
+	}
+
+
 }
