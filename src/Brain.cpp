@@ -28,16 +28,16 @@ Brain::Brain(std::string &&json_path)
 {
     auto datas = JSON_CAST(Map, m_json.load(std::move(json_path)));
 
-    if (std::string(datas["preprocessors"].type().name()) == "v")
+    if (!datas["preprocessors"])
         throw std::runtime_error("No preprocessors in json");
     m_preprocessorManager.load_preprocessor(
-            JSON_CAST(Vector, datas["preprocessors"])
+            std::move(JSON_CAST(Vector, datas["preprocessors"]))
             );
 
-    if (std::string(datas["segmenter"].type().name()) == "v")
+    if (!datas["segmenter"])
         throw std::runtime_error("No segmenter in json");
     m_segmenter = m_moduleManager.load_module<ISegmenter>(
-            JSON_CAST(Map, datas["segmenter"])
+            std::move(JSON_CAST(Map, datas["segmenter"]))
             );
 
     // if (std::string(datas["feature_extractor"].type().name()) == "v")

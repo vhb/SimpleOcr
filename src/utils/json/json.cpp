@@ -22,7 +22,6 @@
 
 #include "json.hpp"
 #include <iostream>
-#include <boost/lexical_cast.hpp>
 
 #warning "TODO: handle comments"
 
@@ -251,12 +250,12 @@ namespace utils {
 
     Json::Item
     Json::parse_int(std::string &&s) const {
-        return Json::Item(boost::lexical_cast<int>(s));
+        return Json::Item(std::stoi(s));
     }
 
     Json::Item
     Json::parse_float(std::string &&s) const {
-        return Json::Item(boost::lexical_cast<float>(s));
+        return Json::Item(std::stoi(s));
     }
 
     Json::Item
@@ -324,7 +323,7 @@ namespace utils {
 
             {
                 case Token::T_UNDEFINDED:
-                    current = "undefined";
+                    current = std::string("undefined");
                     r = i + 1;
                     break;
             }

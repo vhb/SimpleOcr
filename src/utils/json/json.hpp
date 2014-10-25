@@ -21,13 +21,14 @@
 
 #pragma once
 
-#include <boost/any.hpp>
+//#include <boost/any.hpp>
 
 #include <vector>
 #include <unordered_map>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "any.hpp"
 
 #define JSON_CAST(TYPE, OBJ) utils::Json::cast<utils::Json::TYPE>(OBJ)
 
@@ -37,11 +38,11 @@ namespace utils {
         public:
             template <typename TypeTo, typename... Args>
             static auto cast(Args&&... args) ->
-                    decltype(boost::any_cast<TypeTo>(std::forward<Args>(args)...)) {
-                return boost::any_cast<TypeTo>(std::forward<Args>(args)...);
+                    decltype(any_cast<TypeTo>(std::forward<Args>(args)...)) {
+                return any_cast<TypeTo>(std::forward<Args>(args)...);
             }
 
-            typedef boost::any Item;
+            typedef Any Item;
             typedef std::unordered_map<std::string, Item> Map;
             typedef std::vector<Item> Vector;
             typedef int Int;
