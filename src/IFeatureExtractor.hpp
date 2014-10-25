@@ -22,6 +22,7 @@
 #pragma once
 
 #include <IPlugin.hpp>
+#include <Image.hpp>
 
 namespace ocr {
     class IFeatureExtractor

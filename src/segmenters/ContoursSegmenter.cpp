@@ -25,7 +25,7 @@
 
 namespace ocr {
 
-    std::vector<Image>
+    ssize_t
     ContoursSegmenter::apply(Image&& img) const
     {
         std::cout << "applying ContoursSegmenter" << std::endl;
@@ -39,8 +39,8 @@ namespace ocr {
                          cv::Point(0, 0));
 
         std::vector<std::vector<cv::Point>> approxCurve(contours.size());
-
-        for (std::size_t i = 0; i < contours.size();  ++i) {
+        std::size_t i;
+        for (i = 0; i < contours.size();  ++i) {
             cv::approxPolyDP(contours[i], approxCurve[i], 1, true);
             auto rect = cv::boundingRect(cv::Mat(contours[i]));
             cv::Point pt1, pt2;
@@ -53,7 +53,7 @@ namespace ocr {
             img.addSubMatrix(std::move(rect));
         }
         img.setMatrix("contourOutput", std::move(contourOutput));
-        return std::vector<Image>();
+        return i;
     }
 
     char const *

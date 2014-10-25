@@ -1,4 +1,4 @@
-// Simple OCR program
+// Simple ocr
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -19,21 +19,26 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-#pragma once
-
-#include <vector>
-#include <Image.hpp>
-#include <IPlugin.hpp>
+#include "TestExtractor.hpp"
+#include <iostream>
 
 namespace ocr {
-    class ISegmenter
-        : public IPlugin
+    cv::Mat
+    TestExtractor::extract(Image &&, ssize_t) const
     {
-        public:
-            virtual ~ISegmenter() noexcept {}
+        std::cout << "extract" << std::endl;
+        return cv::Mat();
+    }
 
-            // return the number of sub matrices
-            virtual ssize_t apply(Image &&img) const = 0;
-    };
+    char const *
+    TestExtractor::name() const
+    {
+        return "TestExtractor";
+    }
 } /* namespace ocr */
+
+extern "C"
+ocr::TestExtractor *constructor() {
+    return new ocr::TestExtractor;
+}
+

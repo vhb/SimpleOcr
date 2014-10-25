@@ -40,29 +40,21 @@ Brain::Brain(std::string &&json_path)
             std::move(JSON_CAST(Map, datas["segmenter"]))
             );
 
-    // if (std::string(datas["feature_extractor"].type().name()) == "v")
-        // throw std::runtime_error("No feature_extractor in json");
-    // m_featureExtractor = m_moduleManager.load_module<IFeatureExtractor>(
-            // JSON_CAST(Map, datas["feature_extractor"])
-            // );
+    if (!datas["feature_extractor"])
+        throw std::runtime_error("No feature_extractor in json");
+    m_featureExtractor = m_moduleManager.load_module<IFeatureExtractor>(
+            std::move(JSON_CAST(Map, datas["feature_extractor"]))
+            );
 
-    // if (std::string(datas["classifier"].type().name()) == "v")
-        // throw std::runtime_error("No classifier in json");
-
-    // m_classifier = m_moduleManager.load_module<IClassifier>(
-            // JSON_CAST(Map, datas["classifier"])
-            // );
+    if (!datas["classifier"])
+        throw std::runtime_error("No classifier in json");
+    m_classifier = m_moduleManager.load_module<IClassifier>(
+            std::move(JSON_CAST(Map, datas["classifier"]))
+            );
 }
 
 Brain::~Brain()
 {
-}
-
-bool
-Brain::train()
-{
-#warning "TODO: Brain::train"
-    return false;
 }
 
 std::vector<std::string>
@@ -72,8 +64,18 @@ Brain::apply(std::string &&imagePath) const
     m_preprocessorManager.apply(img);
     std::cout << "Segmentation" << std::endl;
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
-    m_segmenter->apply(std::move(img));
-    // TODO: loop over all
+    std::cout << "Looping over sub matrices" << std::endl;
+    auto nb_subMatrix = m_segmenter->apply(std::move(img));
+    for (ssize_t i = 0; i < nb_subMatrix; ++i) {
+        auto subMatrix = img.getSubMatrix(i);
+        std::cout << "\t Feature extractor: " << m_featureExtractor->name()
+                  << std::endl;
+        auto features = m_featureExtractor->extract(std::move(img), i);
+        std::cout << "\t Classifier: " << m_classifier->name() << std::endl;
+        auto value = m_classifier->classify(std::move(features));
+        std::cout << "\t\tvalue: " << value << std::endl;
+        /*break;*/
+    }
     img.writeImage();
     return std::vector<std::string>();
 }

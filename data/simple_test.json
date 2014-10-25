@@ -18,15 +18,15 @@
         },
     ],
     "segmenter": {
-        "path": "libHistogramSegmenter",
+        "path": "libContoursSegmenter",
         "args": {}
     },
     "feature_extractor": {
-        "path": "feature_extractor.so",
+        "path": "libTestExtractor",
         "args": {}
     },
     "classifier": {
-        "path": "classifier.so",
+        "path": "libTestClassifier",
         "args": {
             "dataset": {
                 "path_to_data": "data_category",

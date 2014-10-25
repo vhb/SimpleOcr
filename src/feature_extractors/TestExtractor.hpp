@@ -1,4 +1,4 @@
-// Simple OCR program
+// Simple ocr
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -20,20 +20,16 @@
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#pragma once
-
-#include <vector>
-#include <Image.hpp>
-#include <IPlugin.hpp>
+#include "IFeatureExtractor.hpp"
 
 namespace ocr {
-    class ISegmenter
-        : public IPlugin
+
+    class TestExtractor
+        : public IFeatureExtractor
     {
         public:
-            virtual ~ISegmenter() noexcept {}
-
-            // return the number of sub matrices
-            virtual ssize_t apply(Image &&img) const = 0;
+            virtual ~TestExtractor() noexcept {}
+            virtual cv::Mat extract(Image &&img, ssize_t index) const;
+            virtual char const *name() const;
     };
 } /* namespace ocr */

@@ -31,7 +31,6 @@ namespace ocr {
     {
         public:
             virtual ~IClassifier() noexcept {}
-            virtual std::string &&classify() const = 0;
-            virtual bool train(Dataset &&) = 0;
+            virtual char classify(cv::Mat &&features) const = 0;
     };
 }

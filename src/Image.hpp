@@ -55,10 +55,6 @@ namespace ocr {
 
             cv::Mat m_currentMatrix;
             std::unordered_map<std::string, cv::Mat> m_matrices;
-
-            cv::Mat m_smooth;
-            cv::Mat m_threshold;
-            cv::Mat m_open_morf;
             std::vector<cv::Rect> m_subMatrices;
     };
 } // namespace ocr

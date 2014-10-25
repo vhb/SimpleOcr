@@ -1,4 +1,4 @@
-// Simple OCR program
+// Simple ocr
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -20,20 +20,28 @@
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#pragma once
-
-#include <vector>
-#include <Image.hpp>
-#include <IPlugin.hpp>
+#include "TestClassifier.hpp"
+#include <iostream>
 
 namespace ocr {
-    class ISegmenter
-        : public IPlugin
+    char
+    TestClassifier::classify(cv::Mat &&features) const
     {
-        public:
-            virtual ~ISegmenter() noexcept {}
+        std::cout << "TestClassifier" << std::endl;
+        return 'c';
+    }
 
-            // return the number of sub matrices
-            virtual ssize_t apply(Image &&img) const = 0;
-    };
+    char const *
+    TestClassifier::name() const
+    {
+        return "TestClassifier";
+    }
+
 } /* namespace ocr */
+
+extern "C"
+ocr::TestClassifier *constructor(){
+    auto value = new ocr::TestClassifier;
+    std::cout << "constructor classifier" << value << std::endl;
+    return value;
+}

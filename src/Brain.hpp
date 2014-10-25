@@ -23,6 +23,7 @@
 
 #include <vector>
 #include <memory>
+
 #include <utils/json/json.hpp>
 
 #include <ModuleManager.hpp>
@@ -43,7 +44,7 @@ namespace ocr {
             Brain(std::string &&json_path);
             ~Brain() ;
 
-            bool train();
+            void train();
             //void train(std::string &&dataset_path);
             std::vector<std::string> apply(std::string &&image_path) const;
 
