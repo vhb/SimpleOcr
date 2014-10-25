@@ -40,7 +40,6 @@ namespace ocr {
 
         std::vector<std::vector<cv::Point>> approxCurve(contours.size());
 
-        std::vector<Image> value(contours.size());
         for (std::size_t i = 0; i < contours.size();  ++i) {
             cv::approxPolyDP(contours[i], approxCurve[i], 1, true);
             auto rect = cv::boundingRect(cv::Mat(contours[i]));
@@ -51,7 +50,7 @@ namespace ocr {
             pt2.y = rect.y + rect.height;
             auto color = CV_RGB(255, 255, 255);
             cv::rectangle(contourOutput, pt1, pt2, color, 1, 8, 0);
-            value[i] = img.subImage(std::move(rect));
+            img.addSubMatrix(std::move(rect));
         }
         img.setMatrix("contourOutput", std::move(contourOutput));
         return std::vector<Image>();

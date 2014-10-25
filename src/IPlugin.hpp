@@ -1,4 +1,4 @@
-// Simple OCR program
+// Simple ocr
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,14 +21,11 @@
 
 #pragma once
 
-#include <IPlugin.hpp>
-
 namespace ocr {
-    class IFeatureExtractor
-        : public IPlugin
+    class IPlugin
     {
         public:
-            virtual ~IFeatureExtractor() noexcept {}
-            virtual cv::Mat extract(Image &&img, ssize_t index) const = 0;
+            virtual ~IPlugin() {}
+            virtual char const *name() const = 0;
     };
-}
+} // namespace ocr

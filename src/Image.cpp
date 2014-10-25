@@ -53,7 +53,7 @@ namespace ocr {
     {
         cv::Mat image = cv::imread(img_path, 1);
         if (image.empty()) {
-            throw std::runtime_error("Canno't read image");
+            throw std::runtime_error("Can't read image");
         }
         m_currentMatrix = image;
         m_matrices["origin"] = image;
@@ -79,6 +79,23 @@ namespace ocr {
     {
         m_currentMatrix = mat;
         m_matrices[matrixName] = mat;
+    }
+
+    ssize_t
+    Image::addSubMatrix(cv::Rect &&pos)
+    {
+        m_subMatrices.push_back(std::move(pos));
+        return m_subMatrices.size() - 1;
+    }
+
+    cv::Mat
+    Image::getSubMatrix(ssize_t id)
+    {
+        if (size_t(id) > m_subMatrices.size())
+            throw std::runtime_error("Invalid matrix id");
+        cv::Mat sub_matrix = m_currentMatrix(m_subMatrices[id]);
+        m_currentMatrix.copyTo(sub_matrix);
+        return sub_matrix;
     }
 
     cv::Mat &

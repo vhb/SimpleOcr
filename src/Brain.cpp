@@ -65,7 +65,7 @@ Brain::train()
     return false;
 }
 
-std::vector<std::string> &&
+std::vector<std::string>
 Brain::apply(std::string &&imagePath) const
 {
     auto img = Image(std::move(imagePath));
@@ -73,8 +73,9 @@ Brain::apply(std::string &&imagePath) const
     std::cout << "Segmentation" << std::endl;
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
     m_segmenter->apply(std::move(img));
+    // TODO: loop over all
     img.writeImage();
-    return std::move(std::vector<std::string>());
+    return std::vector<std::string>();
 }
 
 }

@@ -45,7 +45,7 @@ namespace ocr {
 
             bool train();
             //void train(std::string &&dataset_path);
-            std::vector<std::string> &&apply(std::string &&image_path) const;
+            std::vector<std::string> apply(std::string &&image_path) const;
 
         private:
             // The ordre is important here: the modulemanager destructor realease

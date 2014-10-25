@@ -46,6 +46,9 @@ namespace ocr {
             void setMatrix(std::string &&id, cv::Mat &&mat);
             cv::Mat &getCurrentMatrix();
             cv::Mat const &getCurrentMatrix() const;
+            // return the sub matrix id
+            ssize_t addSubMatrix(cv::Rect &&pos);
+            cv::Mat getSubMatrix(ssize_t id);
 
         private:
             void load(std::string &&image_path);
@@ -56,5 +59,6 @@ namespace ocr {
             cv::Mat m_smooth;
             cv::Mat m_threshold;
             cv::Mat m_open_morf;
+            std::vector<cv::Rect> m_subMatrices;
     };
 } // namespace ocr
