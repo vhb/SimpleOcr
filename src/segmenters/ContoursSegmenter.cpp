@@ -48,7 +48,7 @@ namespace ocr {
             pt2.x = rect.x + rect.width;
             pt1.y = rect.y;
             pt2.y = rect.y + rect.height;
-            auto color = CV_RGB(255, 255, 255);
+            auto color = cv::Scalar(255, 255, 255);
             cv::rectangle(contourOutput, pt1, pt2, color, 1, 8, 0);
             img.addSubMatrix(std::move(rect));
         }
