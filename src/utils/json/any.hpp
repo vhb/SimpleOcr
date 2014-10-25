@@ -23,10 +23,12 @@
 #pragma once
 
 #include <ostream>
+#include <sstream>
 #include <typeinfo>
 #include <stdexcept>
 #include <memory>
 #include <type_traits>
+
 
 class Any {
     private:
@@ -140,7 +142,9 @@ class Any {
         }
 
         bool operator!() const {
-            return _data != NULL;
+            auto value = _data == NULL;
+            std::cout << _data << "\t " << value << std::endl;
+            return value;
         }
 
     private:
@@ -171,6 +175,19 @@ inline std::ostream &Any::Data<type>::print(std::ostream &os) const { \
     GENERATE_STREAM_OPERATOR(std::streambuf *)
 
 #undef GENERATE_DEFAULT_STREAM_OPERATOR
+
+template<typename T>
+inline T &any_cast(Any & operand)
+{
+    return operand.get<T>();
+}
+
+template<typename T>
+inline T const & any_cast(const Any & operand)
+{
+    return operand.get<T>();
+}
+
 
 inline std::string &&toString(Any const &any) {
     std::stringstream s;
