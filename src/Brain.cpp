@@ -66,16 +66,16 @@ Brain::apply(std::string &&imagePath) const
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
     std::cout << "Looping over sub matrices" << std::endl;
     auto nb_subMatrix = m_segmenter->apply(std::move(img));
-    for (ssize_t i = 0; i < nb_subMatrix; ++i) {
-        auto subMatrix = img.getSubMatrix(i);
-        std::cout << "\t Feature extractor: " << m_featureExtractor->name()
-                  << std::endl;
-        auto features = m_featureExtractor->extract(std::move(img), i);
-        std::cout << "\t Classifier: " << m_classifier->name() << std::endl;
-        auto value = m_classifier->classify(std::move(features));
-        std::cout << "\t\tvalue: " << value << std::endl;
-        /*break;*/
-    }
+    /*for (ssize_t i = 0; i < nb_subMatrix; ++i) {*/
+        /*auto subMatrix = img.getSubMatrix(i);*/
+        /*std::cout << "\t Feature extractor: " << m_featureExtractor->name()*/
+                  /*<< std::endl;*/
+        /*auto features = m_featureExtractor->extract(std::move(img), i);*/
+        /*std::cout << "\t Classifier: " << m_classifier->name() << std::endl;*/
+        /*auto value = m_classifier->classify(std::move(features));*/
+        /*std::cout << "\t\tvalue: " << value << std::endl;*/
+        /*[>break;<]*/
+    /*}*/
     img.writeImage();
     return std::vector<std::string>();
 }

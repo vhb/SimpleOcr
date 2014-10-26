@@ -29,8 +29,12 @@ namespace ocr {
         public:
             virtual ~HistogramSegmenter() noexcept {}
 
-            virtual std::vector<Image> apply(Image &&img) const;
-            virtual char * name() const;
+            virtual ssize_t apply(Image &&) const;
+            virtual char const * name() const;
 
+        private:
+            void plotHistogram(cv::Mat&& m, std::string&& = "") const;
+            std::vector<cv::Point> detectPic(cv::Mat &&vertical,
+                                             cv::Mat &&horizontal) const;
     };
 } /* namespace ocr */

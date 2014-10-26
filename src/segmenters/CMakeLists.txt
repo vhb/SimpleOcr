@@ -10,7 +10,7 @@ set(
 
 set(
     HISTOGRAM_SEGMENTER_SOURCE
-    ./ContoursSegmenter.cpp
+    ./HistogramSegmenter.cpp
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g3")
