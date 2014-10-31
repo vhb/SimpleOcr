@@ -35,6 +35,9 @@ namespace ocr {
         cv::Scalar avg, avgStd;
         cv::meanStdDev(tmp, avg, avgStd);
         int thresh = (int)avg[0]-7*(int)(avgStd[0]/8);
+        thresh = 200;
+        std::cout << thresh << std::endl;
+        //int thresh = 4;
         cv::threshold(tmp, value, thresh, 255, cv::THRESH_BINARY_INV);
         img.setMatrix("Threshold", std::move(value));
         // Dans l'ordre je load mes images sous differents formats

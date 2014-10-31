@@ -32,15 +32,39 @@ namespace ocr {
         cv::Mat vertical(mat.rows, 1, CV_32S);
         vertical = cv::Scalar::all(0);
 
-        // je dois passer sur chqaue colone,
-        //  compter le nombre de pixels qui ne sont pas a 0
         for(int row = 0; row < mat.rows; ++row) {
             auto item = cv::countNonZero(mat(cv::Rect(0, row, mat.cols, 1)));
             horizontal.at<int>(row, 0) = item;
         }
 
-        detectPic(std::move(horizontal));
-        /*plotHistogram(std::move(horizontal));*/
+        auto tmp = detectPic(std::move(horizontal), std::move(vertical));
+        for (auto & i : tmp) {
+            /*// je dois prendre la sous matrice de mon rect, et faire mes histogram*/
+            /*//  horizontaux dessus. detec*/
+            std::cout << "\t" << i.first << "\t" << i.second << std::endl;
+            auto color = cv::Scalar(255, 255, 255);
+            auto pt1 = cv::Point(0, i.first);
+            auto pt2 = cv::Point(mat.cols, i.second);
+            std::cout << pt1 << "\t" << pt2 << std::endl;
+            auto br = cv::Rect(0, i.first, mat.cols, i.second - i.first);
+            /*std::cout << r << std::endl;*/
+            auto subMatrix = mat(br).clone();
+            std::cout << subMatrix.cols << '\t' << subMatrix.rows << std::endl;
+            for(int col = 0; col < subMatrix.cols; ++col) {
+                std::cout << col << "\t" << subMatrix.cols << std::endl;
+                auto r = cv::Rect(0,col,subMatrix.cols,1);
+                /*std::cout << r << std::endl;*/
+                auto item = cv::countNonZero(subMatrix(r));
+                vertical.at<int>(col, 0) = item;
+                std::cout << col << "\t" << subMatrix.cols << std::endl;
+            }
+            for(int col = 0; col < vertical.cols; ++col) {
+                std::cout << vertical.at<int>(col, 0);
+            }
+            break;
+        }
+        img.setMatrix("HistogramSegmenter", std::move(mat));
+        // plotHistogram(std::move(horizontal));
         return 0;
     }
 
@@ -67,12 +91,13 @@ namespace ocr {
             auto dest = cv::Point(bin_w * i,
                                   hist_h - cvRound(mat.at<int>(i, 0)));
             cv::line(histImage, origin, dest,
-                     cv::Scalar(255, 0, 0), 2, 8, 0
+                     cv::Scalar(255, 0, 0),
+                     2, 8, 0
                      );
         }
         if (dest_path.empty()) {
-            cv::namedWindow("calcHist Demo", cv::WINDOW_AUTOSIZE );
-            cv::imshow("calcHist Demo", histImage );
+            cv::namedWindow("calcHist Demo", cv::WINDOW_AUTOSIZE);
+            cv::imshow("calcHist Demo", histImage);
             cv::waitKey(0);
         }
         else {
@@ -80,34 +105,38 @@ namespace ocr {
         }
     }
 
-    std::vector<cv::Point>
+    std::vector<std::pair<int, int>>
     HistogramSegmenter::detectPic(cv::Mat &&vertical,
                                   cv::Mat &&horizontal) const
     {
-        // TODO: vertical and horizontal have the same size ?
-        auto value = std::vector<cv::Point>();
-        auto augmentation = false;
-        auto decrementation = false;
-        int derivate_floor = 3;
+        // TODO: Does vertical and horizontal have the same size ?
+        // COmment est ce que je peux faire ca:
 
-        for (int i = 1; i < vertical.rows; i++) {
-            bool change = false;
-            auto tmp = vertical.at<int>(i - 1, 0);
-            auto tmp2 = vertical.at<int>(i, 0);
-            auto derivate = tmp2 - tmp;
-            if (derivate > derivate_floor) {
-                augmentation = true;
-                decrementation = false;
-                change = true;
+        // Vector of <Begin, End>
+        auto value = std::vector<std::pair<int, int>>();
+        int activation_floor = 0;
+        int origin = 0;
+        int begin_index = -1;
+        int begin_value = 0;
+
+        for (int i = 0; i < vertical.rows; i++) {
+            auto current_value = vertical.at<int>(i, 0);
+            if (begin_index < 0) {
+                if (current_value > activation_floor) {
+                    begin_index = i;
+                    begin_value = current_value;
+                }
             }
-            else if (derivate < -derivate_floor) {
-                augmentation = false;
-                decrementation = true;
-                change = true;
-            }
-            if (change) {
-                std::cout << augmentation << "\t" << decrementation
-                          << "\t " << derivate << std::endl;
+            else {
+                /*std::cout << current_value << "\t" << begin_value << "\t("*/
+                          /*<< (current_value < begin_value)*/
+                          /*<< ")" << std::endl;*/
+                if (current_value < begin_value) {
+                    /*std::cout << "push\t" << current_value << "\t" << std::endl;*/
+                    value.push_back(std::pair<int, int>(begin_index, i));
+                    begin_index = -1;
+                    begin_value = -1;
+                }
             }
         }
 
@@ -121,3 +150,19 @@ extern "C"
 ocr::HistogramSegmenter *constructor() {
     return new ocr::HistogramSegmenter;
 }
+
+
+            /*if (derivate > derivate_floor) {*/
+                /*augmentation = true;*/
+                /*decrementation = false;*/
+                /*change = true;*/
+            /*}*/
+            /*else if (derivate < -derivate_floor) {*/
+                /*augmentation = false;*/
+                /*decrementation = true;*/
+                /*change = true;*/
+            /*}*/
+            /*if (change) {*/
+                /*std::cout << augmentation << "\t" << decrementation*/
+                          /*<< "\t " << derivate << std::endl;*/
+            /*}*/

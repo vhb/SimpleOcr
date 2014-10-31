@@ -28,7 +28,6 @@ namespace ocr {
     ssize_t
     ContoursSegmenter::apply(Image&& img) const
     {
-        std::cout << "applying ContoursSegmenter" << std::endl;
         std::vector<std::vector<cv::Point> > contours;
         cv::Mat m = img.getCurrentMatrix();
         cv::Mat contourOutput = m.clone();

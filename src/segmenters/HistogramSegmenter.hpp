@@ -21,6 +21,7 @@
 
 
 #include <ISegmenter.hpp>
+#include <utility>
 
 namespace ocr {
     class HistogramSegmenter
@@ -34,7 +35,7 @@ namespace ocr {
 
         private:
             void plotHistogram(cv::Mat&& m, std::string&& = "") const;
-            std::vector<cv::Point> detectPic(cv::Mat &&vertical,
+            std::vector<std::pair<int, int>> detectPic(cv::Mat &&vertical,
                                              cv::Mat &&horizontal) const;
     };
 } /* namespace ocr */
