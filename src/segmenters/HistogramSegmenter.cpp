@@ -27,41 +27,33 @@ namespace ocr {
     HistogramSegmenter::apply(Image &&img) const
     {
         cv::Mat mat = img.getCurrentMatrix();
-        cv::Mat horizontal(mat.cols, 1, CV_32S);
+
+        cv::Mat horizontal(mat.rows, 1, CV_32S);
         horizontal = cv::Scalar::all(0);
-        cv::Mat vertical(mat.rows, 1, CV_32S);
+        cv::Mat vertical(mat.cols, 1, CV_32S);
         vertical = cv::Scalar::all(0);
 
-        for(int row = 0; row < mat.rows; ++row) {
+        for (int row = 0; row < mat.rows; ++row) {
             auto item = cv::countNonZero(mat(cv::Rect(0, row, mat.cols, 1)));
             horizontal.at<int>(row, 0) = item;
         }
 
-        auto tmp = detectPic(std::move(horizontal), std::move(vertical));
-        for (auto & i : tmp) {
-            /*// je dois prendre la sous matrice de mon rect, et faire mes histogram*/
-            /*//  horizontaux dessus. detec*/
-            std::cout << "\t" << i.first << "\t" << i.second << std::endl;
-            auto color = cv::Scalar(255, 255, 255);
-            auto pt1 = cv::Point(0, i.first);
-            auto pt2 = cv::Point(mat.cols, i.second);
-            std::cout << pt1 << "\t" << pt2 << std::endl;
+        auto color = cv::Scalar(255, 255, 255);
+        auto hor_pic = detectPic(std::move(horizontal));
+        for (auto & i : hor_pic) {
             auto br = cv::Rect(0, i.first, mat.cols, i.second - i.first);
-            /*std::cout << r << std::endl;*/
             auto subMatrix = mat(br).clone();
-            std::cout << subMatrix.cols << '\t' << subMatrix.rows << std::endl;
-            for(int col = 0; col < subMatrix.cols; ++col) {
-                std::cout << col << "\t" << subMatrix.cols << std::endl;
-                auto r = cv::Rect(0,col,subMatrix.cols,1);
-                /*std::cout << r << std::endl;*/
-                auto item = cv::countNonZero(subMatrix(r));
+            for (int col = 1; col < subMatrix.cols; ++col) {
+                auto line = subMatrix(cv::Range::all(), cv::Range(col, col + 1));
+                auto item = cv::countNonZero(line);
                 vertical.at<int>(col, 0) = item;
-                std::cout << col << "\t" << subMatrix.cols << std::endl;
             }
-            for(int col = 0; col < vertical.cols; ++col) {
-                std::cout << vertical.at<int>(col, 0);
+            auto vert_pic = detectPic(std::move(vertical));
+            for (auto &j: vert_pic) {
+                auto pt1 = cv::Point(j.first, i.first);
+                auto pt2 = cv::Point(j.second, i.second);
+                cv::rectangle(mat, pt1, pt2, color, 1, 8, 0);
             }
-            break;
         }
         img.setMatrix("HistogramSegmenter", std::move(mat));
         // plotHistogram(std::move(horizontal));
@@ -81,7 +73,7 @@ namespace ocr {
         int hist_w = 512;
         int hist_h = 700;
         double bin_w = double(hist_w) / double(mat.cols);
-        std::cout << bin_w << std::endl;
+        /*std::cout << bin_w << std::endl;*/
 
         cv::Mat histImage(hist_h, hist_w, CV_8UC3, cv::Scalar(0, 0, 0));
 
@@ -106,13 +98,8 @@ namespace ocr {
     }
 
     std::vector<std::pair<int, int>>
-    HistogramSegmenter::detectPic(cv::Mat &&vertical,
-                                  cv::Mat &&horizontal) const
+    HistogramSegmenter::detectPic(cv::Mat &&vertical) const
     {
-        // TODO: Does vertical and horizontal have the same size ?
-        // COmment est ce que je peux faire ca:
-
-        // Vector of <Begin, End>
         auto value = std::vector<std::pair<int, int>>();
         int activation_floor = 0;
         int origin = 0;
@@ -128,11 +115,7 @@ namespace ocr {
                 }
             }
             else {
-                /*std::cout << current_value << "\t" << begin_value << "\t("*/
-                          /*<< (current_value < begin_value)*/
-                          /*<< ")" << std::endl;*/
                 if (current_value < begin_value) {
-                    /*std::cout << "push\t" << current_value << "\t" << std::endl;*/
                     value.push_back(std::pair<int, int>(begin_index, i));
                     begin_index = -1;
                     begin_value = -1;
