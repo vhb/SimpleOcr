@@ -46,6 +46,7 @@ namespace utils {
             typedef std::unordered_map<std::string, Item> Map;
             typedef std::vector<Item> Vector;
             typedef int Int;
+            typedef float Float;
             typedef std::string String;
 
             class Token

@@ -22,31 +22,41 @@
 #include <utils/json/json.hpp>
 #include <Dataset.hpp>
 
+
+
 namespace ocr {
 
-	Dataset::Dataset(std::string &&json_path)
-	: m_json_path(json_path) {
-		auto json = utils::Json();
-		auto datas = JSON_CAST(Map, json.load(std::move(json_path)));
-		for (auto data : datas) {
-			auto key = data.first;
-			auto value = data.second;
-			m_datas.push_back(Data(key, cv::imread(JSON_CAST(String, value), 1)));
-		}
-	}
+    Dataset::Dataset(std::string &&json_path)
+        : m_json_path(json_path)
+    {
+        auto json = utils::Json();
+        auto datas = JSON_CAST(Map, json.load(std::move(json_path)));
+        for (auto data : datas) {
+            auto key = data.first;
+            auto value = data.second;
+            m_datas.push_back(Data(key, cv::imread(JSON_CAST(String, value), 1)));
+        }
+    }
 
-	Dataset::~Dataset() noexcept {}
+    Dataset::~Dataset() noexcept {}
 
-	std::vector<Dataset::Data> const &
-	Dataset::get_datas() const {
-		return m_datas;
-	}
+    std::vector<Dataset::Data> const &
+    Dataset::get_datas() const
+    {
+        return m_datas;
+    }
 
+    std::string const &
+    Dataset::get_json_path() const
+    {
+        return m_json_path;
+    }
 
-	std::string const &
-	Dataset::get_json_path() const {
-		return m_json_path;
-	}
+    cv::Mat
+    Dataset::get_data_matrix() const
+    {
+#warning "TODO: implement Dataset::get_data_matrix() const"
+    }
 
 
 }

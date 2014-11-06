@@ -44,14 +44,14 @@ namespace ocr {
             Brain(std::string &&json_path);
             ~Brain() ;
 
-            void train();
-            //void train(std::string &&dataset_path);
+            void train(std::string &&dataset_path);
             std::vector<std::string> apply(std::string &&image_path) const;
 
         private:
+            void update_json(utils::Json::Map &m);
             // The ordre is important here: the modulemanager destructor realease
             //      The shared library used by the segment, etc..
-            // This is a design flow, it may need fix, but it work
+            // This is a design flow, it may need fix, but it work for now
             ModuleManager                       m_moduleManager;
             PreprocessorManager                  m_preprocessorManager;
             std::shared_ptr<ISegmenter>          m_segmenter;

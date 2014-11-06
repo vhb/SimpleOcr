@@ -37,6 +37,16 @@ namespace ocr {
         return "TestClassifier";
     }
 
+    void
+    TestClassifier::serialize(std::string &&dest_path) const
+    {
+    }
+
+    void
+    TestClassifier::train(Dataset &&dataset_path)
+    {
+    }
+
 } /* namespace ocr */
 
 extern "C"

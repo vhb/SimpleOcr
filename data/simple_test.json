@@ -28,10 +28,8 @@
     "classifier": {
         "path": "libTestClassifier",
         "args": {
-            "dataset": {
-                "path_to_data": "data_category",
-                "path_to_other_data": "other_data_category"
-            }
+            "dataset": "path_to_dataset_infos",
+            "feature_extractor": "__feature_extractor__" // TODO important !
         }
     }
 }

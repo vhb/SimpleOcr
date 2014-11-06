@@ -35,7 +35,9 @@ namespace ocr {
             ~Dataset() noexcept;
 
             std::vector<Data> const &get_datas() const;
+            cv::Mat get_data_matrix() const;
             std::string const &get_json_path() const;
+
 
         private:
             std::string m_json_path;

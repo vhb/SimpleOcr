@@ -22,12 +22,13 @@ include_directories(
 set(APP_SOURCES
     ./src/main.cpp
     ./src/Brain.cpp
-    ./src/utils/json/json.cpp
     ./src/PreprocessorManager.cpp
 )
 
 set(IMG_LIB_SOURCES
     ./src/Image.cpp
+    ./src/Dataset.cpp
+    ./src/utils/json/json.cpp
 )
 
 add_executable(ocr ${APP_SOURCES} )

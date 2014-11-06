@@ -30,6 +30,7 @@ Brain::Brain(std::string &&json_path)
 
     if (!datas["preprocessors"])
         throw std::runtime_error("No preprocessors in json");
+
     m_preprocessorManager.load_preprocessor(
             std::move(JSON_CAST(Vector, datas["preprocessors"]))
             );
@@ -78,6 +79,31 @@ Brain::apply(std::string &&imagePath) const
     /*}*/
     img.writeImage();
     return std::vector<std::string>();
+}
+
+void
+Brain::train(std::string &&dataset_path)
+{
+
+}
+
+void
+Brain::update_json(utils::Json::Map &m)
+{
+    /*using namespace utils;*/
+    /*Json::Item &it = *m.find("args");*/
+    /*[>Json::Item it2 = JSON_CAST(Map, *m.find("args"));<]*/
+    /*utils::Json::Map &tmp = JSON_CAST(Map, *m.find("args"));*/
+    /*for (auto &item : tmp) {*/
+        /*if (item.first == "__feature_exctractor__")*/
+            /*item.second = Json::Item(m_featureExtractor);*/
+        /*else if (item.first == "__segmenter__")*/
+            /*item.second = m_segmenter;*/
+        /*else if (item.first == "__preprocessorManager__")*/
+            /*item.second = m_preprocessorManager;*/
+        /*else if (item.first == "__classifier__")*/
+            /*item.second = m_classifier;*/
+    /*}*/
 }
 
 }

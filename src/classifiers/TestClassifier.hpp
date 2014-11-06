@@ -21,12 +21,16 @@
 
 
 #include <IClassifier.hpp>
+#include <Dataset.hpp>
 
 namespace ocr {
     class TestClassifier : public IClassifier {
-        virtual ~TestClassifier() noexcept {}
-        virtual char classify(cv::Mat &&features) const;
-        virtual char const *name() const;
+        public:
+            virtual ~TestClassifier() noexcept {}
+            virtual char classify(cv::Mat &&features) const;
+            virtual void serialize(std::string &&dest_path) const;
+            virtual char const *name() const;
+            virtual void train(Dataset &&dataset_path);
     };
 
 } /* namespace ocr */
