@@ -25,31 +25,26 @@
 namespace ocr {
     HueThreshold::~HueThreshold() noexcept
     {
+        // TODO: add thresh in parmatters
     }
 
     void
     HueThreshold::apply(Image &img) const
     {
         auto &tmp = img.getCurrentMatrix();
-        auto value = tmp.clone();
+        img.setMatrix("Threshold", std::move(apply(tmp)));
+    }
+
+    cv::Mat
+    HueThreshold::apply(cv::Mat const &mat) const
+    {
+        auto value = mat.clone();
         cv::Scalar avg, avgStd;
-        cv::meanStdDev(tmp, avg, avgStd);
-        int thresh = (int)avg[0]-7*(int)(avgStd[0]/8);
+        cv::meanStdDev(mat, avg, avgStd);
+        int thresh = (int)avg[0] - 7*(int)(avgStd[0] / 8);
         thresh = 200;
-        std::cout << thresh << std::endl;
-        //int thresh = 4;
-        cv::threshold(tmp, value, thresh, 255, cv::THRESH_BINARY_INV);
-        img.setMatrix("Threshold", std::move(value));
-        // Dans l'ordre je load mes images sous differents formats
-        //
-        // smooth
-        // je calcule average value and standard deviation of array elements
-        // J'applique un threshold avec pour paramettres : (int)avg.val[0]-7*(int)(avgStd.val[0]/8),
-        // 255, CV_THRESH_BINARY_INV
-        // Erode puis dilate
-        // Ensuite je fais un findContours
-        // puis un approxPolyDP pour optimiser les contours
-        // Ensuite regarder pour les moments au niveau de la feature extraction
+        cv::threshold(mat, value, thresh, 255, cv::THRESH_BINARY_INV);
+        return value;
     }
 
     char const *

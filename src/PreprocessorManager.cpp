@@ -47,6 +47,16 @@ namespace ocr {
         return true;
     }
 
+    cv::Mat
+    PreprocessorManager::apply(cv::Mat const &mat) const
+    {
+        cv::Mat tmp = mat;
+        for (auto const &i : m_preprocessors) {
+            tmp = i->apply(tmp);
+        }
+        return tmp;
+    }
+
     PreprocessorManager::PreprocessorList const &
     PreprocessorManager::get_preprocessors() const
     {
@@ -57,7 +67,7 @@ namespace ocr {
     PreprocessorManager::get_preprocessor(std::string &&name) const
     {
         return *std::find_if(m_preprocessors.begin(), m_preprocessors.end(),
-                         [&] (auto &it) {
+                         [&] (std::shared_ptr<IPreprocessor> const &it) {
                             return it->name() == name;
                          });
     }

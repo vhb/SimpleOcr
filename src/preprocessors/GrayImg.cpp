@@ -33,6 +33,14 @@ namespace ocr {
         img.setMatrix("GrayImg", std::move(grayImg));
     }
 
+    cv::Mat
+    GrayImg::apply(cv::Mat const &mat) const
+    {
+        cv::Mat grayImg = mat.clone();
+        cv::cvtColor(grayImg, grayImg, cv::COLOR_BGR2GRAY);
+        return grayImg;
+    }
+
     char const *
     GrayImg::name() const
     {

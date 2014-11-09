@@ -33,6 +33,7 @@ namespace ocr {
             virtual ~HueThreshold() noexcept;
             virtual void apply(Image &) const;
             virtual char const *name() const;
+            virtual cv::Mat apply(cv::Mat const &) const;
     };
 } /* namespace ocr */
 

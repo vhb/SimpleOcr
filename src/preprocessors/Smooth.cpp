@@ -27,10 +27,16 @@ namespace ocr {
     Smooth::apply(Image &img) const
     {
         cv::Mat &mat = img.getCurrentMatrix();
+        img.setMatrix("Smooth", std::move(apply(mat)));
+    }
+
+    cv::Mat
+    Smooth::apply(cv::Mat const &mat) const
+    {
         cv::Mat dest = mat.clone();
         cv::Size blurKernel(3, 3);
         cv::blur(mat, dest, blurKernel, cv::Point(-1, -1));
-        img.setMatrix("Smooth", std::move(dest));
+        return dest;
     }
 
     char const *

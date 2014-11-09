@@ -29,6 +29,7 @@ namespace ocr {
     {
         virtual ~MorphologicFilter() noexcept {}
         virtual void apply(Image &img) const;
+        virtual cv::Mat apply(cv::Mat const &img) const;
         virtual char const *name() const;
     };
 } /* namespace ocr */

@@ -38,6 +38,7 @@ namespace ocr {
             void load_preprocessor(std::vector<utils::Json::Item> &&preprocessor_list);
 
             bool apply(Image &img) const;
+            cv::Mat apply(cv::Mat const &img) const;
             PreprocessorList const &get_preprocessors() const;
             std::shared_ptr<IPreprocessor> const &get_preprocessor(std::string &&name) const;
 

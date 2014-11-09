@@ -22,12 +22,12 @@ include_directories(
 set(APP_SOURCES
     ./src/main.cpp
     ./src/Brain.cpp
-    ./src/PreprocessorManager.cpp
 )
 
 set(IMG_LIB_SOURCES
     ./src/Image.cpp
     ./src/Dataset.cpp
+    ./src/PreprocessorManager.cpp
     ./src/utils/json/json.cpp
 )
 

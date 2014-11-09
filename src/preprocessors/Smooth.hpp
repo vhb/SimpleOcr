@@ -26,8 +26,9 @@ namespace ocr {
         : public IPreprocessor
     {
         public:
-            ~Smooth() noexcept {}
-            void apply(Image &) const;
-            char const *name() const;
+            virtual ~Smooth() noexcept {}
+            virtual void apply(Image &) const;
+            virtual cv::Mat apply(cv::Mat const &mat) const;
+            virtual char const *name() const;
     };
 } /* namespace ocr */

@@ -33,6 +33,7 @@ namespace ocr {
         public:
             virtual ~IPreprocessor() noexcept {}
             virtual void apply(Image &) const = 0;
+            virtual cv::Mat apply(cv::Mat const &) const = 0;
     };
 
 } // namespace Ocr

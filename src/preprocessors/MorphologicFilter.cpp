@@ -26,11 +26,17 @@ namespace ocr {
     MorphologicFilter::apply(Image &img) const
     {
         auto &tmp = img.getCurrentMatrix();
+        img.setMatrix("MorphologicFilter", std::move(apply(tmp)));
+    }
+
+    cv::Mat
+    MorphologicFilter::apply(cv::Mat const &m) const
+    {
         std::cout << "Applying MorphologicFilter" << std::endl;
-        auto value = tmp.clone();
-        cv::erode(tmp, value, 1);
+        auto value = m.clone();
+        cv::erode(m, value, 1);
         cv::dilate(value, value, 1);
-        img.setMatrix("MorphologicFilter", std::move(value));
+        return value;
     }
 
     char const *

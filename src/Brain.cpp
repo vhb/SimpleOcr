@@ -92,13 +92,15 @@ Brain::apply(std::string const &imagePath) const
 void
 Brain::train(std::string const &dataset_path)
 {
-    auto dataset = Dataset(m_featureExtractor, dataset_path);
+    auto dataset = Dataset(m_featureExtractor,
+                           m_preprocessorManager,
+                           dataset_path);
 }
 
 void
 Brain::update_json(utils::Json::Map &)
 {
-#warning "TODO: implement depencie injection"
+#warning "TODO: implement depencies injection"
 }
 
 }

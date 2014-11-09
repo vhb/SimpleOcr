@@ -26,24 +26,23 @@
 namespace ocr {
 
     Dataset::Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
+                     std::shared_ptr<PreprocessorManager> const &preprocessor_manager,
                      std::string const &json_path)
         : m_json_path(json_path),
+          m_preprocessorManager(preprocessor_manager),
           m_featureExtractor(features_extractor)
     {
-        std::cout << "pourquoi" << std::endl;
         auto json = utils::Json();
-        std::cout << "coucou" << std::endl;
         auto datas = JSON_CAST(Map, json.load(json_path));
-        std::cout << "pourquoi" << std::endl;
         for (auto data : datas) {
             auto key = data.first;
             auto value = data.second;
-            auto d = cv::imread(JSON_CAST(String, value));
-            auto features = m_featureExtractor->extract(d);
-            m_datas.push_back(Data(key, d));
-            // ici je dois integrer la feature extraction
-            // enfin, je pense.
-            // donc en fait
+            auto mat = cv::imread(JSON_CAST(String, value));
+            mat = m_preprocessorManager->apply(mat);
+            // cv::imwrite("/tmp/test" + key + ".png", mat);
+            // std::cout << mat << std::endl;
+            auto features = m_featureExtractor->extract(mat);
+            m_datas.push_back(Data(key, mat));
         }
     }
 

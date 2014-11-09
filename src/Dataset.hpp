@@ -26,6 +26,7 @@
 #include <opencv2/opencv.hpp>
 
 #include <IFeatureExtractor.hpp>
+#include <PreprocessorManager.hpp>
 
 namespace ocr {
 
@@ -36,6 +37,7 @@ namespace ocr {
 
             // Load the data described in `json_path`
             Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
+                    std::shared_ptr<PreprocessorManager> const &preprocessor_manager,
                     std::string const &json_path);
             ~Dataset() noexcept;
 
@@ -44,6 +46,7 @@ namespace ocr {
 
         private:
             std::string m_json_path;
+            std::shared_ptr<PreprocessorManager> m_preprocessorManager;
             std::shared_ptr<IFeatureExtractor> m_featureExtractor;
             std::vector<Data> m_datas;
     };
