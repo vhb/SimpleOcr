@@ -44,10 +44,15 @@ class Any {
 
             T data;
 
-            Data() {}
+            Data() {
+                //std::cout << "Data::Data()" << std::endl;
+            }
 
             Data(Data const &other)
-                : data(other.data) {}
+                : data(other.data) {
+            //std::cout << "Data::Data(Data const &)" << std::endl;
+
+                }
 
             Data(T const &v)
                 : data(v) {}
@@ -79,7 +84,8 @@ class Any {
         };
 
     public:
-        Any() = default;
+        Any(){
+        };
 
         template<typename T>
         Any(T const &v)
@@ -129,8 +135,7 @@ class Any {
 
         template<typename T>
         T const &get() const {
-            if (!_data ||
-                    (_data->isPointer() && !std::is_pointer<T>::value) ||
+            if (!_data || (_data->isPointer() && !std::is_pointer<T>::value) ||
                     !hasType<T>())
                 throw std::bad_cast();
             return static_cast<Data<T>*>(_data.get())->data;
@@ -147,6 +152,18 @@ class Any {
             return value;
         }
 
+        std::shared_ptr<IData> const &
+        get_data() const
+        {
+            return _data;
+        }
+
+        char const *
+        getTypeName() const
+        {
+            return _data->getTypeInfo().name();
+        }
+
     private:
         friend std::ostream &operator<<(std::ostream &os, Any const &v) {
             if (v._data)
@@ -160,36 +177,40 @@ class Any {
 };
 
 #define GENERATE_STREAM_OPERATOR(type) \
-    template<> \
+template<> \
 inline std::ostream &Any::Data<type>::print(std::ostream &os) const { \
     return os << data; \
 }
 
-    GENERATE_STREAM_OPERATOR(char)
-    GENERATE_STREAM_OPERATOR(unsigned char)
-    GENERATE_STREAM_OPERATOR(int)
-    GENERATE_STREAM_OPERATOR(size_t)
-    GENERATE_STREAM_OPERATOR(float)
-    GENERATE_STREAM_OPERATOR(double)
-    GENERATE_STREAM_OPERATOR(char *)
-    GENERATE_STREAM_OPERATOR(std::streambuf *)
+GENERATE_STREAM_OPERATOR(char)
+GENERATE_STREAM_OPERATOR(unsigned char)
+GENERATE_STREAM_OPERATOR(int)
+GENERATE_STREAM_OPERATOR(size_t)
+GENERATE_STREAM_OPERATOR(float)
+GENERATE_STREAM_OPERATOR(double)
+GENERATE_STREAM_OPERATOR(char *)
+GENERATE_STREAM_OPERATOR(std::streambuf *)
 
 #undef GENERATE_DEFAULT_STREAM_OPERATOR
 
 template<typename T>
-inline T &any_cast(Any & operand)
+inline T &
+any_cast(Any & operand)
 {
     return operand.get<T>();
 }
 
 template<typename T>
-inline T const & any_cast(const Any & operand)
+inline T const &
+any_cast(const Any & operand)
 {
     return operand.get<T>();
 }
 
 
-inline std::string &&toString(Any const &any) {
+inline std::string &&
+toString(Any const &any)
+{
     std::stringstream s;
     std::string str;
     s << any;

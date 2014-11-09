@@ -31,14 +31,17 @@
 #include "any.hpp"
 
 #define JSON_CAST(TYPE, OBJ) utils::Json::cast<utils::Json::TYPE>(OBJ)
+//#define GET_ITEM(NAME, TYPE, OBJ) do { \
+
+//} while (0);
 
 namespace utils {
 
     class Json {
         public:
             template <typename TypeTo, typename... Args>
-            static auto cast(Args&&... args) ->
-                    decltype(any_cast<TypeTo>(std::forward<Args>(args)...)) {
+            static TypeTo cast(Args&&... args) // -> decltype(any_cast<TypeTo>(std::forward<Args>(args)...))
+            {
                 return any_cast<TypeTo>(std::forward<Args>(args)...);
             }
 
@@ -78,6 +81,7 @@ namespace utils {
 
             Item parse(std::string &&str);
             Item load(std::string &&filename);
+            Item load(std::string const &filename);
             Item load(std::ifstream &is);
 
         private:
@@ -108,13 +112,40 @@ namespace utils {
             std::vector<Token> _tokens;
     };
 
-    inline std::ostream & operator<<(std::ostream &is, Json::Token::Type t) {
+    inline std::ostream &
+    operator<<(std::ostream &is, Json::Token::Type t)
+    {
         static char const * v[] = { "T_UNDEFINDED", "T_STRING",
             "T_INT", "T_FLOAT", "T_LEFT_BRACE", "T_RIGHT_BRACE", "T_RIGHT_BRACKET",
             "T_LEFT_BRACKET", "T_COLON", "T_COMMA", "T_BOOLEAN", "T_NULL" };
         std::string value = v[static_cast<int>(t)];
         is << value;
         return is;
+    }
+
+    template <typename T>
+    inline T &
+    get_item(utils::Json::Map &j, std::string const &s)
+    {
+        //utils::Json::Map &m = any_cast<utils::Json::Map>(j);
+        utils::Json::Map::iterator i = j.find(s);
+        if (i == j.end()) {
+            throw std::runtime_error("Invalid key: [" + s + std::string("]"));
+        }
+        std::cout << "GET_ITEM" << &(i->second) << std::endl;
+        return any_cast<T>(i->second);
+    }
+
+    template <typename T>
+    inline T const &
+    get_item(utils::Json::Map const &j, std::string const &s)
+    {
+        utils::Json::Map const &m = any_cast<utils::Json::Map const>(j);
+        utils::Json::Map::const_iterator i = m.find(s);
+        if (i == m.end()) {
+            throw std::runtime_error("Invalid key: [" + s + std::string("]"));
+        }
+        return any_cast<T const>(i->second);
     }
 
 } /* namespace utils */

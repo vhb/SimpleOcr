@@ -21,7 +21,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <opencv2/opencv.hpp>
+
+#include <IFeatureExtractor.hpp>
 
 namespace ocr {
 
@@ -31,16 +35,16 @@ namespace ocr {
             typedef std::tuple<std::string, cv::Mat> Data;
 
             // Load the data described in `json_path`
-            Dataset(std::string &&json_path);
+            Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
+                    std::string const &json_path);
             ~Dataset() noexcept;
 
             std::vector<Data> const &get_datas() const;
-            cv::Mat get_data_matrix() const;
             std::string const &get_json_path() const;
-
 
         private:
             std::string m_json_path;
+            std::shared_ptr<IFeatureExtractor> m_featureExtractor;
             std::vector<Data> m_datas;
     };
 }

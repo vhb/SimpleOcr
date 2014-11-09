@@ -24,13 +24,15 @@
 
 namespace ocr {
 
-    NeuralNetworkClassifier::NeuralNetworkClassifier(utils::Json::Map &&datas)
+    NeuralNetworkClassifier::NeuralNetworkClassifier(utils::Json::Map const &datas)
     {
-        m_nbIterations = JSON_CAST(Float, datas["nb_iterations"]);
-        m_stopRate = JSON_CAST(Float, datas["stop_rate"]);
-        // m_dataset = Dataset(std::move(JSON_CAST(Map, datas["dataset"])));
-        // Je dois avoir le nombre de layers, le nombre de input layers, le nombre
-        //      d'output layers
+        using FPtr            = std::shared_ptr<IFeatureExtractor>;
+        m_nbIterations        = utils::get_item<float>(datas, "nb_iterations");
+        m_stopRate            = utils::get_item<float>(datas, "stop_rate");
+        m_backpropogationCoef = utils::get_item<float>(datas, "stop_rate");
+        m_nbFeatures          = utils::get_item<int>(datas, "nb_features");
+        m_nbOutputClasses     = utils::get_item<int>(datas, "nb_output_closses");
+        m_featureExtractor    = utils::get_item<FPtr>(datas, "features_extractor");
     }
 
     char
@@ -41,10 +43,17 @@ namespace ocr {
         return get_classification(classificationResult);
     }
 
+    cv::Mat
+    NeuralNetworkClassifier::get_data_matrix(std::vector<Dataset::Data> const &datas) const
+    {
+#warning "TODO: implement NeuralNetworkClassifier::get_data_matrix"
+        return cv::Mat();
+    }
+
     void
     NeuralNetworkClassifier::train(Dataset &&d)
     {
-        auto training_set = d.get_data_matrix();
+        auto training_set = get_data_matrix(d.get_datas());
 
         // TODO: put the list of all output values
         auto training_set_classifications = cv::Mat();
@@ -65,7 +74,7 @@ namespace ocr {
                                         cv::Mat(),
                                         params
                 );
-        std::cout << "iterations\t" << iterations << std::endl;
+        std::cout << "\titerations\t" << iterations << std::endl;
     }
 
     void

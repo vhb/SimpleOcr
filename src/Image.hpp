@@ -34,24 +34,25 @@ namespace ocr {
     {
         public:
             Image() = default;
-            Image(std::string &&image_path);
+            //Image(std::string &&image_path);
+            Image(std::string const &image_path);
             Image(cv::Mat &&matrix);
             ~Image();
 
             Image(Image &&) = default;
             Image &operator=(Image &&) = default;
 
-            void writeImage(std::string &&dest_path="/tmp/images");
+            void writeImage(std::string const &dest_path="/tmp/images");
             Image subImage(cv::Rect &&r);
-            void setMatrix(std::string &&id, cv::Mat &&mat);
+            void setMatrix(std::string const &id, cv::Mat &&mat);
             cv::Mat &getCurrentMatrix();
             cv::Mat const &getCurrentMatrix() const;
             // return the sub matrix id
             ssize_t addSubMatrix(cv::Rect &&pos);
-            cv::Mat getSubMatrix(ssize_t id);
+            cv::Mat getSubMatrix(ssize_t id) const;
 
         private:
-            void load(std::string &&image_path);
+            void load(std::string const &image_path);
 
             cv::Mat m_currentMatrix;
             std::unordered_map<std::string, cv::Mat> m_matrices;

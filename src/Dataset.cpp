@@ -23,18 +23,27 @@
 #include <Dataset.hpp>
 
 
-
 namespace ocr {
 
-    Dataset::Dataset(std::string &&json_path)
-        : m_json_path(json_path)
+    Dataset::Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
+                     std::string const &json_path)
+        : m_json_path(json_path),
+          m_featureExtractor(features_extractor)
     {
+        std::cout << "pourquoi" << std::endl;
         auto json = utils::Json();
-        auto datas = JSON_CAST(Map, json.load(std::move(json_path)));
+        std::cout << "coucou" << std::endl;
+        auto datas = JSON_CAST(Map, json.load(json_path));
+        std::cout << "pourquoi" << std::endl;
         for (auto data : datas) {
             auto key = data.first;
             auto value = data.second;
-            m_datas.push_back(Data(key, cv::imread(JSON_CAST(String, value), 1)));
+            auto d = cv::imread(JSON_CAST(String, value));
+            auto features = m_featureExtractor->extract(d);
+            m_datas.push_back(Data(key, d));
+            // ici je dois integrer la feature extraction
+            // enfin, je pense.
+            // donc en fait
         }
     }
 
@@ -50,12 +59,6 @@ namespace ocr {
     Dataset::get_json_path() const
     {
         return m_json_path;
-    }
-
-    cv::Mat
-    Dataset::get_data_matrix() const
-    {
-#warning "TODO: implement Dataset::get_data_matrix() const"
     }
 
 

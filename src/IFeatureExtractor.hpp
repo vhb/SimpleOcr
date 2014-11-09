@@ -30,6 +30,7 @@ namespace ocr {
     {
         public:
             virtual ~IFeatureExtractor() noexcept {}
-            virtual cv::Mat extract(Image &&img, ssize_t index) const = 0;
+            virtual cv::Mat extract(Image const &img, int index) const = 0;
+            virtual cv::Mat extract(cv::Mat const &m) const = 0;
     };
 }

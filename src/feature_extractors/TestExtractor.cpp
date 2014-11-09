@@ -24,7 +24,15 @@
 
 namespace ocr {
     cv::Mat
-    TestExtractor::extract(Image &&, ssize_t) const
+    TestExtractor::extract(cv::Mat const &) const
+    {
+        std::cout << "extract" << std::endl;
+        return cv::Mat();
+    }
+
+    //cv::Mat TestExtractor::extract(Image const &, int) const;
+    cv::Mat
+    TestExtractor::extract(Image const &, int) const
     {
         std::cout << "extract" << std::endl;
         return cv::Mat();

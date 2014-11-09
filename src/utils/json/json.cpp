@@ -54,6 +54,14 @@ namespace utils {
         return load(is);
     }
 
+    Json::Item
+    Json::load(std::string const &filename) {
+        std::ifstream is(filename);
+        if (not is)
+            throw std::runtime_error("Cannot open " + filename);
+        return load(is);
+    }
+
     void
     Json::_check_string(size_t &k, std::string &&token, char delim) {
         size_t i = k + 1;

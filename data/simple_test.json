@@ -22,14 +22,12 @@
         "args": {}
     },
     "feature_extractor": {
-        "path": "libTestExtractor",
+        "path": "libMomentExtractor",
         "args": {}
     },
     "classifier": {
         "path": "libTestClassifier",
         "args": {
-            "dataset": "path_to_dataset_infos",
-            "feature_extractor": "__feature_extractor__" // TODO important !
         }
     }
 }

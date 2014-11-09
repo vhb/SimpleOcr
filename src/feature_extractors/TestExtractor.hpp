@@ -29,7 +29,9 @@ namespace ocr {
     {
         public:
             virtual ~TestExtractor() noexcept {}
-            virtual cv::Mat extract(Image &&img, ssize_t index) const;
+            //virtual cv::Mat extract(cv::Mat const &img) const;
+            virtual cv::Mat extract(cv::Mat const &img) const;
+            virtual cv::Mat extract(Image const &img, int index) const;
             virtual char const *name() const;
     };
 } /* namespace ocr */

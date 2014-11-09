@@ -24,9 +24,14 @@
 
 namespace ocr {
 
-    Image::Image(std::string &&image_path)
+    //Image::Image(std::string &&image_path)
+    //{
+        //this->load(std::move(image_path));
+    //}
+
+    Image::Image(std::string const &image_path)
     {
-        this->load(std::move(image_path));
+        this->load(image_path);
     }
 
     Image::Image(cv::Mat &&matrix)
@@ -49,7 +54,7 @@ namespace ocr {
     }
 
     void
-    Image::load(std::string &&img_path)
+    Image::load(std::string const &img_path)
     {
         cv::Mat image = cv::imread(img_path, 1);
         if (image.empty()) {
@@ -60,7 +65,7 @@ namespace ocr {
     }
 
     void
-    Image::writeImage(std::string &&dest_path)
+    Image::writeImage(std::string const &dest_path)
     {
         for (auto const &i : m_matrices) {
             std::vector<int> compression_params;
@@ -75,7 +80,7 @@ namespace ocr {
     }
 
     void
-    Image::setMatrix(std::string &&matrixName, cv::Mat &&mat)
+    Image::setMatrix(std::string const &matrixName, cv::Mat &&mat)
     {
         m_currentMatrix = mat;
         m_matrices[matrixName] = mat;
@@ -89,7 +94,7 @@ namespace ocr {
     }
 
     cv::Mat
-    Image::getSubMatrix(ssize_t id)
+    Image::getSubMatrix(ssize_t id) const
     {
         if (size_t(id) > m_subMatrices.size())
             throw std::runtime_error("Invalid matrix id");

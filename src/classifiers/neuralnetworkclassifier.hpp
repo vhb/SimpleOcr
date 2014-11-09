@@ -23,6 +23,7 @@
 
 #include <Dataset.hpp>
 #include <IClassifier.hpp>
+#include <IFeatureExtractor.hpp>
 #include <utils/json/Json.hpp>
 
 namespace ocr {
@@ -32,7 +33,7 @@ namespace ocr {
         : public IClassifier
     {
         public:
-            NeuralNetworkClassifier(utils::Json::Map &&datas);
+            NeuralNetworkClassifier(utils::Json::Map const &datas);
             virtual ~NeuralNetworkClassifier() {}
 
             virtual char classify(cv::Mat &&features) const;
@@ -41,6 +42,7 @@ namespace ocr {
 
         private:
             char get_classification(cv::Mat const &classification_matrix) const;
+            cv::Mat get_data_matrix(std::vector<Dataset::Data> const &datas) const;
 
             cv::Mat m_layers;
             CvANN_MLP_TrainParams params;
@@ -48,9 +50,9 @@ namespace ocr {
             double m_nbIterations;
             double m_stopRate;
             double m_backpropogationCoef;
-            int m_nb_trainingSamples;
             int m_nbFeatures;
             int m_nbOutputClasses;
+            std::shared_ptr<IFeatureExtractor> m_featureExtractor;
             std::vector<char> values;
     };
 
