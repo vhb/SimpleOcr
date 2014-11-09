@@ -39,8 +39,6 @@ namespace ocr {
             auto value = data.second;
             auto mat = cv::imread(JSON_CAST(String, value));
             mat = m_preprocessorManager->apply(mat);
-            // cv::imwrite("/tmp/test" + key + ".png", mat);
-            // std::cout << mat << std::endl;
             auto features = m_featureExtractor->extract(mat);
             m_datas.push_back(Data(key, mat));
         }
@@ -59,6 +57,5 @@ namespace ocr {
     {
         return m_json_path;
     }
-
 
 }

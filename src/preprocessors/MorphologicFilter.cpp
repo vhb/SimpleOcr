@@ -32,7 +32,6 @@ namespace ocr {
     cv::Mat
     MorphologicFilter::apply(cv::Mat const &m) const
     {
-        std::cout << "Applying MorphologicFilter" << std::endl;
         auto value = m.clone();
         cv::erode(m, value, 1);
         cv::dilate(value, value, 1);

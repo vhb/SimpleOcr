@@ -24,15 +24,18 @@
 
 namespace ocr {
 
-    NeuralNetworkClassifier::NeuralNetworkClassifier(utils::Json::Map const &datas)
+    NeuralNetworkClassifier::NeuralNetworkClassifier(
+            utils::Json::Map const &datas,
+            std::shared_ptr<IFeatureExtractor> const&features_extractor
+            )
+        : m_nbIterations(utils::get_item<int>(datas, "nb_iterations")),
+                m_stopRate(utils::get_item<float>(datas, "stop_rate")),
+                m_backpropogationCoef(
+                    utils::get_item<float>(datas, "backpropogation_coef")
+                    ),
+                m_nbOutputClasses(features_extractor->nb_features()),
+                m_featureExtractor(features_extractor)
     {
-        using FPtr            = std::shared_ptr<IFeatureExtractor>;
-        m_nbIterations        = utils::get_item<float>(datas, "nb_iterations");
-        m_stopRate            = utils::get_item<float>(datas, "stop_rate");
-        m_backpropogationCoef = utils::get_item<float>(datas, "stop_rate");
-        m_nbFeatures          = utils::get_item<int>(datas, "nb_features");
-        m_nbOutputClasses     = utils::get_item<int>(datas, "nb_output_closses");
-        m_featureExtractor    = utils::get_item<FPtr>(datas, "features_extractor");
     }
 
     char
@@ -46,7 +49,13 @@ namespace ocr {
     cv::Mat
     NeuralNetworkClassifier::get_data_matrix(std::vector<Dataset::Data> const &datas) const
     {
-#warning "TODO: implement NeuralNetworkClassifier::get_data_matrix"
+        auto value = cv::Mat();
+        int index = 0;
+        for (auto const &i: datas) {
+            auto sourceMat = std::get<1>(i);
+            std::cout << sourceMat << std::endl;
+            value.row(index++) = sourceMat;
+        }
         return cv::Mat();
     }
 
@@ -74,13 +83,16 @@ namespace ocr {
                                         cv::Mat(),
                                         params
                 );
+
         std::cout << "\titerations\t" << iterations << std::endl;
     }
 
     void
     NeuralNetworkClassifier::serialize(std::string &&dest_path) const
     {
-        CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(), 0, CV_STORAGE_WRITE);
+        CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(),
+                                                   0,
+                                                   CV_STORAGE_WRITE);
         m_neuralNetwork.write(storage,"DigitOCR");
         cvReleaseFileStorage(&storage);
     }
@@ -104,3 +116,10 @@ namespace ocr {
     }
 
 } /* namespace ocr */
+
+extern "C"
+ocr::NeuralNetworkClassifier
+constructor()
+{
+    return new NeuralNetworkClassifier;
+}

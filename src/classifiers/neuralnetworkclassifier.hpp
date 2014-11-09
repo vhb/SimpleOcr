@@ -33,7 +33,8 @@ namespace ocr {
         : public IClassifier
     {
         public:
-            NeuralNetworkClassifier(utils::Json::Map const &datas);
+            NeuralNetworkClassifier(utils::Json::Map const &datas,
+                                    std::shared_ptr<IFeatureExtractor> const &);
             virtual ~NeuralNetworkClassifier() {}
 
             virtual char classify(cv::Mat &&features) const;

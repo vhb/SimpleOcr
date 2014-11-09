@@ -92,9 +92,11 @@ Brain::apply(std::string const &imagePath) const
 void
 Brain::train(std::string const &dataset_path)
 {
+    std::cout << "Brain::train" << std::endl;
     auto dataset = Dataset(m_featureExtractor,
                            m_preprocessorManager,
                            dataset_path);
+    m_classifier->train(std::move(dataset));
 }
 
 void

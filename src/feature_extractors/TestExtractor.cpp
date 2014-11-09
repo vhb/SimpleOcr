@@ -38,6 +38,12 @@ namespace ocr {
         return cv::Mat();
     }
 
+    int
+    TestExtractor::nb_features() const
+    {
+        return 1;
+    }
+
     char const *
     TestExtractor::name() const
     {

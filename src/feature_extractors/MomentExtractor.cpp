@@ -35,10 +35,15 @@ namespace ocr {
     {
         auto moments = cv::moments(datas);
         cv::Mat hueMoment;
-#warning "check matrix size"
         HuMoments(moments, hueMoment);
-        std::cout << "moments" << hueMoment << std::endl;
+        //std::cout << "moments" << hueMoment << std::endl;
         return hueMoment;
+    }
+
+    int
+    MomentExtractor::nb_features() const
+    {
+        return 9;
     }
 
     cv::Mat

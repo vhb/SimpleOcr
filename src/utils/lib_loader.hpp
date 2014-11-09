@@ -71,8 +71,6 @@ namespace utils {
                     dlclose(h);
                 }
 
-#warning "TODO: Handle .so/.dll"
-
                 void *
                 load(std::string &&lib_path) {
                     Handle value = dlopen((lib_path + EXT).c_str(), RTLD_LAZY);

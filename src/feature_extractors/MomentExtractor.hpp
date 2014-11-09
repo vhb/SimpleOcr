@@ -32,6 +32,7 @@ namespace ocr {
 
             virtual cv::Mat extract(Image const &img, int index) const;
             virtual cv::Mat extract(cv::Mat const &m) const;
+            virtual int nb_features() const;
             virtual char const *name() const;
     };
 } /* namespace ocr */

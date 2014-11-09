@@ -32,5 +32,6 @@ namespace ocr {
             virtual ~IFeatureExtractor() noexcept {}
             virtual cv::Mat extract(Image const &img, int index) const = 0;
             virtual cv::Mat extract(cv::Mat const &m) const = 0;
+            virtual int nb_features() const = 0;
     };
 }
