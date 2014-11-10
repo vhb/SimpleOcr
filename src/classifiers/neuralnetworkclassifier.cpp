@@ -25,16 +25,15 @@
 namespace ocr {
 
     NeuralNetworkClassifier::NeuralNetworkClassifier(
-            utils::Json::Map const &datas,
-            std::shared_ptr<IFeatureExtractor> const&features_extractor
+            utils::Json::Map const &datas
             )
         : m_nbIterations(utils::get_item<int>(datas, "nb_iterations")),
                 m_stopRate(utils::get_item<float>(datas, "stop_rate")),
                 m_backpropogationCoef(
                     utils::get_item<float>(datas, "backpropogation_coef")
-                    ),
-                m_nbOutputClasses(features_extractor->nb_features()),
-                m_featureExtractor(features_extractor)
+                    )
+                //m_nbOutputClasses(features_extractor->nb_features())
+                //m_featureExtractor(features_extractor)
     {
     }
 
@@ -97,6 +96,12 @@ namespace ocr {
         cvReleaseFileStorage(&storage);
     }
 
+    char const *
+    NeuralNetworkClassifier::name() const
+    {
+        return "NeuralNetworkClassifier";
+    }
+
     char
     NeuralNetworkClassifier::get_classification(cv::Mat const &classificationResult) const
     {
@@ -118,8 +123,8 @@ namespace ocr {
 } /* namespace ocr */
 
 extern "C"
-ocr::NeuralNetworkClassifier
-constructor()
+ocr::NeuralNetworkClassifier *
+constructor(utils::Json::Map const &m)
 {
-    return new NeuralNetworkClassifier;
+    return new ocr::NeuralNetworkClassifier(m);
 }

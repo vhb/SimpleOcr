@@ -57,6 +57,7 @@ Brain::Brain(std::string &&json_path)
 
     if (not datas["classifier"])
         throw std::runtime_error("No classifier in json");
+    JSON_CAST(Map, datas["classifier"])["feature_extractor"] = m_featureExtractor;
     m_classifier = m_moduleManager.load_module<IClassifier>(
             std::move(JSON_CAST(Map, datas["classifier"]))
             );

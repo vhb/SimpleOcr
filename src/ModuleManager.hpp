@@ -31,7 +31,6 @@ namespace ocr {
     class ModuleManager
         : public utils::LibLoader, private utils::NonCopyable
     {
-
         public:
             ModuleManager() = default;
             ~ModuleManager() = default;
