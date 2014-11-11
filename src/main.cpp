@@ -25,7 +25,7 @@ int main(int ac, char * const av[]) {
     try {
         using namespace ocr;
         if (ac < 3) {
-            std::cerr << "Usage: ocr image_path json_path" << std::endl;
+            std::cerr << "Usage: ocr image_path json_path dataset_path" << std::endl;
             return 1;
         }
         Brain brain(av[2]);

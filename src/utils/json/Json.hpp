@@ -37,7 +37,7 @@ namespace utils {
     class Json {
         public:
             template <typename TypeTo, typename... Args>
-            static TypeTo cast(Args&&... args) // -> decltype(any_cast<TypeTo>(std::forward<Args>(args)...))
+            static TypeTo & cast(Args&&... args) // -> decltype(any_cast<TypeTo>(std::forward<Args>(args)...))
             {
                 return any_cast<TypeTo>(std::forward<Args>(args)...);
             }
@@ -129,7 +129,7 @@ namespace utils {
         if (i == j.end()) {
             throw std::runtime_error("Invalid key: [" + s + std::string("]"));
         }
-        std::cout << "GET_ITEM" << &(i->second) << std::endl;
+        //std::cout << "GET_ITEM" << &(i->second) << std::endl;
         return any_cast<T>(i->second);
     }
 
@@ -137,14 +137,10 @@ namespace utils {
     inline T const &
     get_item(utils::Json::Map const &j, std::string const &s)
     {
-        utils::Json::Map const &m = any_cast<utils::Json::Map const>(j);
-        std::cout << s << std::endl;
-        for (auto &i : m) {
-            std::cout << i.first << std::endl;
-        }
-        m.find(s);
-        utils::Json::Map::const_iterator i = m.find(s);
-        if (i == m.end()) {
+        //utils::Json::Map const &m = j; // any_cast<utils::Json::Map const>(j);
+        j.find(s);
+        utils::Json::Map::const_iterator i = j.find(s);
+        if (i == j.end()) {
             throw std::runtime_error("Invalid key: [" + s + std::string("]"));
         }
         return any_cast<T const>(i->second);

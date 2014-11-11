@@ -41,7 +41,7 @@ namespace ocr {
             std::shared_ptr<T> load_module(utils::Json::Map const &json_object) {
                 using namespace utils;
                 auto path = get_item<std::string>(json_object, "path");
-                auto args = get_item<std::string>(json_object, "args");
+                auto args = get_item<utils::Json::Map>(json_object, "args");
                 //auto path = Json::cast<std::string>(json_object["path"]);
                 //auto args = JSON_CAST(Map, json_object["args"]);
                 auto obj = this->load<T*>(std::move(path), args);

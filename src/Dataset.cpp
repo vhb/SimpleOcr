@@ -33,7 +33,7 @@ namespace ocr {
           m_featureExtractor(features_extractor)
     {
         auto json = utils::Json();
-        auto datas = JSON_CAST(Map, json.load(json_path));
+        auto datas = JSON_CAST(Map const, json.load(json_path));
         for (auto data : datas) {
             auto key = data.first;
             auto value = data.second;
