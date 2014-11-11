@@ -45,7 +45,7 @@ namespace ocr {
             cv::Mat get_data_matrix(std::vector<Dataset::Data> const &datas) const;
 
             cv::Mat m_layers;
-            cv::ml::ANN_MLP *m_neuralNetwork;
+            cv::Ptr<cv::ml::ANN_MLP> m_neuralNetwork;
             double m_nbIterations;
             double m_stopRate;
             double m_backpropogationCoef;

@@ -96,12 +96,10 @@ namespace ocr {
     void
     NeuralNetworkClassifier::serialize(std::string &&dest_path) const
     {
-#warning "TODO: implement NeuralNetworkClassifier::serialize"
-        //CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(),
-                                                   //0,
-                                                   //cv::STORAGE_WRITE);
-        //m_neuralNetwork->write(storage,"DigitOCR");
-        //cvReleaseFileStorage(&storage);
+        if (m_neuralNetwork)
+        {
+            m_neuralNetwork->save(dest_path);
+        }
     }
 
     char const *
