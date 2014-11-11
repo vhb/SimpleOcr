@@ -141,6 +141,11 @@ namespace utils {
     get_item(utils::Json::Map const &j, std::string const &s)
     {
         utils::Json::Map const &m = any_cast<utils::Json::Map const>(j);
+        std::cout << s << std::endl;
+        for (auto &i : m) {
+            std::cout << i.first << std::endl;
+        }
+        m.find(s);
         utils::Json::Map::const_iterator i = m.find(s);
         if (i == m.end()) {
             throw std::runtime_error("Invalid key: [" + s + std::string("]"));

@@ -45,12 +45,10 @@ class Any {
             T data;
 
             Data() {
-                //std::cout << "Data::Data()" << std::endl;
             }
 
             Data(Data const &other)
                 : data(other.data) {
-            //std::cout << "Data::Data(Data const &)" << std::endl;
 
                 }
 
@@ -148,7 +146,6 @@ class Any {
 
         bool operator!() const {
             auto value = _data == NULL;
-            std::cout << _data << "\t " << value << std::endl;
             return value;
         }
 

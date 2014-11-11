@@ -142,16 +142,18 @@ namespace utils {
     Json::_check_int(size_t &k, std::string &&token, bool push) {
         size_t i = k;
         bool value = false;
+
         while (token[i] == '-' or token[i] == '+')
             ++i;
-        while (token[i] > '0' and token[i] < '9') {
+        while (token[i] >= '0' and token[i] <= '9') {
             value = true;
             ++i;
         }
         if (push && value) {
             _tokens.push_back(Token(token.substr(k, i - k), Token::T_INT));
-            k = i;
         }
+        if (value)
+            k = i;
         return value;
     }
 

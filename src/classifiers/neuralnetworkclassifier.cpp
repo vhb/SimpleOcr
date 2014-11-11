@@ -27,14 +27,16 @@ namespace ocr {
     NeuralNetworkClassifier::NeuralNetworkClassifier(
             utils::Json::Map const &datas
             )
-        : m_nbIterations(utils::get_item<int>(datas, "nb_iterations")),
-                m_stopRate(utils::get_item<float>(datas, "stop_rate")),
-                m_backpropogationCoef(
-                    utils::get_item<float>(datas, "backpropogation_coef")
-                    )
+        //: m_nbIterations(utils::get_item<int>(datas, "nb_iterations")),
+                //m_stopRate(utils::get_item<float>(datas, "stop_rate")),
+                //m_backpropogationCoef(
+                    //utils::get_item<float>(datas, "backpropogation_coef")
+                    //)
                 //m_nbOutputClasses(features_extractor->nb_features())
                 //m_featureExtractor(features_extractor)
     {
+        std::cout << "coucou" << std::endl;
+        std::cout << utils::get_item<int>(datas, "nb_iterations") << std::endl;
     }
 
     char

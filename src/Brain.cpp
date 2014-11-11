@@ -36,7 +36,7 @@ Brain::Brain(std::string &&json_path)
         throw std::runtime_error("No preprocessors in json");
 
     m_preprocessorManager->load_preprocessor(
-            std::move(JSON_CAST(Vector, datas["preprocessors"]))
+            JSON_CAST(Vector, datas["preprocessors"])
             );
 
     if (not datas["segmenter"])
@@ -46,20 +46,20 @@ Brain::Brain(std::string &&json_path)
 
     utils::get_item<utils::Json::Map>(datas, "segmenter");
     m_segmenter = m_moduleManager.load_module<ISegmenter>(
-            std::move(JSON_CAST(Map, datas["segmenter"]))
+            (JSON_CAST(Map, datas["segmenter"]))
             );
 
     if (not datas["feature_extractor"])
         throw std::runtime_error("No feature_extractor in json");
     m_featureExtractor = m_moduleManager.load_module<IFeatureExtractor>(
-            std::move(JSON_CAST(Map, datas["feature_extractor"]))
+            JSON_CAST(Map, datas["feature_extractor"])
             );
 
     if (not datas["classifier"])
         throw std::runtime_error("No classifier in json");
-    JSON_CAST(Map, datas["classifier"])["feature_extractor"] = m_featureExtractor;
+    /*JSON_CAST(Map, datas["classifier"])["feature_extractor"] = m_featureExtractor;*/
     m_classifier = m_moduleManager.load_module<IClassifier>(
-            std::move(JSON_CAST(Map, datas["classifier"]))
+            JSON_CAST(Map, datas["classifier"])
             );
 }
 

@@ -35,7 +35,7 @@ namespace ocr {
             typedef std::vector<std::shared_ptr<IPreprocessor>> PreprocessorList;
             ~PreprocessorManager() = default;
             // In fact except a std::vector<std::string>
-            void load_preprocessor(std::vector<utils::Json::Item> &&preprocessor_list);
+            void load_preprocessor(std::vector<utils::Json::Item> const &preprocessor_list);
 
             bool apply(Image &img) const;
             cv::Mat apply(cv::Mat const &img) const;

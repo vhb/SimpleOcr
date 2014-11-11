@@ -28,9 +28,9 @@
     "classifier": {
         "path": "libNeuralNetworkClassifier",
         "args": {
-            "nb_iterations": 10000,
-            "stop_rate": "0.000001",
-            "backpropagation_coef": 0.1,
+            "nb_iterations": 1,
+            "stop_rate": 0.2,
+            "backpropagation_coef": 0.1
         }
     }
 }

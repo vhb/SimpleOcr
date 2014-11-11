@@ -38,10 +38,12 @@ namespace ocr {
             ModuleManager &operator=(ModuleManager const &) = delete;
 
             template<typename T>
-            std::shared_ptr<T> load_module(utils::Json::Map &&json_object) {
+            std::shared_ptr<T> load_module(utils::Json::Map const &json_object) {
                 using namespace utils;
-                auto path = Json::cast<std::string>(json_object["path"]);
-                auto args = JSON_CAST(Map, json_object["args"]);
+                auto path = get_item<std::string>(json_object, "path");
+                auto args = get_item<std::string>(json_object, "args");
+                //auto path = Json::cast<std::string>(json_object["path"]);
+                //auto args = JSON_CAST(Map, json_object["args"]);
                 auto obj = this->load<T*>(std::move(path), args);
                 return std::shared_ptr<T>(obj);
             }
