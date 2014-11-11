@@ -64,16 +64,25 @@ namespace ocr {
     NeuralNetworkClassifier::train(Dataset &&d)
     {
 #warning "TODO: implement train"
-        //auto training_set = get_data_matrix(d.get_datas());
-        //using namespace cv::ml;
-        //using namespace ANN_MLP;
+        auto training_set = get_data_matrix(d.get_datas());
+        using namespace cv::ml;
+        using namespace cv;
 
         // TODO: put the list of all output values
-        //auto training_set_classifications = cv::Mat();
+        auto training_set_classifications = cv::Mat();
 
-        //ANN_MLP::Params p(m_layers, ANN_MLP::SIGMOID_SYM, 0, 0, 0.1, 0.1);
-        //m_neuralNetwork = ANN_MLP::create(p);
-        // ANN_MLP::create(m_layers, ANN_MLP::SIGMOID_SYM, 0.6, 1);
+        ANN_MLP::Params p(
+                m_layers, // Neural network typography
+                ANN_MLP::SIGMOID_SYM, // Activation function
+                0, // first activation function parameter BackprocCoef ?
+                0, // second activation functon parameter
+                TermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
+                    m_nbIterations, m_stopRate), // training stop condition
+                ANN_MLP::Params::BACKPROP,
+                0, // First parametter for the training method
+                0 // Second parametter for the training method
+                );
+        m_neuralNetwork = ANN_MLP::create(p);
 
         //ANN_MLP::Params params(
                 //cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS,
@@ -83,12 +92,10 @@ namespace ocr {
                 //m_backpropogationCoef,
                 //m_backpropogationCoef
                 //);
-        //int iterations = nnetwork.train(training_set,
-                                        //training_set_classifications,
-                                        //cv::Mat(),
-                                        //cv::Mat(),
-                                        //p
-                //);
+        int iterations = m_neuralNetwork->train(training_set,
+                                        0,
+                                        training_set_classifications
+                );
 
         //std::cout << "\titerations\t" << iterations << std::endl;
     }
