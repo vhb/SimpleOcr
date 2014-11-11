@@ -1,7 +1,7 @@
 
 #include <cassert>
 #include <iostream>
-#include <utils/json/json.hpp>
+#include <utils/json/Json.hpp>
 
 void
 simple_test() {

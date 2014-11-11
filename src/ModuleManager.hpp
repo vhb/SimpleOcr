@@ -23,7 +23,7 @@
 #pragma once
 
 #include <utils/lib_loader.hpp>
-#include <utils/json/json.hpp>
+#include <utils/json/Json.hpp>
 #include <utils/NonCopyable.hpp>
 
 namespace ocr {

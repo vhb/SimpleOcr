@@ -24,8 +24,6 @@
 #include <vector>
 #include <memory>
 
-#include <utils/json/json.hpp>
-
 #include <ModuleManager.hpp>
 #include <PreprocessorManager.hpp>
 #include <ISegmenter.hpp>
@@ -33,7 +31,7 @@
 #include <IPreprocessor.hpp>
 #include <IFeatureExtractor.hpp>
 
-#include <utils/json/json.hpp>
+#include <utils/json/Json.hpp>
 #include <utils/lib_loader.hpp>
 
 namespace ocr {

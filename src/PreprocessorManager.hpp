@@ -24,7 +24,7 @@
 
 #include <IPreprocessor.hpp>
 #include <ModuleManager.hpp>
-#include <utils/json/json.hpp>
+#include <utils/json/Json.hpp>
 
 namespace ocr {
 

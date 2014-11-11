@@ -31,9 +31,6 @@
 #include "any.hpp"
 
 #define JSON_CAST(TYPE, OBJ) utils::Json::cast<utils::Json::TYPE>(OBJ)
-//#define GET_ITEM(NAME, TYPE, OBJ) do { \
-
-//} while (0);
 
 namespace utils {
 
