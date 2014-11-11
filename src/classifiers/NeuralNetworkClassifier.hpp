@@ -28,7 +28,6 @@
 
 namespace ocr {
 
-    // TODO: think about
     class NeuralNetworkClassifier
         : public IClassifier
     {
@@ -46,8 +45,7 @@ namespace ocr {
             cv::Mat get_data_matrix(std::vector<Dataset::Data> const &datas) const;
 
             cv::Mat m_layers;
-            CvANN_MLP_TrainParams params;
-            CvANN_MLP m_neuralNetwork;
+            cv::ml::ANN_MLP *m_neuralNetwork;
             double m_nbIterations;
             double m_stopRate;
             double m_backpropogationCoef;

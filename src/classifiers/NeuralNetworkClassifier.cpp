@@ -43,7 +43,7 @@ namespace ocr {
     NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix) const
     {
         cv::Mat classificationResult(1, m_nbOutputClasses, CV_32F);
-        m_neuralNetwork.predict(featuresMatrix, classificationResult);
+        m_neuralNetwork->predict(featuresMatrix, classificationResult);
         return get_classification(classificationResult);
     }
 
@@ -63,39 +63,45 @@ namespace ocr {
     void
     NeuralNetworkClassifier::train(Dataset &&d)
     {
-        auto training_set = get_data_matrix(d.get_datas());
+#warning "TODO: implement train"
+        //auto training_set = get_data_matrix(d.get_datas());
+        //using namespace cv::ml;
+        //using namespace ANN_MLP;
 
         // TODO: put the list of all output values
-        auto training_set_classifications = cv::Mat();
+        //auto training_set_classifications = cv::Mat();
 
-        CvANN_MLP nnetwork(m_layers, CvANN_MLP::SIGMOID_SYM, 0.6, 1);
+        //ANN_MLP::Params p(m_layers, ANN_MLP::SIGMOID_SYM, 0, 0, 0.1, 0.1);
+        //m_neuralNetwork = ANN_MLP::create(p);
+        // ANN_MLP::create(m_layers, ANN_MLP::SIGMOID_SYM, 0.6, 1);
 
-        CvANN_MLP_TrainParams params(
-                cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS,
-                               m_nbIterations,
-                               m_stopRate),
-                CvANN_MLP_TrainParams::BACKPROP,
-                m_backpropogationCoef,
-                m_backpropogationCoef
-                );
-        int iterations = nnetwork.train(training_set,
-                                        training_set_classifications,
-                                        cv::Mat(),
-                                        cv::Mat(),
-                                        params
-                );
+        //ANN_MLP::Params params(
+                //cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS,
+                               //m_nbIterations,
+                               //m_stopRate),
+                //Params::BACKPROP,
+                //m_backpropogationCoef,
+                //m_backpropogationCoef
+                //);
+        //int iterations = nnetwork.train(training_set,
+                                        //training_set_classifications,
+                                        //cv::Mat(),
+                                        //cv::Mat(),
+                                        //p
+                //);
 
-        std::cout << "\titerations\t" << iterations << std::endl;
+        //std::cout << "\titerations\t" << iterations << std::endl;
     }
 
     void
     NeuralNetworkClassifier::serialize(std::string &&dest_path) const
     {
-        CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(),
-                                                   0,
-                                                   CV_STORAGE_WRITE);
-        m_neuralNetwork.write(storage,"DigitOCR");
-        cvReleaseFileStorage(&storage);
+#warning "TODO: implement NeuralNetworkClassifier::serialize"
+        //CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(),
+                                                   //0,
+                                                   //cv::STORAGE_WRITE);
+        //m_neuralNetwork->write(storage,"DigitOCR");
+        //cvReleaseFileStorage(&storage);
     }
 
     char const *
