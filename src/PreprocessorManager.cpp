@@ -29,13 +29,10 @@ namespace ocr {
     PreprocessorManager::load_preprocessor(std::vector<utils::Json::Item> const &pl)
     {
         for (auto const &i : pl) {
-            std::cout << "coucou" << std::endl;
             auto const &item = JSON_CAST(Map const, i);
-            std::cout << "after" << std::endl;
             auto tmp = this->load_module<IPreprocessor>(item);
             m_preprocessors.push_back(tmp);
         }
-        std::cout << "end" << std::endl;
     }
 
 

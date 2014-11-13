@@ -129,7 +129,6 @@ namespace utils {
         if (i == j.end()) {
             throw std::runtime_error("Invalid key: [" + s + std::string("]"));
         }
-        //std::cout << "GET_ITEM" << &(i->second) << std::endl;
         return any_cast<T>(i->second);
     }
 

@@ -27,17 +27,29 @@ namespace ocr {
     NeuralNetworkClassifier::NeuralNetworkClassifier(
             utils::Json::Map const &datas
             )
-        //: m_nbIterations(utils::get_item<int>(datas, "nb_iterations")),
-                //m_stopRate(utils::get_item<float>(datas, "stop_rate")),
-                //m_backpropogationCoef(
-                    //utils::get_item<float>(datas, "backpropogation_coef")
-                    //)
-                //m_nbOutputClasses(features_extractor->nb_features())
-                //m_featureExtractor(features_extractor)
+        try :   m_nbIterations(utils::get_item<int>(datas, "nb_iterations")),
+                m_stopRate(utils::get_item<float>(datas, "stop_rate")),
+                m_backpropogationCoef(
+                        utils::get_item<float>(datas, "backpropagation_coef")
+                        )
     {
-        std::cout << "coucou" << std::endl;
+        for (auto const &i: datas) {
+            std::cout << i.first << std::endl;
+        }
+
+        std::cout << "NeuralNetworkClassifier::NeuralNetworkClassifier\t" << &datas << std::endl;
+        m_featureExtractor =
+            utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas, "feature_extractor");
+        m_nbFeatures = m_featureExtractor->nb_features();
         std::cout << utils::get_item<int>(datas, "nb_iterations") << std::endl;
     }
+    catch (std::bad_cast const &e) {
+        std::cout << "bad_cast\t" << e.what() << std::endl;
+    }
+    catch (std::runtime_error const &e) {
+        std::cout << "runtime_error\t" << e.what() << std::endl;
+    }
+
 
     char
     NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix) const
@@ -78,7 +90,7 @@ namespace ocr {
                 0, // second activation functon parameter
                 TermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
                     m_nbIterations, m_stopRate), // training stop condition
-                ANN_MLP::Params::BACKPROP,
+                ANN_MLP::Params::BACKPROP, // training algorythm
                 0, // First parametter for the training method
                 0 // Second parametter for the training method
                 );
@@ -92,9 +104,8 @@ namespace ocr {
                 //m_backpropogationCoef,
                 //m_backpropogationCoef
                 //);
-        int iterations = m_neuralNetwork->train(training_set,
-                                        0,
-                                        training_set_classifications
+        int iterations = m_neuralNetwork->train(training_set, 0,
+                                                training_set_classifications
                 );
 
         //std::cout << "\titerations\t" << iterations << std::endl;

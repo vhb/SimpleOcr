@@ -39,11 +39,26 @@ vector_test() {
     assert (utils::Json::cast<std::string>(vector[1]) == "bar");
 }
 
+void test_float() {
+    utils::Json j;
+    std::string test_json("{'a': 2.0}");
+    typedef std::unordered_map<std::string, Any> Map;
+    Map map = j.parse(std::move(test_json)).get<Map>();
+    std::cout << "end" << std::endl;
+    //std::cout << "value\t" << utils::Json::cast<float const>(map["a"]) << std::endl;
+    std::cout << &map << std::endl;
+    std::cout << "coucou" << std::endl;
+    std::cout << map["a"] << std::endl;
+    std::cout << "pourquoi" << std::endl;
+    assert (utils::Json::cast<float const>(map["a"]) == 2.0);
+}
+
 int
 main(void)
 {
-    simple_test();
-    recursive_test();
-    vector_test();
+    //simple_test();
+    //recursive_test();
+    //vector_test();
+    test_float();
     return 0;
 }

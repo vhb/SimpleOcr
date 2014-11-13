@@ -28,47 +28,37 @@ namespace ocr {
 Brain::Brain(std::string &&json_path)
     : m_preprocessorManager(new PreprocessorManager())
 {
-    std::cout << "json_load" << std::endl;
     utils::Json::Map datas = JSON_CAST(Map const, m_json.load(std::move(json_path)));
-    std::cout  << "after json_load" << std::endl;
 
     if (not datas["preprocessors"])
         throw std::runtime_error("No preprocessors in json");
 
-    std::cout << "preprocessors" << std::endl;
     m_preprocessorManager->load_preprocessor(
             JSON_CAST(Vector const, datas["preprocessors"])
             );
-    std::cout << "after preprocessors" << std::endl;
 
     if (not datas["segmenter"])
         throw std::runtime_error("No segmenter in json");
 
-    /*std::cout << datas["segement"].getTypeName() << std::endl;*/
-
-    //utils::get_item<utils::Json::Map>(datas, "segmenter");
-    std::cout << "segmenter" << std::endl;
     m_segmenter = m_moduleManager.load_module<ISegmenter>(
             (JSON_CAST(Map const, datas["segmenter"]))
             );
-    std::cout << "after segmenter" << std::endl;
 
     if (not datas["feature_extractor"])
         throw std::runtime_error("No feature_extractor in json");
-    std::cout << "feature_extractor" << std::endl;
     m_featureExtractor = m_moduleManager.load_module<IFeatureExtractor>(
             JSON_CAST(Map const, datas["feature_extractor"])
             );
-    std::cout << "after feature_extractor" << std::endl;
 
     if (not datas["classifier"])
         throw std::runtime_error("No classifier in json");
+
+    auto tmp = datas["classifier"].get<utils::Json::Map>();
+    /*std::cout << "poruquoi'\t" << &(datas["classifier"].get<utils::Json::Map>()) << std::endl;*/
+    JSON_CAST(Map, tmp["args"])["feature_extractor"] = m_featureExtractor;
+    std::cout << "Before\t" << &tmp << std::endl;
     /*JSON_CAST(Map, datas["classifier"])["feature_extractor"] = m_featureExtractor;*/
-    std::cout << "classifier" << std::endl;
-    m_classifier = m_moduleManager.load_module<IClassifier>(
-            JSON_CAST(Map const, datas["classifier"])
-            );
-    std::cout << "after classifier" << std::endl;
+    m_classifier = m_moduleManager.load_module<IClassifier>(tmp);
 }
 
 Brain::~Brain()

@@ -149,11 +149,12 @@ namespace utils {
             value = true;
             ++i;
         }
-        if (push && value) {
+        if (push and value) {
             _tokens.push_back(Token(token.substr(k, i - k), Token::T_INT));
         }
-        if (value)
+        if (value) {
             k = i;
+        }
         return value;
     }
 
@@ -163,9 +164,10 @@ namespace utils {
         bool value = _check_int(i, std::move(token), false);
         if (value && token[i] == '.') {
             ++i;
-            while (token[i] > '0' and token[i] < '9') {
+            while (token[i] >= '0' and token[i] <= '9') {
                 ++i;
             }
+            _tokens.push_back(Token(token.substr(t, i - t), Token::T_FLOAT));
             t = i;
         } else {
             value = false;
@@ -265,7 +267,7 @@ namespace utils {
 
     Json::Item
     Json::parse_float(std::string &&s) const {
-        return Json::Item(std::stoi(s));
+        return Json::Item(std::stof(s));
     }
 
     Json::Item
@@ -342,14 +344,13 @@ namespace utils {
                 case Token::T_INT:
                     current = parse_int(std::move(v[i].value));
                     r = i + 1;
-
-                        break;
+                    break;
             }
             {
                 case Token::T_FLOAT:
                     current = parse_float(std::move(v[i].value));
                     r = i + 1;
-                        break;
+                    break;
             }
             default:
                 break;

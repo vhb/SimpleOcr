@@ -121,15 +121,17 @@ class Any {
         template<typename T>
         T &get() {
             if ((_data->isPointer() && !std::is_pointer<T>::value) ||
-                    !hasType<T>())
+                    !hasType<T>()) {
                 throw std::bad_cast();
+            }
+            std::cout << &static_cast<Data<T>*>(_data.get())->data << std::endl;
             return static_cast<Data<T>*>(_data.get())->data;
         }
 
-        template<typename T>
-        operator T &() {
-            return get<T>();
-        }
+        //template<typename T>
+        //operator T &() {
+            //return get<T>();
+        //}
 
         template<typename T>
         T const &get() const {
@@ -139,10 +141,10 @@ class Any {
             return static_cast<Data<T>*>(_data.get())->data;
         }
 
-        template<typename T>
-        operator T const &() const {
-            return get<T>();
-        }
+        //template<typename T>
+        //operator T const &() const {
+            //return get<T>();
+        //}
 
         bool operator!() const {
             auto value = _data == NULL;
