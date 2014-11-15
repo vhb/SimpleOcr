@@ -21,6 +21,7 @@
 
 #include <utils/json/Json.hpp>
 #include <Dataset.hpp>
+#include <unistd.h>
 
 
 namespace ocr {
@@ -37,7 +38,11 @@ namespace ocr {
         for (auto data : datas) {
             auto key = data.first;
             auto value = data.second;
-            auto mat = cv::imread(JSON_CAST(String, value));
+            auto mat = cv::imread(JSON_CAST(String, value), 1);
+            if (not mat.data) {
+                throw std::runtime_error("Dataset::Dataset: Cannot oppen img file: " +
+                                         JSON_CAST(String, value));
+            }
             mat = m_preprocessorManager->apply(mat);
             auto features = m_featureExtractor->extract(mat);
             m_datas.push_back(Data(key, mat));

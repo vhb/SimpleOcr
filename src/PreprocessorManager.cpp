@@ -35,11 +35,10 @@ namespace ocr {
         }
     }
 
-
     bool
     PreprocessorManager::apply(Image &img) const
     {
-        std::cout << "Preprocessor" << std::endl;
+        std::cout << "Preprocessing" << std::endl;
         for (auto const &i : m_preprocessors) {
             std::cout << "\t Applying: " << i->name() << std::endl;
             i->apply(img);
@@ -52,6 +51,7 @@ namespace ocr {
     {
         cv::Mat tmp = mat;
         for (auto const &i : m_preprocessors) {
+            std::cout << i->name() << std::endl;
             tmp = i->apply(tmp);
         }
         return tmp;

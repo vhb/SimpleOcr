@@ -43,7 +43,7 @@ namespace ocr {
     int
     MomentExtractor::nb_features() const
     {
-        return 9;
+        return 7;
     }
 
     cv::Mat

@@ -124,7 +124,6 @@ class Any {
                     !hasType<T>()) {
                 throw std::bad_cast();
             }
-            std::cout << &static_cast<Data<T>*>(_data.get())->data << std::endl;
             return static_cast<Data<T>*>(_data.get())->data;
         }
 

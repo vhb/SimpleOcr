@@ -58,7 +58,7 @@ namespace ocr {
     {
         cv::Mat image = cv::imread(img_path, 1);
         if (image.empty()) {
-            throw std::runtime_error("Can't read image");
+            throw std::runtime_error("Image::load: Can't read image : " + img_path);
         }
         m_currentMatrix = image;
         m_matrices["origin"] = image;

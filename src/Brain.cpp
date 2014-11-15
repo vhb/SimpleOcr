@@ -54,10 +54,7 @@ Brain::Brain(std::string &&json_path)
         throw std::runtime_error("No classifier in json");
 
     auto tmp = datas["classifier"].get<utils::Json::Map>();
-    /*std::cout << "poruquoi'\t" << &(datas["classifier"].get<utils::Json::Map>()) << std::endl;*/
     JSON_CAST(Map, tmp["args"])["feature_extractor"] = m_featureExtractor;
-    std::cout << "Before\t" << &tmp << std::endl;
-    /*JSON_CAST(Map, datas["classifier"])["feature_extractor"] = m_featureExtractor;*/
     m_classifier = m_moduleManager.load_module<IClassifier>(tmp);
 }
 
@@ -82,7 +79,7 @@ Brain::apply(std::string const &imagePath) const
         std::cout << "\t Classifier: " << m_classifier->name() << std::endl;
         auto value = m_classifier->classify(std::move(features));
         std::cout << "\t\tvalue: " << value << std::endl;
-        break;
+        break; // TODO: Comment this
     }
     img.writeImage();
     return std::vector<std::string>();

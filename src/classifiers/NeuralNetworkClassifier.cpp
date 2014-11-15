@@ -33,15 +33,14 @@ namespace ocr {
                         utils::get_item<float>(datas, "backpropagation_coef")
                         )
     {
-        for (auto const &i: datas) {
-            std::cout << i.first << std::endl;
-        }
-
-        std::cout << "NeuralNetworkClassifier::NeuralNetworkClassifier\t" << &datas << std::endl;
         m_featureExtractor =
             utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas, "feature_extractor");
         m_nbFeatures = m_featureExtractor->nb_features();
-        std::cout << utils::get_item<int>(datas, "nb_iterations") << std::endl;
+
+        m_layers = cv::Mat(2, 1, CV_32SC1);
+        m_layers.row(0) = cv::Scalar(m_nbFeatures);
+        m_layers.row(1) = cv::Scalar(1);
+
     }
     catch (std::bad_cast const &e) {
         std::cout << "bad_cast\t" << e.what() << std::endl;
@@ -62,26 +61,30 @@ namespace ocr {
     cv::Mat
     NeuralNetworkClassifier::get_data_matrix(std::vector<Dataset::Data> const &datas) const
     {
-        auto value = cv::Mat();
-        int index = 0;
+        std::cout << datas.size() << "\t" << m_nbFeatures <<  std::endl;
+        cv::Mat value = cv::Mat::zeros(datas.size(), m_nbFeatures, CV_32F);
+        std::cout << value << std::endl;
+        unsigned int index = 0;
         for (auto const &i: datas) {
-            auto sourceMat = std::get<1>(i);
+            auto sourceMat = m_featureExtractor->extract(std::get<1>(i));
             std::cout << sourceMat << std::endl;
             value.row(index++) = sourceMat;
         }
-        return cv::Mat();
+        std::cout << "value" << std::endl << value << std::endl;
+        return value;
     }
 
     void
     NeuralNetworkClassifier::train(Dataset &&d)
     {
-#warning "TODO: implement train"
-        auto training_set = get_data_matrix(d.get_datas());
         using namespace cv::ml;
         using namespace cv;
 
+        auto training_set = get_data_matrix(d.get_datas());
         // TODO: put the list of all output values
         auto training_set_classifications = cv::Mat();
+
+        std::cout << m_layers << std::endl;
 
         ANN_MLP::Params p(
                 m_layers, // Neural network typography
@@ -89,26 +92,16 @@ namespace ocr {
                 0, // first activation function parameter BackprocCoef ?
                 0, // second activation functon parameter
                 TermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
-                    m_nbIterations, m_stopRate), // training stop condition
-                ANN_MLP::Params::BACKPROP, // training algorythm
-                0, // First parametter for the training method
-                0 // Second parametter for the training method
+                            m_nbIterations, m_stopRate), // training stop condition
+                ANN_MLP::Params::BACKPROP, // training algorithm
+                0, // First parameter for the training method
+                0 // Second parameter for the training method
                 );
+        training_set_classifications = cv::Mat::zeros(1, 0, CV_32F);
         m_neuralNetwork = ANN_MLP::create(p);
-
-        //ANN_MLP::Params params(
-                //cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS,
-                               //m_nbIterations,
-                               //m_stopRate),
-                //Params::BACKPROP,
-                //m_backpropogationCoef,
-                //m_backpropogationCoef
-                //);
-        int iterations = m_neuralNetwork->train(training_set, 0,
-                                                training_set_classifications
+        int iterations = m_neuralNetwork->train(training_set, ROW_SAMPLE,
+                                                cv::Mat::zeros(1, 1, CV_32F)
                 );
-
-        //std::cout << "\titerations\t" << iterations << std::endl;
     }
 
     void
