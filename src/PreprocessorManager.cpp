@@ -22,6 +22,7 @@
 
 #include <PreprocessorManager.hpp>
 #include <utils/json/Json.hpp>
+#include <stdexcept>
 
 namespace ocr {
 

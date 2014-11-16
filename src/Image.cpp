@@ -21,6 +21,7 @@
 
 
 #include <Image.hpp>
+#include <stdexcept>
 
 namespace ocr {
 

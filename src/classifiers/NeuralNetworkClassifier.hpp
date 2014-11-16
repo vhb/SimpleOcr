@@ -33,7 +33,7 @@ namespace ocr {
     {
         public:
             NeuralNetworkClassifier(utils::Json::Map const &datas);
-            virtual ~NeuralNetworkClassifier() {}
+            virtual ~NeuralNetworkClassifier() noexcept {}
 
             virtual char classify(cv::Mat &&features) const;
             virtual void train(Dataset &&);

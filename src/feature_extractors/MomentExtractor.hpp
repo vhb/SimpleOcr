@@ -28,7 +28,7 @@ namespace ocr {
     {
         public:
             MomentExtractor();
-            virtual ~MomentExtractor();
+            virtual ~MomentExtractor() noexcept {}
 
             virtual cv::Mat extract(Image const &img, int index) const;
             virtual cv::Mat extract(cv::Mat const &m) const;

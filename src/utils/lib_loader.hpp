@@ -33,6 +33,7 @@
 #include <iostream>
 #include <utility>
 #include <dlfcn.h>
+#include <stdexcept>
 #include <string>
 
 namespace utils {

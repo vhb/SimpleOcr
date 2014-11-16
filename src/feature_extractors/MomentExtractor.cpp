@@ -26,10 +26,6 @@ namespace ocr {
     {
     }
 
-    MomentExtractor::~MomentExtractor()
-    {
-    }
-
     cv::Mat
     MomentExtractor::extract(cv::Mat const &datas) const
     {
