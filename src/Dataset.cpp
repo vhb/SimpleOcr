@@ -22,7 +22,7 @@
 #include <utils/json/Json.hpp>
 #include <Dataset.hpp>
 #include <unistd.h>
-
+#include <set>
 
 namespace ocr {
 
@@ -50,6 +50,12 @@ namespace ocr {
     }
 
     Dataset::~Dataset() noexcept {}
+
+    int
+    Dataset::get_nb_output() const
+    {
+        return m_datas.size();
+    }
 
     std::vector<Dataset::Data> const &
     Dataset::get_datas() const

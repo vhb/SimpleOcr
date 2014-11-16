@@ -32,8 +32,7 @@ namespace ocr {
         auto moments = cv::moments(datas);
         cv::Mat hueMoment;
         HuMoments(moments, hueMoment);
-        //std::cout << "moments" << hueMoment << std::endl;
-        return hueMoment;
+        return hueMoment.reshape(0, 1);
     }
 
     int

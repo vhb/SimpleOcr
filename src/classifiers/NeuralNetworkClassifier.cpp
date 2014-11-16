@@ -37,16 +37,12 @@ namespace ocr {
             utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas, "feature_extractor");
         m_nbFeatures = m_featureExtractor->nb_features();
 
-        m_layers = cv::Mat(2, 1, CV_32SC1);
-        m_layers.row(0) = cv::Scalar(m_nbFeatures);
-        m_layers.row(1) = cv::Scalar(1);
-
     }
     catch (std::bad_cast const &e) {
-        std::cout << "bad_cast\t" << e.what() << std::endl;
+        std::cerr << "bad_cast\t" << e.what() << std::endl;
     }
     catch (std::runtime_error const &e) {
-        std::cout << "runtime_error\t" << e.what() << std::endl;
+        std::cerr << "runtime_error\t" << e.what() << std::endl;
     }
 
 
@@ -61,16 +57,27 @@ namespace ocr {
     cv::Mat
     NeuralNetworkClassifier::get_data_matrix(std::vector<Dataset::Data> const &datas) const
     {
-        std::cout << datas.size() << "\t" << m_nbFeatures <<  std::endl;
         cv::Mat value = cv::Mat::zeros(datas.size(), m_nbFeatures, CV_32F);
-        std::cout << value << std::endl;
         unsigned int index = 0;
         for (auto const &i: datas) {
             auto sourceMat = m_featureExtractor->extract(std::get<1>(i));
-            std::cout << sourceMat << std::endl;
-            value.row(index++) = sourceMat;
+            auto tmp = sourceMat.size();
+            //std::cout << sourceMat<< std::endl;
+            //std::cout << value.row(index) << std::endl;
+            sourceMat.copyTo(value.row(index++));
+            //std::cout << sourceMat.col(0).at<float>(0) << std::endl;
+            //value.row(index++) = sourceMat.col(0);
         }
-        std::cout << "value" << std::endl << value << std::endl;
+        //std::cout << "value\t" << value << std::endl;
+        return value;
+    }
+
+    cv::Mat
+    NeuralNetworkClassifier::get_classification_matrix(cv::Mat const &mat,
+                                                       int nb_output_classification)
+    {
+        auto size = mat.size();
+        auto value = cv::Mat::zeros(size.height, nb_output_classification, CV_32F);
         return value;
     }
 
@@ -81,27 +88,37 @@ namespace ocr {
         using namespace cv;
 
         auto training_set = get_data_matrix(d.get_datas());
+        auto training_set_classifications = get_classification_matrix(training_set,
+                                                                      d.get_nb_output());
         // TODO: put the list of all output values
-        auto training_set_classifications = cv::Mat();
+        //std::cout << m_layers << std::endl;
+        //auto training_set_classifications = cv::Mat::zeros(2, 1, CV_32F);
 
-        std::cout << m_layers << std::endl;
+        m_layers = cv::Mat(3, 1, CV_32SC1);
+        m_layers.row(0) = cv::Scalar(m_nbFeatures);
+        m_layers.row(1) = cv::Scalar(9);
+        m_layers.row(2) = cv::Scalar(d.get_nb_output());
+
 
         ANN_MLP::Params p(
                 m_layers, // Neural network typography
                 ANN_MLP::SIGMOID_SYM, // Activation function
-                0, // first activation function parameter BackprocCoef ?
-                0, // second activation functon parameter
+                0.001, // first activation function parameter BackprocCoef ?
+                0.001, // second activation functon parameter
                 TermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
-                            m_nbIterations, m_stopRate), // training stop condition
+                             m_nbIterations, m_stopRate), // training stop condition
                 ANN_MLP::Params::BACKPROP, // training algorithm
-                0, // First parameter for the training method
-                0 // Second parameter for the training method
+                0.0001, // First parameter for the training method
+                0.0001 // Second parameter for the training method
                 );
-        training_set_classifications = cv::Mat::zeros(1, 0, CV_32F);
         m_neuralNetwork = ANN_MLP::create(p);
+        std::cout << "avant"  << std::endl;
         int iterations = m_neuralNetwork->train(training_set, ROW_SAMPLE,
-                                                cv::Mat::zeros(1, 1, CV_32F)
+                                                training_set_classifications
                 );
+        std::cout << "apres" << std::endl;
+        std::cout << iterations << std::endl;
+        serialize("./test.xml");
     }
 
     void

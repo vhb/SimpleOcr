@@ -43,6 +43,7 @@ namespace ocr {
 
             std::vector<Data> const &get_datas() const;
             std::string const &get_json_path() const;
+            int get_nb_output() const;
 
         private:
             std::string m_json_path;
