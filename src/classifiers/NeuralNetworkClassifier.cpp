@@ -87,9 +87,9 @@ namespace ocr {
         using namespace cv::ml;
         using namespace cv;
 
-        auto training_set = get_data_matrix(d.get_datas());
-        auto training_set_classifications = get_classification_matrix(training_set,
-                                                                      d.get_nb_output());
+        m_training_set = get_data_matrix(d.get_datas());
+        m_training_set_classifications = get_classification_matrix(m_training_set,
+                                                                   d.get_nb_output());
         // TODO: put the list of all output values
         //std::cout << m_layers << std::endl;
         //auto training_set_classifications = cv::Mat::zeros(2, 1, CV_32F);
@@ -113,8 +113,8 @@ namespace ocr {
                 );
         m_neuralNetwork = ANN_MLP::create(p);
         std::cout << "avant"  << std::endl;
-        int iterations = m_neuralNetwork->train(training_set, ROW_SAMPLE,
-                                                training_set_classifications
+        int iterations = m_neuralNetwork->train(m_training_set, ROW_SAMPLE,
+                                                m_training_set_classifications
                 );
         std::cout << "apres" << std::endl;
         std::cout << iterations << std::endl;
@@ -124,8 +124,7 @@ namespace ocr {
     void
     NeuralNetworkClassifier::serialize(std::string &&dest_path) const
     {
-        if (m_neuralNetwork)
-        {
+        if (m_neuralNetwork) {
             m_neuralNetwork->save(dest_path);
         }
     }

@@ -56,6 +56,8 @@ namespace ocr {
             int m_nbOutputClasses;
             std::shared_ptr<IFeatureExtractor> m_featureExtractor;
             std::vector<char> values;
+            cv::Mat m_training_set;
+            cv::Mat m_training_set_classifications;
     };
 
 } // namespace ocr
