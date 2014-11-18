@@ -77,7 +77,7 @@ namespace ocr {
                                                        int nb_output_classification)
     {
         auto size = mat.size();
-        auto value = cv::Mat::zeros(size.height, nb_output_classification, CV_32F);
+        auto value = cv::Mat::zeros(size.height + 1, nb_output_classification + 1, CV_32F);
         return value;
     }
 
@@ -90,10 +90,6 @@ namespace ocr {
         m_training_set = get_data_matrix(d.get_datas());
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    d.get_nb_output());
-        // TODO: put the list of all output values
-        //std::cout << m_layers << std::endl;
-        //auto training_set_classifications = cv::Mat::zeros(2, 1, CV_32F);
-
         m_layers = cv::Mat(3, 1, CV_32SC1);
         m_layers.row(0) = cv::Scalar(m_nbFeatures);
         m_layers.row(1) = cv::Scalar(9);
@@ -141,11 +137,9 @@ namespace ocr {
         int maxIndex = 0;
         float value=0.0f;
         float maxValue = classificationResult.at<float>(0, 0);
-        for (int index = 1; index < m_nbOutputClasses; ++index)
-        {
+        for (int index = 1; index < m_nbOutputClasses; ++index) {
             classificationResult.at<float>(0, index);
-            if (value > maxValue)
-            {
+            if (value > maxValue) {
                 maxValue = value;
                 maxIndex = index;
             }
