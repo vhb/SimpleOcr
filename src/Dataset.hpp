@@ -44,11 +44,13 @@ namespace ocr {
             std::vector<Data> const &get_datas() const;
             std::string const &get_json_path() const;
             int get_nb_output() const;
+            int get_output_for(std::size_t pos);
 
         private:
             std::string m_json_path;
             std::shared_ptr<PreprocessorManager> m_preprocessorManager;
             std::shared_ptr<IFeatureExtractor> m_featureExtractor;
             std::vector<Data> m_datas;
+            std::vector<std::string> m_output;
     };
 }

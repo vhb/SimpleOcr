@@ -44,7 +44,7 @@ namespace ocr {
         private:
             char get_classification(cv::Mat const &classification_matrix) const;
             cv::Mat get_classification_matrix(cv::Mat const &training_set,
-                                              int nb_output_classification);
+                                              Dataset &&);
             cv::Mat get_data_matrix(std::vector<Dataset::Data> const &datas) const;
 
             cv::Mat m_layers;
