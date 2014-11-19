@@ -94,23 +94,23 @@ namespace ocr {
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    std::move(d));
         std::cout << m_training_set << std::endl;
-        m_layers = cv::Mat(3, 1, CV_32SC1);
+        m_layers = cv::Mat(4, 1, CV_32SC1);
         m_layers.row(0) = cv::Scalar(m_nbFeatures);
-        //m_layers.row(2) = cv::Scalar(10);
+        m_layers.row(2) = cv::Scalar(10);
         m_layers.row(1) = cv::Scalar(10);
-        m_layers.row(2) = cv::Scalar(d.get_nb_output());
+        m_layers.row(3) = cv::Scalar(d.get_nb_output());
 
 
         ANN_MLP::Params p(
                 m_layers, // Neural network typography
                 ANN_MLP::SIGMOID_SYM, // Activation function
-                0.001, // first activation function parameter BackprocCoef ?
-                0.001, // second activation functon parameter
+                0.01, // first activation function parameter BackprocCoef ?
+                0.01, // second activation functon parameter
                 TermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
                              m_nbIterations, m_stopRate), // training stop condition
                 ANN_MLP::Params::BACKPROP, // training algorithm
-                0.0001, // First parameter for the training method
-                0.0001 // Second parameter for the training method
+                0.01, // First parameter for the training method
+                0.01 // Second parameter for the training method
                 );
         std::cout << m_layers << std::endl;
         m_neuralNetwork = ANN_MLP::create(p);
@@ -120,7 +120,7 @@ namespace ocr {
                 );
         std::cout << "apres" << std::endl;
         std::cout << iterations << std::endl;
-        serialize("./test.xml");
+        //serialize("./test.xml");
     }
 
     void
