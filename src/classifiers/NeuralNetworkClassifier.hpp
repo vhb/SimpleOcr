@@ -40,6 +40,7 @@ namespace ocr {
             virtual void train(Dataset &&);
             virtual void serialize(std::string &&dest_path) const;
             virtual char const *name() const;
+            virtual void unserialize(std::string const &);
 
         private:
             char get_classification(cv::Mat const &classification_matrix) const;

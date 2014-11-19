@@ -74,6 +74,12 @@ namespace ocr {
         return m_output.size() - 1;
     }
 
+    std::string const &
+    Dataset::get_value(std::size_t pos) const
+    {
+        return m_output[pos];
+    }
+
     std::vector<Dataset::Data> const &
     Dataset::get_datas() const
     {

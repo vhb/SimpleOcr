@@ -86,6 +86,12 @@ Brain::apply(std::string const &imagePath) const
 }
 
 void
+Brain::loadTrainData(std::string const &filePath)
+{
+    m_classifier->unserialize(filePath);
+}
+
+void
 Brain::train(std::string const &dataset_path)
 {
     std::cout << "Brain::train" << std::endl;

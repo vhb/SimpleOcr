@@ -75,7 +75,7 @@ namespace ocr {
         auto size = mat.size();
         // TODO: add zeros
         auto value = cv::Mat(size.height, dataset.get_nb_output(), CV_32F);
-        for (std::size_t i = 0; i < size.height; ++i) {
+        for (ssize_t i = 0; i < size.height; ++i) {
             //std::cout << i << "\t" << dataset.get_output_for(i) << std::endl;
             value.at<float>(i, dataset.get_output_for(i)) = 1.0;
         }
@@ -129,6 +129,12 @@ namespace ocr {
         if (m_neuralNetwork) {
             m_neuralNetwork->save(dest_path);
         }
+    }
+
+    void
+    NeuralNetworkClassifier::unserialize(std::string const &filePath)
+    {
+        m_neuralNetwork = cv::ml::StatModel::load<cv::ml::ANN_MLP>(filePath);
     }
 
     char const *

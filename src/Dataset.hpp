@@ -22,6 +22,7 @@
 #pragma once
 
 #include <memory>
+#include <tuple>
 
 #include <opencv2/opencv.hpp>
 
@@ -45,6 +46,7 @@ namespace ocr {
             std::string const &get_json_path() const;
             int get_nb_output() const;
             int get_output_for(std::size_t pos);
+            std::string const &get_value(std::size_t pos) const;
 
         private:
             std::string m_json_path;

@@ -31,6 +31,7 @@ namespace ocr {
             virtual void serialize(std::string &&dest_path) const;
             virtual char const *name() const;
             virtual void train(Dataset &&dataset_path);
+            virtual void unserialize(std::string const &) {}
     };
 
 } /* namespace ocr */
