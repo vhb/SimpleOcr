@@ -24,11 +24,11 @@
 #include <iostream>
 
 namespace ocr {
-    char
+    std::string
     TestClassifier::classify(cv::Mat &&features, Dataset const &) const
     {
         std::cout << "TestClassifier" << std::endl;
-        return 'c';
+        return "c";
     }
 
     char const *

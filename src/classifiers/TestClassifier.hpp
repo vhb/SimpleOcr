@@ -27,7 +27,7 @@ namespace ocr {
     class TestClassifier : public IClassifier {
         public:
             virtual ~TestClassifier() noexcept {}
-            virtual char classify(cv::Mat &&features, Dataset const &) const;
+            virtual std::string classify(cv::Mat &&features, Dataset const &) const;
             virtual void serialize(std::string &&dest_path) const;
             virtual char const *name() const;
             virtual void train(Dataset &&dataset_path);

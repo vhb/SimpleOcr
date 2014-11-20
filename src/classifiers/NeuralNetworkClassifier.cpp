@@ -46,13 +46,14 @@ namespace ocr {
     }
 
 
-    char
+    std::string
     NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix,
                                       Dataset const &dataset) const
     {
         cv::Mat classificationResult(1, m_nbOutputClasses, CV_32F);
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
-        return get_classification(classificationResult);
+        // return 'c';
+        return dataset.get_value(get_classification(classificationResult));
     }
 
     cv::Mat
@@ -144,7 +145,7 @@ namespace ocr {
         return "NeuralNetworkClassifier";
     }
 
-    char
+    int
     NeuralNetworkClassifier::get_classification(cv::Mat const &classificationResult) const
     {
         int maxIndex = 0;
@@ -157,7 +158,7 @@ namespace ocr {
                 maxIndex = index;
             }
         }
-        return values[maxIndex];
+        return maxIndex;
     }
 
 } /* namespace ocr */

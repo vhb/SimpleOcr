@@ -36,7 +36,7 @@ namespace ocr {
             NeuralNetworkClassifier(utils::Json::Map const &datas);
             virtual ~NeuralNetworkClassifier() noexcept {}
 
-            virtual char classify(cv::Mat &&features,
+            virtual std::string classify(cv::Mat &&features,
                                   Dataset const &dataset) const;
             virtual void train(Dataset &&);
             virtual void serialize(std::string &&dest_path) const;
@@ -44,7 +44,7 @@ namespace ocr {
             virtual void unserialize(std::string const &);
 
         private:
-            char get_classification(cv::Mat const &classification_matrix) const;
+            int get_classification(cv::Mat const &classification_matrix) const;
             cv::Mat get_classification_matrix(cv::Mat const &training_set,
                                               Dataset &&);
             cv::Mat get_data_matrix(std::vector<Dataset::Data> const &datas) const;
