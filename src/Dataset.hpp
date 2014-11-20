@@ -37,6 +37,7 @@ namespace ocr {
             typedef std::tuple<std::string, cv::Mat> Data;
 
             // Load the data described in `json_path`
+            Dataset() = default;
             Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
                     std::shared_ptr<PreprocessorManager> const &preprocessor_manager,
                     std::string const &json_path);

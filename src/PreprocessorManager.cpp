@@ -52,7 +52,6 @@ namespace ocr {
     {
         cv::Mat tmp = mat;
         for (auto const &i : m_preprocessors) {
-            std::cout << i->name() << std::endl;
             tmp = i->apply(tmp);
         }
         return tmp;

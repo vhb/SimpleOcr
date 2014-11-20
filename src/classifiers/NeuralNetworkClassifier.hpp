@@ -36,7 +36,8 @@ namespace ocr {
             NeuralNetworkClassifier(utils::Json::Map const &datas);
             virtual ~NeuralNetworkClassifier() noexcept {}
 
-            virtual char classify(cv::Mat &&features) const;
+            virtual char classify(cv::Mat &&features,
+                                  Dataset const &dataset) const;
             virtual void train(Dataset &&);
             virtual void serialize(std::string &&dest_path) const;
             virtual char const *name() const;

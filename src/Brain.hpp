@@ -39,16 +39,16 @@ namespace ocr {
     class Brain {
 
         public:
-            Brain(std::string &&json_path);
+            Brain(std::string &&json_path, std::string &&dataset_path);
             ~Brain() ;
 
-            void train(std::string const &dataset_path);
+            void train();
             std::vector<std::string> apply(std::string const &image_path) const;
             void loadTrainData(std::string const &filePath);
 
         private:
             void update_json(utils::Json::Map &m);
-            // The ordre is important here: the modulemanager destructor realease
+            // The order is important here: the modulemanager destructor release
             //      The shared library used by the segment, etc..
             // This is a design flow, it may need fix, but it work for now
             ModuleManager                        m_moduleManager;
@@ -56,6 +56,7 @@ namespace ocr {
             std::shared_ptr<ISegmenter>          m_segmenter;
             std::shared_ptr<IFeatureExtractor>   m_featureExtractor;
             std::shared_ptr<IClassifier>         m_classifier;
+            Dataset m_dataset;
 
             utils::Json                         m_json;
     };

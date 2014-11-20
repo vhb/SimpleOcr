@@ -25,7 +25,7 @@
 
 namespace ocr {
 
-Brain::Brain(std::string &&json_path)
+Brain::Brain(std::string &&json_path, std::string &&dataset_path)
     : m_preprocessorManager(new PreprocessorManager())
 {
     utils::Json::Map datas = JSON_CAST(Map const, m_json.load(std::move(json_path)));
@@ -56,6 +56,8 @@ Brain::Brain(std::string &&json_path)
     auto tmp = datas["classifier"].get<utils::Json::Map>();
     JSON_CAST(Map, tmp["args"])["feature_extractor"] = m_featureExtractor;
     m_classifier = m_moduleManager.load_module<IClassifier>(tmp);
+    m_dataset = Dataset(m_featureExtractor, m_preprocessorManager, dataset_path);
+
 }
 
 Brain::~Brain()
@@ -71,15 +73,16 @@ Brain::apply(std::string const &imagePath) const
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
     std::cout << "Looping over sub matrices" << std::endl;
     auto nb_subMatrix = m_segmenter->apply(std::move(img));
+    std::cout << nb_subMatrix << std::endl;
     for (ssize_t i = 0; i < nb_subMatrix; ++i) {
         auto subMatrix = img.getSubMatrix(i);
         std::cout << "\t Feature extractor: " << m_featureExtractor->name()
                   << std::endl;
         auto features = m_featureExtractor->extract(std::move(img), i);
         std::cout << "\t Classifier: " << m_classifier->name() << std::endl;
-        auto value = m_classifier->classify(std::move(features));
+        auto value = m_classifier->classify(std::move(features), m_dataset);
         std::cout << "\t\tvalue: " << value << std::endl;
-        break; // TODO: Comment this
+        std::cout << "\t\tvalue: " << int(value) << std::endl;
     }
     img.writeImage();
     return std::vector<std::string>();
@@ -92,13 +95,13 @@ Brain::loadTrainData(std::string const &filePath)
 }
 
 void
-Brain::train(std::string const &dataset_path)
+Brain::train()
 {
     std::cout << "Brain::train" << std::endl;
-    auto dataset = Dataset(m_featureExtractor,
-                           m_preprocessorManager,
-                           dataset_path);
-    m_classifier->train(std::move(dataset));
+    //auto dataset = Dataset(m_featureExtractor,
+                           //m_preprocessorManager,
+                           //dataset_path);
+    m_classifier->train(std::move(m_dataset));
 }
 
 void

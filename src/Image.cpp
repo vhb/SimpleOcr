@@ -91,7 +91,7 @@ namespace ocr {
     Image::addSubMatrix(cv::Rect &&pos)
     {
         m_subMatrices.push_back(std::move(pos));
-        return m_subMatrices.size() - 1;
+        return m_subMatrices.size();
     }
 
     cv::Mat

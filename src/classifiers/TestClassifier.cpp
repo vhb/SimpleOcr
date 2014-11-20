@@ -25,7 +25,7 @@
 
 namespace ocr {
     char
-    TestClassifier::classify(cv::Mat &&features) const
+    TestClassifier::classify(cv::Mat &&features, Dataset const &) const
     {
         std::cout << "TestClassifier" << std::endl;
         return 'c';

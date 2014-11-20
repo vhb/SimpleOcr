@@ -47,7 +47,8 @@ namespace ocr {
 
 
     char
-    NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix) const
+    NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix,
+                                      Dataset const &dataset) const
     {
         cv::Mat classificationResult(1, m_nbOutputClasses, CV_32F);
         m_neuralNetwork->predict(featuresMatrix, classificationResult);

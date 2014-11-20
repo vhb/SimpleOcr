@@ -25,12 +25,18 @@ int main(int ac, char * const av[]) {
     try {
         using namespace ocr;
         if (ac < 4) {
-            std::cerr << "Usage: ocr image_path json_path dataset_path" << std::endl;
+            std::cerr << "Usage: ocr image_path json_path dataset_path [xml_path]"
+                      << std::endl;
             return 1;
         }
-        Brain brain(av[2]);
-        brain.loadTrainData(av[3]);
-        //brain.train(av[3]);
+        Brain brain(av[2], av[3]);
+        if (ac == 5) {
+            std::cout << "coucou" << std::endl;
+            brain.loadTrainData(av[4]);
+        }
+        else {
+            brain.train();
+        }
         brain.apply(av[1]);
     }
     catch (std::exception &e) {

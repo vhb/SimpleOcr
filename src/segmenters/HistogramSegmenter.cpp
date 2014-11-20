@@ -40,6 +40,7 @@ namespace ocr {
 
         auto color = cv::Scalar(255, 255, 255);
         auto hor_pic = detectPic(std::move(horizontal));
+        int value;
         for (auto & i : hor_pic) {
             auto br = cv::Rect(0, i.first, mat.cols, i.second - i.first);
             auto subMatrix = mat(br).clone();
@@ -53,11 +54,13 @@ namespace ocr {
                 auto pt1 = cv::Point(j.first, i.first);
                 auto pt2 = cv::Point(j.second, i.second);
                 cv::rectangle(mat, pt1, pt2, color, 1, 8, 0);
+                auto rect = cv::Rect(pt1, pt2);
+                value = img.addSubMatrix(std::move(rect));
             }
         }
         img.setMatrix("HistogramSegmenter", std::move(mat));
         // plotHistogram(std::move(horizontal));
-        return 0;
+        return value;
     }
 
     char const *
