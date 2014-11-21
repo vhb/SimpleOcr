@@ -23,39 +23,69 @@
 
 namespace ocr {
 
-	ScaleDown::ScaleDown() noexcept {}
+    ScaleDown::ScaleDown() noexcept {}
 
-	ScaleDown::~ScaleDown() noexcept {}
+    ScaleDown::~ScaleDown() noexcept {}
 
-	cv::Mat
-	ScaleDown::extract(Image const &img, int index) const {
-		cv::Mat const & data = img.getSubMatrix(index);
-		return extract(data);
-	}
+    cv::Mat
+    ScaleDown::extract(Image const &img, int index) const {
+        cv::Mat const & data = img.getSubMatrix(index);
+        return extract(data);
+    }
 
-	cv::Mat
-	ScaleDown::extract(cv::Mat const &m) const {
-		cv::Mat dest;
-		cv::Size size(width, height);
-		cv::resize(m, dest, size);
-		dest = dest.reshape(0, 1);
-		return dest;
-	}
+    inline std::string type2str(int type) {
+        std::string r;
 
-	int
-	ScaleDown::nb_features() const {
-		return width * height;
-	}
+        uchar depth = type & CV_MAT_DEPTH_MASK;
+        uchar chans = 1 + (type >> CV_CN_SHIFT);
 
-	char const *
-	ScaleDown::name() const
-	{
-		return "ScaleDown";
-	}
+        switch ( depth ) {
+            case CV_8U:  r = "8U"; break;
+            case CV_8S:  r = "8S"; break;
+            case CV_16U: r = "16U"; break;
+            case CV_16S: r = "16S"; break;
+            case CV_32S: r = "32S"; break;
+            case CV_32F: r = "32F"; break;
+            case CV_64F: r = "64F"; break;
+            default:     r = "User"; break;
+        }
+
+        r += "C";
+        r += (chans+'0');
+
+        return r;
+    }
+
+
+    cv::Mat
+    ScaleDown::extract(cv::Mat const &m) const {
+        cv::Size size(width, height);
+        cv::Mat dest(width, height, CV_32F);
+        //std::cout << type2str(dest.type());
+        cv::resize(m, dest, size);
+        cv::Mat value;
+        dest.convertTo(value, CV_32F);
+        dest = value;
+        //std::cout << dest << std::endl;
+        //std::cout << type2str(m.type()) << std::endl;
+        dest = dest.reshape(0, 1);
+        return dest;
+    }
+
+    int
+    ScaleDown::nb_features() const {
+        return width * height;
+    }
+
+    char const *
+    ScaleDown::name() const
+    {
+        return "ScaleDown";
+    }
 
 }
 
-extern "C"
+    extern "C"
 ocr::ScaleDown *constructor()
 {
     return new ocr::ScaleDown();
