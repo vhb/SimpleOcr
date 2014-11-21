@@ -37,6 +37,7 @@ namespace ocr {
             utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas,
                     "feature_extractor");
         m_nbFeatures = m_featureExtractor->nb_features();
+        m_nbOutputClasses = m_featureExtractor->nb_features();
         //m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,0.6,1);
     }
     catch (std::bad_cast const &e) {
@@ -51,6 +52,7 @@ namespace ocr {
     NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix,
                                       Dataset const &dataset) const
     {
+        std::cout << "nbOutputClasses\t" << m_nbOutputClasses << std::endl;
         cv::Mat classificationResult(1, m_nbOutputClasses, CV_32F);
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
         // return 'c';
@@ -116,7 +118,7 @@ namespace ocr {
         m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,0.6,1);
         //m_neuralNetwork = ANN_MLP::create(p);
         std::cout << "avant"  << std::endl;
-        //std::cout << m_training_set << std::endl;
+        std::cout << m_training_set << std::endl;
         std::cout << m_training_set_classifications << std::endl;
         int iterations = m_neuralNetwork->train(
                 m_training_set,
