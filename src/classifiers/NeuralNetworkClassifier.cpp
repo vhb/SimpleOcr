@@ -81,7 +81,7 @@ namespace ocr {
 
 
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
-        classificationResult.at<double>(0, 0);
+        // classificationResult.at<double>(0, 0);
         auto maxIndex = get_classification(classificationResult,
                                            dataset.get_nb_output());
         auto value = dataset.get_value(maxIndex);
@@ -93,11 +93,14 @@ namespace ocr {
             std::size_t nbOutputClasses
             ) const
     {
+        using Type = float;
         int maxIndex = 0;
         float value=0.0f;
-        float maxValue = classificationResult.at<double>(0, 0);
+        std::cout << "avant" << std::endl;
+        float maxValue = classificationResult.at<Type>(0, 0);
+        std::cout << "apres" << std::endl;
         for (unsigned int index = 1; index < nbOutputClasses; ++index) {
-            value = classificationResult.at<double>(0, index);
+            value = classificationResult.at<Type>(0, index);
             //std::cout << value << std::endl;
             if (value > maxValue) {
                 //std::cout << maxValue << std::endl;
