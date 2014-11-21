@@ -34,9 +34,10 @@ namespace ocr {
                         )
     {
         m_featureExtractor =
-            utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas, "feature_extractor");
+            utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas,
+                    "feature_extractor");
         m_nbFeatures = m_featureExtractor->nb_features();
-
+        //m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,0.6,1);
     }
     catch (std::bad_cast const &e) {
         std::cerr << "bad_cast\t" << e.what() << std::endl;
@@ -88,37 +89,40 @@ namespace ocr {
     void
     NeuralNetworkClassifier::train(Dataset &&d)
     {
-        using namespace cv::ml;
         using namespace cv;
 
         m_training_set = get_data_matrix(d.get_datas());
-        //std::cout << m_training_set.rows << "\t" << m_training_set.cols << std::endl;
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    std::move(d));
-        std::cout << m_training_set << std::endl;
-        m_layers = cv::Mat(4, 1, CV_32SC1);
-        m_layers.row(0) = cv::Scalar(m_nbFeatures);
-        m_layers.row(2) = cv::Scalar(10);
-        m_layers.row(1) = cv::Scalar(10);
-        m_layers.row(3) = cv::Scalar(d.get_nb_output());
-
-
-        ANN_MLP::Params p(
-                m_layers, // Neural network typography
-                ANN_MLP::SIGMOID_SYM, // Activation function
-                0.01, // first activation function parameter BackprocCoef ?
-                0.01, // second activation functon parameter
-                TermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
+        CvANN_MLP_TrainParams p(
+                //m_layers, // Neural network typography
+                //ANN_MLP::SIGMOID_SYM, // Activation function
+                //0.01, // first activation function parameter BackprocCoef ?
+                //0.01, // second activation functon parameter
+                cvTermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
                              m_nbIterations, m_stopRate), // training stop condition
-                ANN_MLP::Params::BACKPROP, // training algorithm
+                CvANN_MLP_TrainParams::BACKPROP, // training algorithm
                 0.01, // First parameter for the training method
                 0.01 // Second parameter for the training method
                 );
+
+        m_layers = cv::Mat(4, 1, CV_32S);
+        m_layers.at<int>(0, 0) = m_featureExtractor->nb_features();
+        m_layers.at<int>(1, 0) = 16;
+        m_layers.at<int>(2, 0) = 16;
+        m_layers.at<int>(3, 0) = d.get_nb_output();
         std::cout << m_layers << std::endl;
-        m_neuralNetwork = ANN_MLP::create(p);
+        m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,0.6,1);
+        //m_neuralNetwork = ANN_MLP::create(p);
         std::cout << "avant"  << std::endl;
-        int iterations = m_neuralNetwork->train(m_training_set, ROW_SAMPLE,
-                                                m_training_set_classifications
+        std::cout << m_training_set << std::endl;
+        std::cout << m_training_set_classifications << std::endl;
+        int iterations = m_neuralNetwork->train(
+                m_training_set,
+                m_training_set_classifications,
+                cv::Mat(),
+                cv::Mat(),
+                p
                 );
         std::cout << "apres" << std::endl;
         std::cout << iterations << std::endl;
@@ -128,15 +132,20 @@ namespace ocr {
     void
     NeuralNetworkClassifier::serialize(std::string &&dest_path) const
     {
+
         if (m_neuralNetwork) {
-            m_neuralNetwork->save(dest_path);
+            CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(),
+                     0, CV_STORAGE_WRITE);
+            m_neuralNetwork->write(storage, "SimpleOcr");
+            cvReleaseFileStorage(&storage);
         }
     }
 
     void
     NeuralNetworkClassifier::unserialize(std::string const &filePath)
     {
-        m_neuralNetwork = cv::ml::StatModel::load<cv::ml::ANN_MLP>(filePath);
+        CvANN_MLP neuralNetwork;
+        neuralNetwork.load(filePath.c_str(), "SimpleOcr");
     }
 
     char const *

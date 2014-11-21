@@ -104,6 +104,12 @@ Brain::train()
 }
 
 void
+Brain::serialize(std::string &&filePath)
+{
+    m_classifier->serialize(std::move(filePath));
+}
+
+void
 Brain::update_json(utils::Json::Map &)
 {
 #warning "TODO: implement depencies injection"

@@ -36,6 +36,7 @@ int main(int ac, char * const av[]) {
         }
         else {
             brain.train();
+            brain.serialize("./test.xml");
         }
         brain.apply(av[1]);
     }
