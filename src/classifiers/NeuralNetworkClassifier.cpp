@@ -81,7 +81,6 @@ namespace ocr {
 
 
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
-        classificationResult.at<double>(0, 0);
         auto maxIndex = get_classification(classificationResult,
                                            dataset.get_nb_output());
         auto value = dataset.get_value(maxIndex);
@@ -95,9 +94,9 @@ namespace ocr {
     {
         int maxIndex = 0;
         float value=0.0f;
-        float maxValue = classificationResult.at<double>(0, 0);
+        float maxValue = classificationResult.at<float>(0, 0);
         for (unsigned int index = 1; index < nbOutputClasses; ++index) {
-            value = classificationResult.at<double>(0, index);
+            value = classificationResult.at<float>(0, index);
             //std::cout << value << std::endl;
             if (value > maxValue) {
                 //std::cout << maxValue << std::endl;
@@ -157,9 +156,9 @@ namespace ocr {
 
         m_layers = cv::Mat(5, 1, CV_32S);
         m_layers.at<int>(0, 0) = m_featureExtractor->nb_features();
-        m_layers.at<int>(1, 0) = 40;
-        m_layers.at<int>(2, 0) = 40;
-        m_layers.at<int>(3, 0) = 40;
+        m_layers.at<int>(1, 0) = 30;
+        m_layers.at<int>(2, 0) = 20;
+        m_layers.at<int>(3, 0) = 10;
         m_layers.at<int>(4, 0) = d.get_nb_output();
         m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,
                 0.0,0);
