@@ -65,7 +65,7 @@ namespace ocr {
     {
         auto const &tmp = m_datas[pos];
         auto it = std::find_if(begin(m_output), end(m_output),
-                [&] (std::string const &s){
+                [&] (std::string const &s) {
             return s == std::get<0>(tmp);
         });
         if (it != end(m_output))
@@ -77,6 +77,10 @@ namespace ocr {
     std::string const &
     Dataset::get_value(std::size_t pos) const
     {
+        //std::cout << pos << std::endl;
+        //for (auto i : m_output) {
+            //std::cout << i << std::endl;
+        //}
         return m_output[pos];
     }
 

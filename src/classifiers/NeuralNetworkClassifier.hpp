@@ -44,7 +44,7 @@ namespace ocr {
             virtual void unserialize(std::string const &);
 
         private:
-            int get_classification(cv::Mat const &classification_matrix) const;
+            int get_classification(cv::Mat const &classification_matrix, std::size_t) const;
             cv::Mat get_classification_matrix(cv::Mat const &training_set,
                                               Dataset &&);
             cv::Mat get_data_matrix(std::vector<Dataset::Data> const &datas) const;

@@ -37,7 +37,6 @@ namespace ocr {
             utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas,
                     "feature_extractor");
         m_nbFeatures = m_featureExtractor->nb_features();
-        m_nbOutputClasses = m_featureExtractor->nb_features();
         //m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,0.6,1);
     }
     catch (std::bad_cast const &e) {
@@ -52,11 +51,33 @@ namespace ocr {
     NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix,
                                       Dataset const &dataset) const
     {
-        std::cout << "nbOutputClasses\t" << m_nbOutputClasses << std::endl;
-        cv::Mat classificationResult(1, m_nbOutputClasses, CV_32F);
+        cv::Mat classificationResult(1, dataset.get_nb_output(), CV_32F);
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
-        // return 'c';
-        return dataset.get_value(get_classification(classificationResult));
+        classificationResult.at<double>(0, 0);
+        auto maxIndex = get_classification(classificationResult,
+                dataset.get_nb_output());
+        auto value = dataset.get_value(maxIndex);
+        return value;
+    }
+
+    int
+    NeuralNetworkClassifier::get_classification(cv::Mat const &classificationResult,
+            std::size_t nbOutputClasses
+            ) const
+    {
+        int maxIndex = 0;
+        float value=0.0f;
+        float maxValue = classificationResult.at<double>(0, 0);
+        for (unsigned int index = 1; index < nbOutputClasses; ++index) {
+            value = classificationResult.at<double>(0, index);
+            std::cout << value << std::endl;
+            if (value > maxValue) {
+                std::cout << maxValue << std::endl;
+                maxValue = value;
+                maxIndex = index;
+            }
+        }
+        return maxIndex;
     }
 
     cv::Mat
@@ -68,7 +89,6 @@ namespace ocr {
             auto sourceMat = m_featureExtractor->extract(std::get<1>(i));
             sourceMat.copyTo(value.row(index++));
         }
-        //std::cout << "value\t" << value << std::endl;
         return value;
     }
 
@@ -82,10 +102,8 @@ namespace ocr {
         auto tmp = cv::Mat::zeros(size.height, dataset.get_nb_output(), CV_32F);
         auto value = cv::Mat(tmp);
         for (ssize_t i = 0; i < size.height; ++i) {
-            //std::cout << i << "\t" << dataset.get_output_for(i) << std::endl;
             value.at<float>(i, dataset.get_output_for(i)) = 1.0;
         }
-        //std::cout << "value\t" << value << std::endl;
         return value;
     }
 
@@ -109,17 +127,14 @@ namespace ocr {
                 0.01 // Second parameter for the training method
                 );
 
-        m_layers = cv::Mat(4, 1, CV_32S);
+        m_layers = cv::Mat(5, 1, CV_32S);
         m_layers.at<int>(0, 0) = m_featureExtractor->nb_features();
-        m_layers.at<int>(1, 0) = 16;
-        m_layers.at<int>(2, 0) = 16;
-        m_layers.at<int>(3, 0) = d.get_nb_output();
-        std::cout << m_layers << std::endl;
-        m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,0.6,1);
-        //m_neuralNetwork = ANN_MLP::create(p);
-        std::cout << "avant"  << std::endl;
-        std::cout << m_training_set << std::endl;
-        std::cout << m_training_set_classifications << std::endl;
+        m_layers.at<int>(1, 0) = 40;
+        m_layers.at<int>(2, 0) = 40;
+        m_layers.at<int>(3, 0) = 40;
+        m_layers.at<int>(4, 0) = d.get_nb_output();
+        m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,
+                0.0,0);
         int iterations = m_neuralNetwork->train(
                 m_training_set,
                 m_training_set_classifications,
@@ -127,9 +142,7 @@ namespace ocr {
                 cv::Mat(),
                 p
                 );
-        std::cout << "apres" << std::endl;
-        std::cout << iterations << std::endl;
-        //serialize("./test.xml");
+        std::cout << "iterations\t" << iterations << std::endl;
     }
 
     void
@@ -157,23 +170,6 @@ namespace ocr {
     {
         return "NeuralNetworkClassifier";
     }
-
-    int
-    NeuralNetworkClassifier::get_classification(cv::Mat const &classificationResult) const
-    {
-        int maxIndex = 0;
-        float value=0.0f;
-        float maxValue = classificationResult.at<float>(0, 0);
-        for (int index = 1; index < m_nbOutputClasses; ++index) {
-            classificationResult.at<float>(0, index);
-            if (value > maxValue) {
-                maxValue = value;
-                maxIndex = index;
-            }
-        }
-        return maxIndex;
-    }
-
 } /* namespace ocr */
 
 extern "C"
