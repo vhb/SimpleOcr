@@ -24,7 +24,7 @@
         }
     },
     "feature_extractor": {
-        "path": "libMomentExtractor",
+        "path": "libScaleDown",
         "args": {}
     },
     "classifier": {
@@ -36,4 +36,3 @@
         }
     }
 }
-

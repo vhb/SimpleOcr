@@ -51,11 +51,12 @@ namespace ocr {
     NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix,
                                       Dataset const &dataset) const
     {
+        std::cout << featuresMatrix << std::endl;
         cv::Mat classificationResult(1, dataset.get_nb_output(), CV_32F);
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
         classificationResult.at<double>(0, 0);
         auto maxIndex = get_classification(classificationResult,
-                dataset.get_nb_output());
+                                           dataset.get_nb_output());
         auto value = dataset.get_value(maxIndex);
         return value;
     }

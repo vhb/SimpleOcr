@@ -23,32 +23,35 @@
 
 namespace ocr {
 
-    cv::Mat
-    ScaleDown::extract(Image const &img, int index) const
-    {
-        cv::Mat const & data = img.getSubMatrix(index);
-        extract(data);
-    }
+	ScaleDown::ScaleDown() noexcept {}
 
-    cv::Mat
-    ScaleDown::extract(cv::Mat const &m) const
-    {
-        cv::Mat dest;
-        cv::Size size(width, height);
-        cv::resize(m, dest, size);
-    }
+	ScaleDown::~ScaleDown() noexcept {}
 
-    int
-    ScaleDown::nb_features() const
-    {
-        return width * height;
-    }
+	cv::Mat
+	ScaleDown::extract(Image const &img, int index) const {
+		cv::Mat const & data = img.getSubMatrix(index);
+		return extract(data);
+	}
 
-    char const *
-    ScaleDown::name() const
-    {
-        return "ScaleDown";
-    }
+	cv::Mat
+	ScaleDown::extract(cv::Mat const &m) const {
+		cv::Mat dest;
+		cv::Size size(width, height);
+		cv::resize(m, dest, size);
+		dest = dest.reshape(0, 1);
+		return dest;
+	}
+
+	int
+	ScaleDown::nb_features() const {
+		return width * height;
+	}
+
+	char const *
+	ScaleDown::name() const
+	{
+		return "ScaleDown";
+	}
 
 }
 
