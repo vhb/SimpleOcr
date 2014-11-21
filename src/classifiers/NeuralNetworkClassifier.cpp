@@ -77,7 +77,8 @@ namespace ocr {
     {
         auto size = mat.size();
         // TODO: add zeros
-        auto value = cv::Mat(size.height, dataset.get_nb_output(), CV_32F);
+        auto tmp = cv::Mat::zeros(size.height, dataset.get_nb_output(), CV_32F);
+        auto value = cv::Mat(tmp);
         for (ssize_t i = 0; i < size.height; ++i) {
             //std::cout << i << "\t" << dataset.get_output_for(i) << std::endl;
             value.at<float>(i, dataset.get_output_for(i)) = 1.0;
@@ -115,7 +116,7 @@ namespace ocr {
         m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,0.6,1);
         //m_neuralNetwork = ANN_MLP::create(p);
         std::cout << "avant"  << std::endl;
-        std::cout << m_training_set << std::endl;
+        //std::cout << m_training_set << std::endl;
         std::cout << m_training_set_classifications << std::endl;
         int iterations = m_neuralNetwork->train(
                 m_training_set,
@@ -146,6 +147,7 @@ namespace ocr {
     {
         CvANN_MLP neuralNetwork;
         neuralNetwork.load(filePath.c_str(), "SimpleOcr");
+        m_neuralNetwork = new CvANN_MLP(neuralNetwork);
     }
 
     char const *
