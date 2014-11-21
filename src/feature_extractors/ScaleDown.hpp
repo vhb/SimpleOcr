@@ -1,4 +1,4 @@
-// Simple ocr
+// Simple OCR program
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -19,36 +19,25 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <preprocessors/Smooth.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#pragma once
+
+#include <IFeatureExtractor.hpp>
 
 namespace ocr {
-    void
-    Smooth::apply(Image &img) const
-    {
-        cv::Mat &mat = img.getCurrentMatrix();
-        img.setMatrix("Smooth", std::move(apply(mat)));
-    }
 
-    cv::Mat
-    Smooth::apply(cv::Mat const &mat) const
-    {
-        cv::Mat dest = mat.clone();
-        cv::Size blurKernel(3, 3);
-        cv::blur(mat, dest, blurKernel, cv::Point(-1, -1));
-        return dest;
-    }
+	class ScaleDown
+	: public IFeatureExtractor
+	{
+	public:
+		virtual ~ScaleDown() noexcept {}
+		virtual cv::Mat extract(Image const &img, int index) const;
+		virtual cv::Mat extract(cv::Mat const &m) const;
+		virtual int nb_features() const;
+		virtual char const *name() const;
 
-    char const *
-    Smooth::name() const
-    {
-        return "Smooth";
-    }
+	private:
+		constexpr int width = 16;
+		constexpr int height = 16;
+	};
 
-} /* namespace ocr */
-
-extern "C" {
-    ocr::Smooth* constructor() {
-        return new ocr::Smooth();
-    }
 }

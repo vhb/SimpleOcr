@@ -1,4 +1,4 @@
-// Simple ocr
+// Simple OCR program
 // Copyright (C) 2014 vhb
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -19,36 +19,39 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <preprocessors/Smooth.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <ScaleDown.hpp>
 
 namespace ocr {
-    void
-    Smooth::apply(Image &img) const
-    {
-        cv::Mat &mat = img.getCurrentMatrix();
-        img.setMatrix("Smooth", std::move(apply(mat)));
-    }
 
-    cv::Mat
-    Smooth::apply(cv::Mat const &mat) const
-    {
-        cv::Mat dest = mat.clone();
-        cv::Size blurKernel(3, 3);
-        cv::blur(mat, dest, blurKernel, cv::Point(-1, -1));
-        return dest;
-    }
+	ScaleDown::ScaleDown() {}
 
-    char const *
-    Smooth::name() const
-    {
-        return "Smooth";
-    }
+	ScaleDown::~ScaleDown() {}
 
-} /* namespace ocr */
+	cv::Mat extract(Image const &img, int index) const {
+		cv::Mat const & data = img.getSubMatrix(index);
+		extract(data);
+	}
 
-extern "C" {
-    ocr::Smooth* constructor() {
-        return new ocr::Smooth();
-    }
+	cv::Mat extract(cv::Mat const &m) const {
+		cv::Mat dest;
+		cv::Size size(width, height);
+		cv::resize(m, dest, size);
+	}
+
+	int nb_features() const {
+		return width * height;
+	}
+
+	char const *
+	MomentExtractor::name() const
+	{
+		return "ScaleDown";
+	}
+
+}
+
+extern "C"
+ocr::ScaleDown *constructor()
+{
+	return new ocr::ScaleDown();
 }
