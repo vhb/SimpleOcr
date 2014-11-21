@@ -19,7 +19,9 @@
     ],
     "segmenter": {
         "path": "libContoursSegmenter",
-        "args": {}
+        "args": {
+            "toto": "tutu"
+        }
     },
     "feature_extractor": {
         "path": "libMomentExtractor",

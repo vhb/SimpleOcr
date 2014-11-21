@@ -25,19 +25,19 @@
 
 namespace ocr {
 
-	class ScaleDown
-	: public IFeatureExtractor
-	{
-	public:
-		virtual ~ScaleDown() noexcept {}
-		virtual cv::Mat extract(Image const &img, int index) const;
-		virtual cv::Mat extract(cv::Mat const &m) const;
-		virtual int nb_features() const;
-		virtual char const *name() const;
+    class ScaleDown
+        : public IFeatureExtractor
+    {
+        public:
+            virtual ~ScaleDown() noexcept {}
+            virtual cv::Mat extract(Image const &img, int index) const;
+            virtual cv::Mat extract(cv::Mat const &m) const;
+            virtual int nb_features() const;
+            virtual char const *name() const;
 
-	private:
-		constexpr int width = 16;
-		constexpr int height = 16;
-	};
+        private:
+            constexpr int width = 16;
+            constexpr int height = 16;
+    };
 
 }

@@ -19,39 +19,41 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 // OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include <ScaleDown.hpp>
+#include "ScaleDown.hpp"
 
 namespace ocr {
 
-	ScaleDown::ScaleDown() {}
+    cv::Mat
+    ScaleDown::extract(Image const &img, int index) const
+    {
+        cv::Mat const & data = img.getSubMatrix(index);
+        extract(data);
+    }
 
-	ScaleDown::~ScaleDown() {}
+    cv::Mat
+    ScaleDown::extract(cv::Mat const &m) const
+    {
+        cv::Mat dest;
+        cv::Size size(width, height);
+        cv::resize(m, dest, size);
+    }
 
-	cv::Mat extract(Image const &img, int index) const {
-		cv::Mat const & data = img.getSubMatrix(index);
-		extract(data);
-	}
+    int
+    ScaleDown::nb_features() const
+    {
+        return width * height;
+    }
 
-	cv::Mat extract(cv::Mat const &m) const {
-		cv::Mat dest;
-		cv::Size size(width, height);
-		cv::resize(m, dest, size);
-	}
-
-	int nb_features() const {
-		return width * height;
-	}
-
-	char const *
-	MomentExtractor::name() const
-	{
-		return "ScaleDown";
-	}
+    char const *
+    ScaleDown::name() const
+    {
+        return "ScaleDown";
+    }
 
 }
 
 extern "C"
 ocr::ScaleDown *constructor()
 {
-	return new ocr::ScaleDown();
+    return new ocr::ScaleDown();
 }
