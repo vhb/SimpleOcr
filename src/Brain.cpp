@@ -81,7 +81,7 @@ Brain::apply(std::string const &imagePath) const
         auto features = m_featureExtractor->extract(std::move(img), i);
         std::cout << "\t Classifier: " << m_classifier->name() << std::endl;
         auto value = m_classifier->classify(std::move(features), m_dataset);
-        std::cout << "\t\noutput value: " << value << std::endl;
+        std::cout << "output value: " << value << std::endl;
     }
     img.writeImage();
     return std::vector<std::string>();
