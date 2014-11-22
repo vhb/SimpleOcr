@@ -18,7 +18,7 @@
         },
     ],
     "segmenter": {
-        "path": "libContoursSegmenter",
+        "path": "libHistogramSegmenter",
         "args": {
             "toto": "tutu"
         }
