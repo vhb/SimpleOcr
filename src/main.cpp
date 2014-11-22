@@ -31,12 +31,10 @@ int main(int ac, char * const av[]) {
         }
         Brain brain(av[2], av[3]);
         if (ac == 5) {
-            std::cout << "coucou" << std::endl;
             brain.loadTrainData(av[4]);
         }
         else {
             brain.train();
-            brain.serialize("./test.xml");
         }
         brain.apply(av[1]);
     }

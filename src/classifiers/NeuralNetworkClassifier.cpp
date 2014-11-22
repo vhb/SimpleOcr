@@ -31,7 +31,19 @@ namespace ocr {
                 m_stopRate(utils::get_item<float>(datas, "stop_rate")),
                 m_backpropogationCoef(
                         utils::get_item<float>(datas, "backpropagation_coef")
+                        ),
+                m_trainingMethodFirst(
+                        utils::get_item<float>(datas, "training_method_first")
+                        ),
+                m_trainingMethodSec(
+                        utils::get_item<float>(datas, "training_method_sec")
+                        ),
+                m_layers_datas(
+                        utils::get_item<std::vector<utils::Json::Item>>(datas, "layers")
                         )
+                //m_destPath(
+                        //utils::get_item<float>(datas, "m_destPath")
+                        //)
     {
         m_featureExtractor =
             utils::get_item<std::shared_ptr<IFeatureExtractor>>(datas,
@@ -74,14 +86,9 @@ namespace ocr {
                                       Dataset const &dataset) const
     {
         cv::Mat classificationResult(1, dataset.get_nb_output(), featuresMatrix.type());
-        //std::cout << type2str(classificationResult.type()) << std::endl;
-        //std::cout << type2str(featuresMatrix.type()) << std::endl;
-        //std::cout << classificationResult.rows << "\t" << classificationResult.cols << std::endl;
-        //std::cout << featuresMatrix.rows << "\t" << featuresMatrix.cols << std::endl;
 
 
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
-        // classificationResult.at<double>(0, 0);
         auto maxIndex = get_classification(classificationResult,
                                            dataset.get_nb_output());
         auto value = dataset.get_value(maxIndex);
@@ -96,9 +103,7 @@ namespace ocr {
         using Type = float;
         int maxIndex = 0;
         float value=0.0f;
-        std::cout << "avant" << std::endl;
         float maxValue = classificationResult.at<Type>(0, 0);
-        std::cout << "apres" << std::endl;
         for (unsigned int index = 1; index < nbOutputClasses; ++index) {
             value = classificationResult.at<Type>(0, index);
             //std::cout << value << std::endl;
@@ -129,6 +134,7 @@ namespace ocr {
                                                        )
     {
         auto size = mat.size();
+        std::cout << size<< std::endl;
         // TODO: add zeros
         auto tmp = cv::Mat::zeros(size.height, dataset.get_nb_output(), CV_32F);
         auto value = cv::Mat(tmp);
@@ -146,24 +152,32 @@ namespace ocr {
         m_training_set = get_data_matrix(d.get_datas());
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    std::move(d));
+        std::cout << m_nbIterations << "\t" << m_stopRate << std::endl;
         CvANN_MLP_TrainParams p(
                 //m_layers, // Neural network typography
                 //ANN_MLP::SIGMOID_SYM, // Activation function
                 //0.01, // first activation function parameter BackprocCoef ?
                 //0.01, // second activation functon parameter
-                cvTermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
+                cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, // TermCriteria::EPS + TermCriteria::COUNT,
                              m_nbIterations, m_stopRate), // training stop condition
                 CvANN_MLP_TrainParams::BACKPROP, // training algorithm
-                0.01, // First parameter for the training method
-                0.01 // Second parameter for the training method
+                0.1, // First parameter for the training method
+                0.1 // Second parameter for the training method
                 );
 
-        m_layers = cv::Mat(5, 1, CV_32S);
+        m_layers = cv::Mat(m_layers_datas.size() + 2, 1, CV_32S);
         m_layers.at<int>(0, 0) = m_featureExtractor->nb_features();
-        m_layers.at<int>(1, 0) = 40;
-        m_layers.at<int>(2, 0) = 40;
-        m_layers.at<int>(3, 0) = 40;
-        m_layers.at<int>(4, 0) = d.get_nb_output();
+
+        int j = 1;
+        for (auto i : m_layers_datas) {
+            m_layers.at<int>(j, 0) = JSON_CAST(Int, i);
+            j++;
+        }
+        m_layers.at<int>(m_layers_datas.size() + 1, 0) = d.get_nb_output();
+
+        //m_layers.at<int>(1, 0) = 30;
+        //m_layers.at<int>(2, 0) = 20;
+        //m_layers.at<int>(3, 0) = 10;
         m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,
                 0.0,0);
         int iterations = m_neuralNetwork->train(
@@ -174,15 +188,26 @@ namespace ocr {
                 p
                 );
         std::cout << "iterations\t" << iterations << std::endl;
+        serialize("__auto__");
     }
 
     void
     NeuralNetworkClassifier::serialize(std::string &&dest_path) const
     {
+        std::string dest;
+        if (dest_path == "__auto__") {
+            time_t rawtime;
+            struct tm * timeinfo;
+            char buffer[80];
 
+            time (&rawtime);
+            timeinfo = localtime(&rawtime);
+            strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
+            dest_path = std::string(buffer) + ".xml";
+        }
         if (m_neuralNetwork) {
             CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(),
-                     0, CV_STORAGE_WRITE);
+                                                       0, CV_STORAGE_WRITE);
             m_neuralNetwork->write(storage, "SimpleOcr");
             cvReleaseFileStorage(&storage);
         }
@@ -191,9 +216,10 @@ namespace ocr {
     void
     NeuralNetworkClassifier::unserialize(std::string const &filePath)
     {
-        CvANN_MLP neuralNetwork;
-        neuralNetwork.load(filePath.c_str(), "SimpleOcr");
-        m_neuralNetwork = new CvANN_MLP(neuralNetwork);
+        //CvANN_MLP neuralNetwork;
+        m_neuralNetwork = new CvANN_MLP;
+        m_neuralNetwork->load(filePath.c_str(), "SimpleOcr");
+        //m_neuralNetwork = new CvANN_MLP(neuralNetwork);
     }
 
     char const *
