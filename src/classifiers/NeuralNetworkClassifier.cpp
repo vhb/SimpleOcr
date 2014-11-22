@@ -142,16 +142,17 @@ namespace ocr {
         m_training_set = get_data_matrix(d.get_datas());
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    std::move(d));
+        std::cout << m_nbIterations << "\t" << m_stopRate << std::endl;
         CvANN_MLP_TrainParams p(
                 //m_layers, // Neural network typography
                 //ANN_MLP::SIGMOID_SYM, // Activation function
                 //0.01, // first activation function parameter BackprocCoef ?
                 //0.01, // second activation functon parameter
-                cvTermCriteria(TermCriteria::EPS + TermCriteria::COUNT,
+                cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, // TermCriteria::EPS + TermCriteria::COUNT,
                              m_nbIterations, m_stopRate), // training stop condition
                 CvANN_MLP_TrainParams::BACKPROP, // training algorithm
-                0.01, // First parameter for the training method
-                0.01 // Second parameter for the training method
+                0.1, // First parameter for the training method
+                0.1 // Second parameter for the training method
                 );
 
         m_layers = cv::Mat(5, 1, CV_32S);
@@ -187,9 +188,10 @@ namespace ocr {
     void
     NeuralNetworkClassifier::unserialize(std::string const &filePath)
     {
-        CvANN_MLP neuralNetwork;
-        neuralNetwork.load(filePath.c_str(), "SimpleOcr");
-        m_neuralNetwork = new CvANN_MLP(neuralNetwork);
+        //CvANN_MLP neuralNetwork;
+        m_neuralNetwork = new CvANN_MLP;
+        m_neuralNetwork->load(filePath.c_str(), "SimpleOcr");
+        //m_neuralNetwork = new CvANN_MLP(neuralNetwork);
     }
 
     char const *
