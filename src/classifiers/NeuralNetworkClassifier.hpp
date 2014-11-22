@@ -54,12 +54,15 @@ namespace ocr {
             double m_nbIterations;
             double m_stopRate;
             double m_backpropogationCoef;
+            float m_trainingMethodFirst;
+            float m_trainingMethodSec;
+            std::string m_destPath;
             int m_nbFeatures;
-            int m_nbOutputClasses;
             std::shared_ptr<IFeatureExtractor> m_featureExtractor;
             std::vector<char> values;
             cv::Mat m_training_set;
             cv::Mat m_training_set_classifications;
+            std::vector<utils::Json::Item> m_layers_datas;
     };
 
 } // namespace ocr
