@@ -20,7 +20,6 @@
     "segmenter": {
         "path": "libHistogramSegmenter",
         "args": {
-            "toto": "tutu"
         }
     },
     "feature_extractor": {
@@ -40,3 +39,4 @@
         }
     }
 }
+

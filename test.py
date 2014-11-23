@@ -7,7 +7,7 @@ import subprocess
 
 argc = len(sys.argv)
 if argc < 4:
-	print 'usage: ./tesy.py workflow path_to_data dataset training_datas'
+	print 'usage: ./tesy.py workflow dataset training_datas'
 	exit()
 
 workflow_path = str(sys.argv[1])
@@ -24,9 +24,12 @@ errors = float(0)
 workflow = sorted(workflow.items())
 
 for key, value in workflow:
-    cmd = './ocr ' + value + ' ' + workflow_path + ' ' + dataset_path + ' ' + training_path + ' | grep \'output value:\' | sed \'s/output value: //g\''
+    cmd = './ocr ' + value + ' ' + workflow_path + ' ' + dataset_path + ' ' + training_path + ' | grep \'value:\' | sed \'s/value: //g\''
+    print cmd
     result = subprocess.check_output(['sh', '-c', cmd])[:-1]
     print key + ", " + result
+    print '[', key, ']'
+    print '{', result, '}'
     if key != result:
         errors += 1
 
