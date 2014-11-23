@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse as ap
 import subprocess
 import shlex, subprocess
