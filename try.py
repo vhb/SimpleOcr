@@ -47,16 +47,17 @@ with open(args.outfile, 'w+') as logfile:
 
         layers = get_layers(training).split()
         # fichier -> tant de layers, tel taux de success
-        for key, value in dataset:
-            cmd = "./ocr {:s} {:s} {:s} {:s} | grep \'value:\' | sed \'s/value: //g\'"\
-                .format(value, workflow, dataset_path, training)
+        for key, values in dataset:
+            for value in values:
+                cmd = "./ocr {:s} {:s} {:s} {:s} | grep \'value:\' | sed \'s/value: //g\'"\
+                    .format(value, workflow, dataset_path, training)
             #cmd = shlex.split(cmd)
 
-            result = subprocess.check_output(['sh', '-c', cmd],
-                                            stderr=subprocess.PIPE)[:-1]
-            print key + ", " + result
-            if key != result:
-                errors += 1
+                result = subprocess.check_output(['sh', '-c', cmd],
+                                                 stderr=subprocess.PIPE)[:-1]
+                print key + ", " + result
+                if key != result:
+                    errors += 1
 
         success = (total - errors) / (total) * 100
         logfile.write('Workflow: {:s} dataset: {:s} training: {:s} training_iteration: {:s} success {:f} layers: {:s}\n'.\
@@ -82,6 +83,7 @@ with open(args.outfile, 'w+') as logfile:
         cmd = shlex.split(cmd)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
+        print out, err
         output = parse_output(out)
         check_value(i, args.dataset, output['training_path'], output)
 
