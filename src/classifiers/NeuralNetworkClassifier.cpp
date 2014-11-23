@@ -86,8 +86,6 @@ namespace ocr {
                                       Dataset const &dataset) const
     {
         cv::Mat classificationResult(1, dataset.get_nb_output(), featuresMatrix.type());
-
-
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
         auto maxIndex = get_classification(classificationResult,
                                            dataset.get_nb_output());
@@ -152,7 +150,6 @@ namespace ocr {
         m_training_set = get_data_matrix(d.get_datas());
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    std::move(d));
-        std::cout << m_nbIterations << "\t" << m_stopRate << std::endl;
         CvANN_MLP_TrainParams p(
                 //m_layers, // Neural network typography
                 //ANN_MLP::SIGMOID_SYM, // Activation function
@@ -187,7 +184,7 @@ namespace ocr {
                 cv::Mat(),
                 p
                 );
-        std::cout << "iterations\t" << iterations << std::endl;
+        std::cout << "iterations    " << iterations << std::endl;
         serialize("__auto__");
     }
 
@@ -202,10 +199,11 @@ namespace ocr {
 
             time (&rawtime);
             timeinfo = localtime(&rawtime);
-            strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
+            strftime(buffer, 80, "%d-%m-%Y_%I:%M:%S", timeinfo);
             dest_path = std::string(buffer) + ".xml";
         }
         if (m_neuralNetwork) {
+            std::cout << "training_file:      " << dest_path << std::endl;
             CvFileStorage* storage = cvOpenFileStorage(dest_path.c_str(),
                                                        0, CV_STORAGE_WRITE);
             m_neuralNetwork->write(storage, "SimpleOcr");
