@@ -37,15 +37,18 @@ namespace ocr {
         auto datas = JSON_CAST(Map const, json.load(json_path));
         for (auto data : datas) {
             auto key = data.first;
-            auto value = data.second;
-            auto mat = cv::imread(JSON_CAST(String, value), 1);
-            if (not mat.data) {
-                throw std::runtime_error("Dataset::Dataset: Cannot oppen img file: " +
-                                         JSON_CAST(String, value));
+            auto values = JSON_CAST(Vector, data.second);
+
+            for (auto value: values) {
+                auto mat = cv::imread(JSON_CAST(String, value), 1);
+                if (not mat.data) {
+                    throw std::runtime_error("Dataset::Dataset: Cannot oppen img file: " +
+                                             JSON_CAST(String, value));
+                }
+                mat = m_preprocessorManager->apply(mat);
+                auto features = m_featureExtractor->extract(mat);
+                m_datas.push_back(Data(key, mat));
             }
-            mat = m_preprocessorManager->apply(mat);
-            auto features = m_featureExtractor->extract(mat);
-            m_datas.push_back(Data(key, mat));
         }
         for (std::size_t i = 0; i < m_datas.size(); ++i) {
             get_output_for(i);

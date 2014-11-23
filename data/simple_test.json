@@ -18,7 +18,7 @@
         },
     ],
     "segmenter": {
-        "path": "libHistogramSegmenter",
+        "path": "libOtherHistogramSegmenter",
         "args": {
         }
     },
@@ -29,7 +29,7 @@
     "classifier": {
         "path": "libNeuralNetworkClassifier",
         "args": {
-            "nb_iterations": 100000,
+            "nb_iterations": 1,
             "stop_rate": 0.000001,
             "backpropagation_coef": 0.1,
             "training_method_first": 0.01,

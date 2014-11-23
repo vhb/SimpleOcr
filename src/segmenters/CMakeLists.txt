@@ -13,12 +13,20 @@ set(
     ./HistogramSegmenter.cpp
     )
 
+set(
+    OTHER_HISTOGRAM_SEGMENTER_SOURCE
+    ./OtherHistogramSegmenter.cpp
+    )
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g3")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../../..)
 
 add_library(ContoursSegmenter SHARED ${CONTOUR_SEGMENTER_SOURCE})
 add_library(HistogramSegmenter SHARED ${HISTOGRAM_SEGMENTER_SOURCE})
+add_library(OtherHistogramSegmenter SHARED ${OTHER_HISTOGRAM_SEGMENTER_SOURCE})
 
 target_link_libraries(ContoursSegmenter ${OpenCV_LIBS} image)
 target_link_libraries(HistogramSegmenter ${OpenCV_LIBS} image)
+target_link_libraries(OtherHistogramSegmenter ${OpenCV_LIBS} image)
+
 
