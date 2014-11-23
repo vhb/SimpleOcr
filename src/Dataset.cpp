@@ -77,10 +77,6 @@ namespace ocr {
     std::string const &
     Dataset::get_value(std::size_t pos) const
     {
-        //std::cout << pos << std::endl;
-        //for (auto i : m_output) {
-            //std::cout << i << std::endl;
-        //}
         return m_output[pos];
     }
 
