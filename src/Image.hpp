@@ -50,11 +50,14 @@ namespace ocr {
             // return the sub matrix id
             ssize_t addSubMatrix(cv::Rect &&pos);
             cv::Mat getSubMatrix(ssize_t id) const;
+            std::vector<cv::Rect> const &get_rectangles();
+            void generateSubMatrix(std::vector<cv::Rect> const &);
 
         private:
             void load(std::string const &image_path);
 
             cv::Mat m_currentMatrix;
+            std::vector<cv::Rect> m_rects;
             std::unordered_map<std::string, cv::Mat> m_matrices;
             std::vector<cv::Rect> m_subMatrices;
     };
