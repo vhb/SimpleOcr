@@ -56,7 +56,7 @@ Brain::Brain(std::string &&json_path, std::string &&dataset_path)
     auto tmp = datas["classifier"].get<utils::Json::Map>();
     JSON_CAST(Map, tmp["args"])["feature_extractor"] = m_featureExtractor;
     m_classifier = m_moduleManager.load_module<IClassifier>(tmp);
-    m_dataset = Dataset(m_featureExtractor, m_preprocessorManager, dataset_path);
+    m_dataset = Dataset(m_featureExtractor, m_preprocessorManager, m_segmenter, dataset_path);
 
 }
 
@@ -73,9 +73,9 @@ Brain::apply(std::string const &imagePath) const
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
     std::cout << "Looping over sub matrices" << std::endl;
     //auto nb_subMatrix =
-    auto nb_subMatrix = m_segmenter->apply(std::move(img));
+    auto nb_subMatrix = m_segmenter->apply(std::move(img)).size();
     img.writeImage();
-    return std::vector<std::string>();
+    //return std::vector<std::string>();
     auto subMatrix = img.getCurrentMatrix();
     //std::cout << nb_subMatrix << std::endl;
     //for (ssize_t i = 0; i < nb_subMatrix; ++i) {

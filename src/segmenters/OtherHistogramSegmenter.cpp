@@ -23,11 +23,11 @@
 #include "HistogramSegmenter.hpp"
 
 namespace ocr {
-    ssize_t
+    std::vector<cv::Rect>
     HistogramSegmenter::apply(Image &&img) const
     {
         cv::Mat mat = img.getCurrentMatrix();
-
+        std::vector<cv::Rect> value;
         cv::Mat horizontal(mat.rows, 1, CV_32S);
         horizontal = cv::Scalar::all(0);
         cv::Mat vertical(mat.cols, 1, CV_32S);
@@ -41,7 +41,6 @@ namespace ocr {
 
         auto color = cv::Scalar(255, 255, 255);
         auto hor_pic = detectPic(std::move(horizontal));
-        int value;
         for (auto & i : hor_pic) {
             auto br = cv::Rect(i.first, 0, i.second - i.first, mat.rows);
             auto subMatrix = mat(br).clone();
@@ -56,11 +55,11 @@ namespace ocr {
                 auto pt2 = cv::Point(j.second, i.second);
                 cv::rectangle(mat, pt1, pt2, color, 1, 8, 0);
                 auto rect = cv::Rect(pt1, pt2);
-                value = img.addSubMatrix(std::move(rect));
+                value.push_back(rect);
+                img.addSubMatrix(std::move(rect));
             }
         }
         img.setMatrix(name(), std::move(mat));
-        // plotHistogram(std::move(horizontal));
         return value;
     }
 

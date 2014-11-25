@@ -34,6 +34,6 @@ namespace ocr {
             virtual ~ISegmenter() noexcept {}
 
             // return the number of sub matrices
-            virtual ssize_t apply(Image &&img) const = 0;
+            virtual std::vector<cv::Rect> apply(Image &&img) const = 0;
     };
 } /* namespace ocr */

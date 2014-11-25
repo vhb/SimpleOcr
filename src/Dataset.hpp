@@ -28,6 +28,7 @@
 
 #include <IFeatureExtractor.hpp>
 #include <PreprocessorManager.hpp>
+#include <ISegmenter.hpp>
 
 namespace ocr {
 
@@ -40,6 +41,7 @@ namespace ocr {
             Dataset() = default;
             Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
                     std::shared_ptr<PreprocessorManager> const &preprocessor_manager,
+                    std::shared_ptr<ISegmenter> const &segmenter,
                     std::string const &json_path);
             ~Dataset() noexcept;
 
@@ -48,6 +50,7 @@ namespace ocr {
             int get_nb_output() const;
             int get_output_for(std::size_t pos);
             std::string const &get_value(std::size_t pos) const;
+            cv::Mat merge_matrix(std::vector<cv::Rect> const &rects, Image const &img);
 
         private:
             std::string m_json_path;

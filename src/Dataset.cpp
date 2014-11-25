@@ -28,6 +28,7 @@ namespace ocr {
 
     Dataset::Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
                      std::shared_ptr<PreprocessorManager> const &preprocessor_manager,
+                     std::shared_ptr<ISegmenter> const &segmenter,
                      std::string const &json_path)
         : m_json_path(json_path),
           m_preprocessorManager(preprocessor_manager),
@@ -40,19 +41,25 @@ namespace ocr {
             auto values = JSON_CAST(Vector, data.second);
 
             for (auto value: values) {
-                auto mat = cv::imread(JSON_CAST(String, value), 1);
-                if (not mat.data) {
-                    throw std::runtime_error("Dataset::Dataset: Cannot oppen img file: " +
-                                             JSON_CAST(String, value));
-                }
-                mat = m_preprocessorManager->apply(mat);
-                auto features = m_featureExtractor->extract(mat);
+                auto img = Image(JSON_CAST(String, value));
+                //auto mat = cv::imread(JSON_CAST(String, value), 1);
+                //if (not mat.data) {
+                    //throw std::runtime_error("Dataset::Dataset: Cannot oppen img file: " +
+                                             //JSON_CAST(String, value));
+                //}
+                m_preprocessorManager->apply(img);
+                //auto rects = segmenter->apply(std::move(img));
+                //auto mat = merge_matrix(rects, img);
+                auto mat = img.getCurrentMatrix();
+                mat = m_featureExtractor->extract(mat);
+                std::cerr << key << "\t" << std::endl << mat << std::endl;
                 m_datas.push_back(Data(key, mat));
             }
         }
         for (std::size_t i = 0; i < m_datas.size(); ++i) {
             get_output_for(i);
         }
+        std::cerr << "classify" << std::endl;
     }
 
     Dataset::~Dataset() noexcept {}
@@ -61,6 +68,32 @@ namespace ocr {
     Dataset::get_nb_output() const
     {
         return m_output.size();
+    }
+
+    cv::Mat
+    Dataset::merge_matrix(std::vector<cv::Rect> const &rects, Image const &img)
+    {
+        int xmin, ymin, xmax, ymax;
+        bool it = false;
+        for (auto i : rects) {
+            auto pt1 = cv::Point(i.x, i.y);
+            auto pt2 = cv::Point(i.height, i.width);
+            if (not it) {
+                xmin = std::min(pt1.x, pt2.x);
+                ymin = std::min(pt1.y, pt2.y);
+                xmax = std::max(pt1.x, pt2.x);
+                ymax = std::max(pt1.y, pt2.y);
+                it = true;
+            }
+            else {
+                xmin = std::min(xmin, std::min(pt1.x, pt2.x));
+                ymin = std::min(ymin, std::min(pt1.y, pt2.y));
+                xmax = std::max(xmax, std::max(pt1.x, pt2.x));
+                ymax = std::max(ymax, std::max(pt1.y, pt2.y));
+            }
+        }
+        auto tmp = (img.getCurrentMatrix());
+        return tmp(cv::Rect(xmin, ymin, xmax - xmin, ymax - ymin));
     }
 
     int

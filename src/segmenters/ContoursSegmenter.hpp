@@ -29,7 +29,7 @@ namespace ocr {
         public:
             virtual ~ContoursSegmenter() noexcept {}
 
-            virtual ssize_t apply(Image &&img) const;
+            virtual std::vector<cv::Rect> apply(Image &&img) const;
             virtual char const *name() const;
     };
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os
 import sys
 import json
 import subprocess
@@ -23,15 +22,17 @@ errors = float(0)
 
 workflow = sorted(workflow.items())
 
-for key, value in workflow:
-    cmd = './ocr ' + value + ' ' + workflow_path + ' ' + dataset_path + ' ' + training_path + ' | grep \'value:\' | sed \'s/value: //g\''
-    print cmd
-    result = subprocess.check_output(['sh', '-c', cmd])[:-1]
-    print key + ", " + result
-    print '[', key, ']'
-    print '{', result, '}'
-    if key != result:
-        errors += 1
+for key, values in workflow:
+    for value in values:
+        cmd = './ocr ' + value + ' ' + workflow_path + ' ' + dataset_path + ' ' + training_path + ' | grep \'value:\' | sed \'s/value: //g\''
+        sys.stderr.write(value)
+        print cmd
+        result = subprocess.check_output(['sh', '-c', cmd])[:-1]
+        print key + ", " + result
+        print '[', key, ']'
+        print '{', result, '}'
+        if key != result:
+            errors += 1
 
 workflow_file.close()
 

@@ -25,10 +25,11 @@
 
 namespace ocr {
 
-    ssize_t
+    std::vector<cv::Rect>
     ContoursSegmenter::apply(Image&& img) const
     {
         std::vector<std::vector<cv::Point> > contours;
+        std::vector<cv::Rect> value;
         cv::Mat m = img.getCurrentMatrix();
         cv::Mat contourOutput = m.clone();
         cv::findContours(contourOutput,
@@ -41,41 +42,44 @@ namespace ocr {
         std::size_t i;
         int xmin, ymin, xmax, ymax;
         auto color = cv::Scalar(255, 255, 255);
-        bool merge = true;
 
         for (i = 0; i < contours.size();  ++i) {
             cv::approxPolyDP(contours[i], approxCurve[i], 1, true);
             auto rect = cv::boundingRect(cv::Mat(contours[i]));
+            value.push_back(rect);
             cv::Point pt1, pt2;
             pt1.x = rect.x;
             pt2.x = rect.x + rect.width;
             pt1.y = rect.y;
             pt2.y = rect.y + rect.height;
-            cv::rectangle(contourOutput, pt1, pt2, color, 1, 8, 0);
-            if (not merge) {
+            //if (not merge) {
+                cv::rectangle(contourOutput, pt1, pt2, color, 1, 8, 0);
                 img.addSubMatrix(std::move(rect));
-            }
-            else {
-                if (i != 0) {
-                    xmin = std::min(pt1.x, pt2.x);
-                    xmax = std::max(pt1.x, pt2.x);
-                    ymin = std::min(pt1.y, pt2.y);
-                    ymax = std::max(pt1.y, pt2.y);
-                }
-                else {
-                    xmin = std::min(xmin, std::min(pt1.x, pt2.x));
-                    ymin = std::max(xmax, std::max(pt1.x, pt2.x));
-                    xmax = std::max(xmin, std::min(pt1.y, pt2.y));
-                    ymax = std::max(ymin, std::max(pt1.y, pt2.y));
-                }
-            }
+            //}
+            //else {
+                //if (i == 0) {
+                    //xmin = std::min(pt1.x, pt2.x);
+                    //ymin = std::min(pt1.y, pt2.y);
+                    //xmax = std::max(pt1.x, pt2.x);
+                    //ymax = std::max(pt1.y, pt2.y);
+                //}
+                //else {
+                    //xmin = std::min(xmin, std::min(pt1.x, pt2.x));
+                    //ymin = std::min(ymin, std::min(pt1.y, pt2.y));
+                    //xmax = std::max(xmax, std::max(pt1.x, pt2.x));
+                    //ymax = std::max(ymax, std::max(pt1.y, pt2.y));
+                //}
+            //}
         }
-        if (merge) {
-            cv::Point pt1(xmin, ymin), pt2(xmax, ymax);
-            cv::rectangle(contourOutput, pt1, pt2, color, 1, 8, 0);
-        }
+        //if (merge) {
+            //cv::Point pt1(xmin, ymin), pt2(xmax, ymax);
+            //cv::rectangle(contourOutput, pt1, pt2, color, 1, 8, 0);
+            //auto rect = cv::Rect(pt1, pt2);
+            //img.addSubMatrix(std::move(rect));
+        //}
         img.setMatrix("contourOutput", std::move(contourOutput));
-        return i;
+        return value;
+        //return i;
     }
 
     char const *

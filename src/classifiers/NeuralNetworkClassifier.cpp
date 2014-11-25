@@ -85,6 +85,7 @@ namespace ocr {
     NeuralNetworkClassifier::classify(cv::Mat &&featuresMatrix,
                                       Dataset const &dataset) const
     {
+        std::cerr << featuresMatrix << std::endl;
         cv::Mat classificationResult(1, dataset.get_nb_output(), featuresMatrix.type());
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
         auto maxIndex = get_classification(classificationResult,

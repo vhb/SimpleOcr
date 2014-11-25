@@ -31,7 +31,7 @@ namespace ocr {
         public:
             virtual ~HistogramSegmenter() noexcept {}
 
-            virtual ssize_t apply(Image &&) const;
+            virtual std::vector<cv::Rect> apply(Image &&) const;
             virtual char const * name() const;
 
         private:
