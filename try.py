@@ -81,7 +81,8 @@ with open(args.outfile, 'wa+') as logfile:
 
     for i in args.jsons:
         try:
-            cmd = './ocr {:s} {:s} {:s}'.format('./data/step1/a.bmd', i, args.dataset)
+            cmd = './ocr {:s} {:s} {:s}'.format('./data/step1/base/a.bmp', i, args.dataset)
+            print cmd
             cmd = shlex.split(cmd)
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = p.communicate()

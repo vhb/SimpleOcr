@@ -91,9 +91,6 @@ namespace ocr {
                                            dataset.get_nb_output());
         auto tmp = get_data_matrix(dataset.get_datas());
         //auto mat = get_classification_matrix(tmp, Dataset(dataset));
-        std::cout << featuresMatrix << std::endl;
-        std::cout << tmp << std::endl;
-        std::cout << "MAxIndex" << maxIndex << std::endl;
         auto value = dataset.get_value(maxIndex);
         return value;
     }
@@ -128,10 +125,8 @@ namespace ocr {
             //auto sourceMat = m_featureExtractor->extract(std::get<1>(i));
             //sourceMat.copyTo(value.row(index++));
             auto tmp = std::get<1>(i);
-            std::cout << tmp.cols << "\t" << tmp.rows << std::endl;
             tmp.copyTo(value.row(index++));
         }
-        std::cout << "end" << std::endl;
         return value;
     }
 
@@ -141,7 +136,6 @@ namespace ocr {
                                                        ) const
     {
         auto size = mat.size();
-        std::cout << size<< std::endl;
         // TODO: add zeros
         auto tmp = cv::Mat::zeros(size.height, dataset.get_nb_output(), CV_32F);
         auto value = cv::Mat(tmp);
@@ -156,12 +150,9 @@ namespace ocr {
     {
         using namespace cv;
 
-        std::cout << "ici" << std::endl;
         m_training_set = get_data_matrix(d.get_datas());
-        std::cout << "la" << std::endl;
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    std::move(d));
-        std::cout << "end" << std::endl;
         CvANN_MLP_TrainParams p(
                 //m_layers, // Neural network typography
                 //ANN_MLP::SIGMOID_SYM, // Activation function
@@ -184,7 +175,6 @@ namespace ocr {
             m_layers.at<int>(j, 0) = JSON_CAST(Int, i);
             j++;
         }
-        std::cout << "end" << std::endl;
         m_layers.at<int>(m_layers_datas.size() + 1, 0) = d.get_nb_output();
 
         //m_layers.at<int>(1, 0) = 30;
@@ -192,7 +182,6 @@ namespace ocr {
         //m_layers.at<int>(3, 0) = 10;
         m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,
                 1.0,1);
-        std::cout << "nike" << std::endl;
         int iterations = m_neuralNetwork->train(
                 m_training_set,
                 m_training_set_classifications,
@@ -200,7 +189,7 @@ namespace ocr {
                 cv::Mat(),
                 p
                 );
-        std::cout << "iterations    " << iterations << std::endl;
+        std::cout << "iterations\t" << iterations << std::endl;
         serialize("__auto__");
     }
 
