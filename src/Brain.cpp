@@ -73,9 +73,9 @@ Brain::apply(std::string const &imagePath) const
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
     std::cout << "Looping over sub matrices" << std::endl;
     //auto nb_subMatrix =
-    auto nb_subMatrix = m_segmenter->apply(std::move(img));
-    img.writeImage();
-    return std::vector<std::string>();
+    //auto nb_subMatrix = m_segmenter->apply(std::move(img));
+    //img.writeImage();
+    //return std::vector<std::string>();
     auto subMatrix = img.getCurrentMatrix();
     //std::cout << nb_subMatrix << std::endl;
     //for (ssize_t i = 0; i < nb_subMatrix; ++i) {

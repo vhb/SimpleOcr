@@ -32,8 +32,8 @@
             "nb_iterations": 1,
             "stop_rate": 0.000001,
             "backpropagation_coef": 0.1,
-            "training_method_first": 0.01,
-            "training_method_sec": 0.01,
+            "training_method_first": 1.0,
+            "training_method_sec": 1.0,
             "dest_path": "__auto__",
             "layers": [30, 30, 10]
         }

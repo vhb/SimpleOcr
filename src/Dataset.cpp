@@ -47,7 +47,8 @@ namespace ocr {
                 }
                 mat = m_preprocessorManager->apply(mat);
                 auto features = m_featureExtractor->extract(mat);
-                m_datas.push_back(Data(key, mat));
+                std::cout << features << std::endl;
+                m_datas.push_back(Data(key, features));
             }
         }
         for (std::size_t i = 0; i < m_datas.size(); ++i) {

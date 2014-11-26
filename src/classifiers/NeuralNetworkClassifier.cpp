@@ -89,6 +89,11 @@ namespace ocr {
         m_neuralNetwork->predict(featuresMatrix, classificationResult);
         auto maxIndex = get_classification(classificationResult,
                                            dataset.get_nb_output());
+        auto tmp = get_data_matrix(dataset.get_datas());
+        //auto mat = get_classification_matrix(tmp, Dataset(dataset));
+        std::cout << featuresMatrix << std::endl;
+        std::cout << tmp << std::endl;
+        std::cout << "MAxIndex" << maxIndex << std::endl;
         auto value = dataset.get_value(maxIndex);
         return value;
     }
@@ -100,7 +105,7 @@ namespace ocr {
     {
         using Type = float;
         int maxIndex = 0;
-        float value=0.0f;
+        float value;
         float maxValue = classificationResult.at<Type>(0, 0);
         for (unsigned int index = 1; index < nbOutputClasses; ++index) {
             value = classificationResult.at<Type>(0, index);
@@ -120,16 +125,20 @@ namespace ocr {
         cv::Mat value = cv::Mat::zeros(datas.size(), m_nbFeatures, CV_32F);
         unsigned int index = 0;
         for (auto const &i: datas) {
-            auto sourceMat = m_featureExtractor->extract(std::get<1>(i));
-            sourceMat.copyTo(value.row(index++));
+            //auto sourceMat = m_featureExtractor->extract(std::get<1>(i));
+            //sourceMat.copyTo(value.row(index++));
+            auto tmp = std::get<1>(i);
+            std::cout << tmp.cols << "\t" << tmp.rows << std::endl;
+            tmp.copyTo(value.row(index++));
         }
+        std::cout << "end" << std::endl;
         return value;
     }
 
     cv::Mat
     NeuralNetworkClassifier::get_classification_matrix(cv::Mat const &mat,
                                                        Dataset &&dataset
-                                                       )
+                                                       ) const
     {
         auto size = mat.size();
         std::cout << size<< std::endl;
@@ -147,14 +156,19 @@ namespace ocr {
     {
         using namespace cv;
 
+        std::cout << "ici" << std::endl;
         m_training_set = get_data_matrix(d.get_datas());
+        std::cout << "la" << std::endl;
         m_training_set_classifications = get_classification_matrix(m_training_set,
                                                                    std::move(d));
+        std::cout << "end" << std::endl;
         CvANN_MLP_TrainParams p(
                 //m_layers, // Neural network typography
                 //ANN_MLP::SIGMOID_SYM, // Activation function
                 //0.01, // first activation function parameter BackprocCoef ?
                 //0.01, // second activation functon parameter
+                //TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 300, FLT_EPSILON),
+                //ANN_MLP::Params::BACKPROP, 0.001
                 cvTermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, // TermCriteria::EPS + TermCriteria::COUNT,
                              m_nbIterations, m_stopRate), // training stop condition
                 CvANN_MLP_TrainParams::BACKPROP, // training algorithm
@@ -170,6 +184,7 @@ namespace ocr {
             m_layers.at<int>(j, 0) = JSON_CAST(Int, i);
             j++;
         }
+        std::cout << "end" << std::endl;
         m_layers.at<int>(m_layers_datas.size() + 1, 0) = d.get_nb_output();
 
         //m_layers.at<int>(1, 0) = 30;
@@ -177,6 +192,7 @@ namespace ocr {
         //m_layers.at<int>(3, 0) = 10;
         m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,
                 0.0,0);
+        std::cout << "nike" << std::endl;
         int iterations = m_neuralNetwork->train(
                 m_training_set,
                 m_training_set_classifications,
