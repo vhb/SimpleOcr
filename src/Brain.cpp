@@ -72,7 +72,6 @@ Brain::apply(std::string const &imagePath) const
     std::cout << "Segmentation" << std::endl;
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
     std::cout << "Looping over sub matrices" << std::endl;
-    //auto nb_subMatrix =
     //auto nb_subMatrix = m_segmenter->apply(std::move(img));
     //img.writeImage();
     //return std::vector<std::string>();

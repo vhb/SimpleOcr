@@ -40,6 +40,7 @@ namespace ocr {
             auto values = JSON_CAST(Vector, data.second);
 
             for (auto value: values) {
+                std::cout << JSON_CAST(String, value) << std::endl;
                 auto mat = cv::imread(JSON_CAST(String, value), 1);
                 if (not mat.data) {
                     throw std::runtime_error("Dataset::Dataset: Cannot oppen img file: " +

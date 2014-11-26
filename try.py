@@ -29,7 +29,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-with open(args.outfile, 'w+') as logfile:
+with open(args.outfile, 'wa+') as logfile:
     def get_layers(training_path):
         tree = ET.parse(training_path)
         root = tree.getroot()
@@ -49,6 +49,7 @@ with open(args.outfile, 'w+') as logfile:
         # fichier -> tant de layers, tel taux de success
         for key, values in dataset:
             for value in values:
+                print value
                 cmd = "./ocr {:s} {:s} {:s} {:s} | grep \'value:\' | sed \'s/value: //g\'"\
                     .format(value, workflow, dataset_path, training)
             #cmd = shlex.split(cmd)
@@ -79,13 +80,16 @@ with open(args.outfile, 'w+') as logfile:
 
 
     for i in args.jsons:
-        cmd = './ocr {:s} {:s} {:s}'.format('./data/step1/a.bmd', i, args.dataset)
-        cmd = shlex.split(cmd)
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
-        print out, err
-        output = parse_output(out)
-        check_value(i, args.dataset, output['training_path'], output)
+        try:
+            cmd = './ocr {:s} {:s} {:s}'.format('./data/step1/a.bmd', i, args.dataset)
+            cmd = shlex.split(cmd)
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            out, err = p.communicate()
+            print out, err
+            output = parse_output(out)
+            check_value(i, args.dataset, output['training_path'], output)
+        except Exception as e:
+            print e
 
 
     #def main():

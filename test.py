@@ -24,15 +24,16 @@ errors = float(0)
 workflow = sorted(workflow.items())
 
 for key, value in workflow:
-    cmd = './ocr ' + value + ' ' + workflow_path + ' ' + dataset_path + ' ' + training_path + ' | grep \'value:\' | sed \'s/value: //g\''
-    print cmd
-    result = subprocess.check_output(['sh', '-c', cmd])[:-1]
-    print key + ", " + result
-    print '[', key, ']'
-    print '{', result, '}'
-    if key != result:
-        errors += 1
+    for i in value:
+        cmd = './ocr ' + i + ' ' + workflow_path + ' ' + dataset_path + ' "' + training_path + '" | grep \'value:\' | sed \'s/value: //g\''
+        #print cmd
+        result = subprocess.check_output(['sh', '-c', cmd])[:-1]
+        #print key + ", " + result
+        #print '[', key, ']'
+        #print '{', result, '}'
+        if key != result:
+            errors += 1
 
 workflow_file.close()
 
-print (total - errors) / (total) * 100
+print training_path, (total - errors) / (total) * 100
