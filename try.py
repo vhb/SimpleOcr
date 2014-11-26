@@ -42,7 +42,7 @@ with open(args.outfile, 'wa+') as logfile:
         with open(dataset_path, 'r') as r:
             dataset = sorted(json.load(r).items())
 
-        total = float(len(dataset))
+        total = float(0)
         errors = float(0)
 
         layers = get_layers(training).split()
@@ -57,6 +57,7 @@ with open(args.outfile, 'wa+') as logfile:
                 result = subprocess.check_output(['sh', '-c', cmd],
                                                  stderr=subprocess.PIPE)[:-1]
                 print key + ", " + result
+                total += 1
                 if key != result:
                     errors += 1
 

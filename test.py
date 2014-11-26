@@ -18,7 +18,7 @@ training_path = training_path.replace(' ', '\\ ')
 workflow_file = open(dataset_path)
 workflow = json.load(workflow_file)
 
-total = float(len(workflow))
+total = float(0)
 errors = float(0)
 
 workflow = sorted(workflow.items())
@@ -26,14 +26,16 @@ workflow = sorted(workflow.items())
 for key, value in workflow:
     for i in value:
         cmd = './ocr ' + i + ' ' + workflow_path + ' ' + dataset_path + ' "' + training_path + '" | grep \'value:\' | sed \'s/value: //g\''
-        #print cmd
+        print cmd
         result = subprocess.check_output(['sh', '-c', cmd])[:-1]
-        #print key + ", " + result
-        #print '[', key, ']'
-        #print '{', result, '}'
+        print key + ", " + result
+        print '[', key, ']'
+        print '{', result, '}'
+        total += 1
         if key != result:
             errors += 1
 
 workflow_file.close()
 
+#print (total - errors), (total) * 100
 print training_path, (total - errors) / (total) * 100
