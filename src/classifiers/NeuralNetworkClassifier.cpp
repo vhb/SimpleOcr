@@ -191,7 +191,7 @@ namespace ocr {
         //m_layers.at<int>(2, 0) = 20;
         //m_layers.at<int>(3, 0) = 10;
         m_neuralNetwork = new CvANN_MLP(m_layers, CvANN_MLP::SIGMOID_SYM,
-                0.0,0);
+                1.0,1);
         std::cout << "nike" << std::endl;
         int iterations = m_neuralNetwork->train(
                 m_training_set,
