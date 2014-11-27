@@ -42,7 +42,8 @@ namespace ocr {
         cv::Scalar avg, avgStd;
         cv::meanStdDev(mat, avg, avgStd);
         int thresh = (int)avg[0] - 7*(int)(avgStd[0] / 8);
-        thresh = 200;
+        // std::cout << thresh << std::endl;
+        thresh = 120;
         cv::threshold(mat, value, thresh, 255, cv::THRESH_BINARY_INV);
         return value;
     }

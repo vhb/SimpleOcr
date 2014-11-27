@@ -9,11 +9,11 @@
             "args": {}
         },
         {
-            "path": "libhuethreshold",
+            "path": "libmorphologicfilter",
             "args": {}
         },
         {
-            "path": "libmorphologicfilter",
+            "path": "libhuethreshold",
             "args": {}
         },
     ],
