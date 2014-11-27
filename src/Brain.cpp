@@ -56,7 +56,7 @@ Brain::Brain(std::string &&json_path, std::string &&dataset_path)
     auto tmp = datas["classifier"].get<utils::Json::Map>();
     JSON_CAST(Map, tmp["args"])["feature_extractor"] = m_featureExtractor;
     m_classifier = m_moduleManager.load_module<IClassifier>(tmp);
-    m_dataset = Dataset(m_featureExtractor, m_preprocessorManager, dataset_path);
+    m_dataset = Dataset(m_featureExtractor, m_preprocessorManager, m_segmenter, dataset_path);
 
 }
 
@@ -64,30 +64,59 @@ Brain::~Brain()
 {
 }
 
+float
+Brain::test_datas(std::string const &json_path)
+{
+    utils::Json json;
+    auto datas = JSON_CAST(Map const, json.load(json_path));
+    float success = 0;
+    float total = 0;
+    for (auto i : datas) {
+        std::cout << i << std::endl;
+        auto vec = JSON_CAST(Vector, i.second);
+        for (auto j : vec) {
+            auto tmp = apply(JSON_CAST(String, j));
+            if (tmp.size() and tmp[0] == i.first) {
+                success++;
+            }
+            total++;
+        }
+    }
+    return success / total;
+}
+
 std::vector<std::string>
 Brain::apply(std::string const &imagePath) const
 {
-    auto img = Image(std::move(imagePath));
+    auto img = Image(std::move(imagePath), false);
     m_preprocessorManager->apply(img);
     std::cout << "Segmentation" << std::endl;
     std::cout << "\tApply " << m_segmenter->name() << std::endl;
     std::cout << "Looping over sub matrices" << std::endl;
-    //auto nb_subMatrix = m_segmenter->apply(std::move(img));
-    //img.writeImage();
-    //return std::vector<std::string>();
-    auto subMatrix = img.getCurrentMatrix();
+    auto nb_subMatrix = m_segmenter->apply(std::move(img));
+    std::cout << "Detected " << nb_subMatrix << std::endl;
+    auto tmp = img.getCurrentMatrix();
+        cv::imwrite("/tmp/tmp.jpg", tmp);
+    auto ret = std::vector<std::string>();
+
     //std::cout << nb_subMatrix << std::endl;
     //for (ssize_t i = 0; i < nb_subMatrix; ++i) {
-        //auto subMatrix = img.getSubMatrix(i);
+
+
+        auto subMatrix = img.getSubMatrix(0);
         std::cout << "\t Feature extractor: " << m_featureExtractor->name()
                   << std::endl;
         auto features = m_featureExtractor->extract(subMatrix);
         //auto features = m_featureExtractor->extract(std::move(img), i);
+        cv::imwrite("/tmp/toto.jpg", subMatrix);
         std::cout << "\t Classifier: " << m_classifier->name() << std::endl;
         auto value = m_classifier->classify(std::move(features), m_dataset);
         std::cout << "value: " << value << std::endl;
+        ret.push_back(value);
     //}
-    return std::vector<std::string>();
+    img.writeImage();
+    return ret;
+    //return std::vector<std::string>();
 }
 
 void

@@ -54,12 +54,12 @@ namespace ocr {
             for (auto &j: vert_pic) {
                 auto pt1 = cv::Point(j.first, i.first);
                 auto pt2 = cv::Point(j.second, i.second);
-                cv::rectangle(mat, pt1, pt2, color, 1, 8, 0);
+                //cv::rectangle(mat, pt1, pt2, color, 1, 8, 0);
                 auto rect = cv::Rect(pt1, pt2);
                 value = img.addSubMatrix(std::move(rect));
             }
         }
-        img.setMatrix(name(), std::move(mat));
+        //img.setMatrix(name(), std::move(mat));
         // plotHistogram(std::move(horizontal));
         return value;
     }

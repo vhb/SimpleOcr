@@ -46,6 +46,7 @@ namespace ocr {
             std::vector<std::string> apply(std::string const &image_path) const;
             void loadTrainData(std::string const &filePath);
             void serialize(std::string &&filePath);
+            float test_datas(std::string const &json_path);
 
         private:
             void update_json(utils::Json::Map &m);

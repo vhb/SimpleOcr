@@ -25,12 +25,8 @@
 
 namespace ocr {
 
-    //Image::Image(std::string &&image_path)
-    //{
-        //this->load(std::move(image_path));
-    //}
-
-    Image::Image(std::string const &image_path)
+    Image::Image(std::string const &image_path, bool merged)
+        : merged(merged)
     {
         this->load(image_path);
     }
@@ -97,9 +93,14 @@ namespace ocr {
     cv::Mat
     Image::getSubMatrix(ssize_t id) const
     {
-        if (size_t(id) > m_subMatrices.size())
+        std::cout << id << std::endl;
+        if (size_t(id) >= m_subMatrices.size())
             throw std::runtime_error("Invalid matrix id");
+        //throw std::runtime_error("Invalid matrix id");
+        std::cout << m_subMatrices[id] << std::endl;
         cv::Mat sub_matrix = m_currentMatrix(m_subMatrices[id]);
+        std::cout << sub_matrix.rows << "\t" << sub_matrix.cols << std::endl;
+        std::cout << sub_matrix << std::endl;
         m_currentMatrix.copyTo(sub_matrix);
         return sub_matrix;
     }

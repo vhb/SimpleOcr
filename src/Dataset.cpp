@@ -28,10 +28,12 @@ namespace ocr {
 
     Dataset::Dataset(std::shared_ptr<IFeatureExtractor> const &features_extractor,
                      std::shared_ptr<PreprocessorManager> const &preprocessor_manager,
+                     std::shared_ptr<ISegmenter> const &segmenter,
                      std::string const &json_path)
         : m_json_path(json_path),
           m_preprocessorManager(preprocessor_manager),
-          m_featureExtractor(features_extractor)
+          m_featureExtractor(features_extractor),
+          m_segmenter(segmenter)
     {
         auto json = utils::Json();
         auto datas = JSON_CAST(Map const, json.load(json_path));
@@ -40,15 +42,21 @@ namespace ocr {
             auto values = JSON_CAST(Vector, data.second);
 
             for (auto value: values) {
-                std::cout << JSON_CAST(String, value) << std::endl;
-                auto mat = cv::imread(JSON_CAST(String, value), 1);
-                if (not mat.data) {
-                    throw std::runtime_error("Dataset::Dataset: Cannot oppen img file: " +
-                                             JSON_CAST(String, value));
-                }
-                mat = m_preprocessorManager->apply(mat);
+                //auto mat = cv::imread(JSON_CAST(String, value), 1);
+                //if (not mat.data) {
+                    //throw std::runtime_error("Dataset::Dataset: Cannot open img file: " +
+                                             //JSON_CAST(String, value));
+                //}
+                //mat = m_preprocessorManager->apply(mat);
+
+                auto img = Image(JSON_CAST(String, value), true);
+                m_preprocessorManager->apply(img);
+                auto nb_subMatrix = m_segmenter->apply(std::move(img));
+                auto mat = img.getSubMatrix(0);
+                //std::cout << "apres" << std::endl;
+                if (not nb_subMatrix)
+                    continue;
                 auto features = m_featureExtractor->extract(mat);
-                //std::cout << features << std::endl;
                 m_datas.push_back(Data(key, features));
             }
         }
@@ -70,9 +78,10 @@ namespace ocr {
     {
         auto const &tmp = m_datas[pos];
         auto it = std::find_if(begin(m_output), end(m_output),
-                [&] (std::string const &s) {
-            return s == std::get<0>(tmp);
-        });
+            [&] (std::string const &s) {
+                return s == std::get<0>(tmp);
+            }
+            );
         if (it != end(m_output))
             return std::distance(begin(m_output), it);
         m_output.push_back(std::get<0>(tmp));

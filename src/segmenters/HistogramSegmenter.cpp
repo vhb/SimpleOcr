@@ -58,7 +58,7 @@ namespace ocr {
                 value = img.addSubMatrix(std::move(rect));
             }
         }
-        img.setMatrix("HistogramSegmenter", std::move(mat));
+        //img.setMatrix("HistogramSegmenter", std::move(mat));
         // plotHistogram(std::move(horizontal));
         return value;
     }

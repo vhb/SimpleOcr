@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse as ap
-import subprocess
+#import subprocess
 import shlex, subprocess
 import json
 import xml.etree.ElementTree as ET
@@ -52,7 +52,7 @@ with open(args.outfile, 'wa+') as logfile:
                 print value
                 cmd = "./ocr {:s} {:s} {:s} {:s} | grep \'value:\' | sed \'s/value: //g\'"\
                     .format(value, workflow, dataset_path, training)
-            #cmd = shlex.split(cmd)
+                #cmd = shlex.split(cmd)
 
                 result = subprocess.check_output(['sh', '-c', cmd],
                                                  stderr=subprocess.PIPE)[:-1]

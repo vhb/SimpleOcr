@@ -35,7 +35,7 @@ namespace ocr {
         public:
             Image() = default;
             //Image(std::string &&image_path);
-            Image(std::string const &image_path);
+            Image(std::string const &image_path, bool);
             Image(cv::Mat &&matrix);
             ~Image();
 
@@ -52,6 +52,7 @@ namespace ocr {
             cv::Mat getSubMatrix(ssize_t id) const;
             std::vector<cv::Rect> const &get_rectangles();
             void generateSubMatrix(std::vector<cv::Rect> const &);
+            bool toMerge() const { return merged; }
 
         private:
             void load(std::string const &image_path);
@@ -60,5 +61,6 @@ namespace ocr {
             std::vector<cv::Rect> m_rects;
             std::unordered_map<std::string, cv::Mat> m_matrices;
             std::vector<cv::Rect> m_subMatrices;
+            bool merged;
     };
 } // namespace ocr
